@@ -11,15 +11,14 @@ class Piece {
         bool isAlive;
         Coordinate location;
         int color;
+        string identifier;
     public:
         Piece();
-        Piece(int row, int col, int lvl, int color);
+        Piece(int row_, int col_, int lvl_, int color_);
 
         int getColor();
-        int getLocation();
-        void getIdentifier();
-        void setIdentifier();
-        void setLocation();
+        Coordinate getLocation();
+        void setLocation(int row_, int col_, int lvl_);
         string toString();
 };
 
