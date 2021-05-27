@@ -1,7 +1,7 @@
 #ifndef coordinate_h
 #define coordinate_h
 
-class Coordinate {
+struct Coordinate {
     private:
         int row;
         int col;
@@ -9,6 +9,7 @@ class Coordinate {
     public:
         Coordinate();
         Coordinate(int row, int col, int lvl);
+        // might add toChessNotation method
 };
 
 #endif
