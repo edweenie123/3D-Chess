@@ -1,7 +1,7 @@
 #ifndef piece_h
 #define piece_h
 
-#include<coordinate.h>
+#include "coordinate.h"
 #include<string>
 
 using namespace std;

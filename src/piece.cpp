@@ -1,4 +1,4 @@
-#include<../include/piece.h>
+#include "../include/piece.h"
 
 
 Piece::Piece(int row_, int col_, int lvl_, int color_) {
