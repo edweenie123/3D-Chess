@@ -6,10 +6,8 @@ using namespace std;
 
 struct Coordinate {
     private:
-        int row;
-        int col;
-        int lvl;
     public:
+        int row, col, lvl;
         Coordinate();
         Coordinate(int row, int col, int lvl);
         string toString();

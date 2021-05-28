@@ -8,17 +8,17 @@ using namespace std;
 
 class Piece {
     private:
+    public:
         bool isAlive;
         Coordinate location;
         int color;
         string identifier;
-    public:
         Piece();
-        Piece(int row_, int col_, int lvl_, int color_);
+        Piece(int row, int col, int lvl, int color);
 
         int getColor();
         Coordinate getLocation();
-        void setLocation(int row_, int col_, int lvl_);
+        void setLocation(int row, int col, int lvl);
         string toString();
 };
 
