@@ -9,8 +9,8 @@
 
 class Rook: public Piece {
     public:
-        Rook(int col_, int row_, int lvl_, int color_);
-        vector<Move> getMoves();
+        using Piece::Piece;
+        vector<Move> getMoves(Board board);
 };
 
 
