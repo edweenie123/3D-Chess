@@ -7,12 +7,15 @@ Move::Move(int row_, int col_, int lvl_) {
     lvl = lvl_;
 }
 
-Move Move::operator+(const Move& move) {
-    int nrow = move.row + row;
-    int ncol = move.col + col;
-    int nlvl = move.lvl + lvl;
+Move Move::operator+(const Move &delta){
+    return Move(row + delta.row, col + delta.col, lvl + delta.lvl);
+}
 
-    return Move(nrow, ncol, nlvl);
+Move& Move::operator+=(const Move &delta){
+    this->row += delta.row;
+    this->col += delta.col;
+    this->lvl += delta.lvl;
+    return *this;
 }
 
 string Move::toString() {

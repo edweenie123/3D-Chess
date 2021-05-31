@@ -1,9 +1,9 @@
 #ifndef coordinate_h
 #define coordinate_h
 
-using namespace std;
-#include "move.h"
 #include<string>
+#include "move.h"
+using namespace std;
 
 struct Coordinate {
     private:
@@ -13,6 +13,8 @@ struct Coordinate {
         Coordinate(Coordinate cur, Move delta);
         Coordinate(int row, int col, int lvl);
         string toString();
+        Coordinate operator+(const Move&);
+        Coordinate& operator+=(const Move&);
         // might add toChessNotation method
 };
 

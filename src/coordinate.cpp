@@ -15,6 +15,17 @@ Coordinate::Coordinate(Coordinate cur, Move delta) {
     lvl = cur.lvl + delta.lvl;
 }
 
+Coordinate Coordinate::operator+(const Move &delta){
+    return Coordinate(row + delta.row, col + delta.col, lvl + delta.lvl);
+}
+
+Coordinate& Coordinate::operator+=(const Move &delta){
+    this->row += delta.row;
+    this->col += delta.col;
+    this->lvl += delta.lvl;
+    return *this;
+}
+
 string Coordinate::toString() {
     return "(" + to_string(row) + ", " + to_string(col) + ", " + to_string(lvl) + ")";
 }
