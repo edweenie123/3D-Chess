@@ -1,8 +1,8 @@
-#include "../include/queen.h"
+#include "../include/king.h"
 
-vector<Move> Queen::getMoves(Board board) {
+vector<Move> King::getMoves(Board board) {
 
-    // generate all the directions the queen can go in
+    // generate all the directions the king can go in
     for (auto a : {-1, 0, 1}) {
         for (auto b : {-1, 0, 1}) {
             for (auto c : {-1, 0, 1}) {
@@ -12,6 +12,5 @@ vector<Move> Queen::getMoves(Board board) {
         }
     }
 
-    // get all moves in line based of piece directions
-    return getAllMovesInLine(directions, board);
+    return directions;
 }
