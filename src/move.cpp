@@ -1,6 +1,5 @@
 #include "../include/move.h"
 
-
 Move::Move(int row_, int col_, int lvl_) {
     row = row_;
     col = col_;

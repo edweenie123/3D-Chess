@@ -12,7 +12,7 @@ vector<Move> Bishop::directions = {
     Move(0, 1, 1),
     Move(0, -1, 1),
     Move(0, 1, -1),
-    Move(0, -1, -1),
+    Move(0, -1, -1)
 };
 
 vector<Move> Bishop::getMoves(Board board) {

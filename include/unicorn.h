@@ -1,5 +1,5 @@
-#ifndef bishop_h
-#define bishop_h
+#ifndef unicorn_h
+#define unicorn_h
 
 #include<vector>
 #include "piece.h"
@@ -7,7 +7,7 @@
 #include "move.h"
 #include "board.h"
 
-class Bishop: public Piece {
+class Unicorn: public Piece {
     public:
         using Piece::Piece; // use constructor of parent class
         static vector<Move> directions;
