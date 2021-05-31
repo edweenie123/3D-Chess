@@ -7,6 +7,14 @@ Coordinate::Coordinate(int row_, int col_, int lvl_) {
     lvl = lvl_;
 }
 
+Coordinate::Coordinate(Coordinate cur, Move delta) {
+    // creates the coordinate object after moving with delta
+
+    row = cur.row + delta.row;
+    col = cur.col + delta.col;
+    lvl = cur.lvl + delta.lvl;
+}
+
 Coordinate Coordinate::operator+(const Move &delta){
     return Coordinate(row + delta.row, col + delta.col, lvl + delta.lvl);
 }

@@ -10,6 +10,7 @@ struct Coordinate {
     public:
         int row, col, lvl;
         Coordinate();
+        Coordinate(Coordinate cur, Move delta);
         Coordinate(int row, int col, int lvl);
         string toString();
         Coordinate operator+(const Move&);

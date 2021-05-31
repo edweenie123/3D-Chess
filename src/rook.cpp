@@ -2,10 +2,6 @@
 
 vector<Move> Rook::getMoves(Board board) {
     vector<Move> moves;
-
-   // NEED TO ADD PIECE BLOCKING
-    
-    // go through all directions (up, down, left, right, front, back) to find legal moves
     
     Move delta[6] = {
         Move(1, 0, 0),
@@ -16,38 +12,31 @@ vector<Move> Rook::getMoves(Board board) {
         Move(0, 0, -1),
     };
 
+    // go up, down, left, right, front and back to find all legal moves
+
     for (int di = 0; di < 6; di++) {
-        Coordinate cur;
+        Coordinate cur(location.row, location.col, location.lvl);
+        Move curDelta = delta[di];
 
-        
-    }
+        while (true) {
+            cur = Coordinate(cur, curDelta);
 
+            if (!board.isOnBoard(cur)) break;
+            if (!board.isVacant(cur)) {
+                // only add the move if the piece at cur is of OPPOSITE color
+                if (board.getPieceAt(cur).color != color)
+                    moves.push_back(curDelta);
+                
+                // exit the while loop as there is a piece blocking the rook's way
+                break;
+            }
 
-    int delta = 1;
-    for (int i=location.row;i<5;i++) {
-        if (board.isVacant(Coordinate(i, location.col, location.lvl)))
-            moves.push_back(Move(delta++, 0, 0));    
-        else {
-            if (board.getPieceAt(Coordinate(i, location.col, location.lvl)).color != color)
-                moves.push_back(Move(delta++, 0, 0));    
-            break;
-        }
-    }
+            // coordinate cur is empty 
+            moves.push_back(curDelta);
 
-
-
-    delta = -1;
-    for (int i=location.row;i>=0;i--) {
-        if (board.isVacant(Coordinate(i, location.col, location.lvl)))
-            moves.push_back(Move(delta--, 0, 0));    
-        else {
-            moves.push_back(Move(delta--, 0, 0));    
-            break;
+            curDelta = curDelta + delta[di];
         }
     }
     
-
-    
-
     return moves;
 }
