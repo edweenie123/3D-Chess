@@ -17,6 +17,10 @@ class Board {
         Piece getPieceAt(Coordinate square);
         void updateLocation(Coordinate square, Move movement);
         string getGameState();
+
+        bool isVacant(Coordinate cord); // not defined
+
+
 };
 
 #endif

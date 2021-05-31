@@ -11,6 +11,7 @@ struct Move {
         Move();
         Move(int row, int col, int lvl);
         string toString();
+        Move operator+(const Move& move);
 };
 
 #endif

@@ -43,9 +43,9 @@ Piece Board::getPieceAt(Coordinate square) {
 
 void Board::updateLocation(Coordinate square, Move movement) {
     Piece curPiece = getPieceAt(square);
-    curPiece.location.row = movement.row;
-    curPiece.location.col = movement.col;
-    curPiece.location.lvl = movement.lvl;
+    curPiece.location.row += movement.row;
+    curPiece.location.col += movement.col;
+    curPiece.location.lvl += movement.lvl;
 }
 
 string Board::getGameState() {

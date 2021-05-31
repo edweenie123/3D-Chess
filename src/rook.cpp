@@ -1,36 +1,53 @@
 #include "../include/rook.h"
 
-Rook::Rook(int row_, int col_, int lvl_, int color_){
-    location = Coordinate(row_, col_, lvl_);
-    color = color_;
-};
-
-vector<Move> Rook::getMoves() {
+vector<Move> Rook::getMoves(Board board) {
     vector<Move> moves;
 
    // NEED TO ADD PIECE BLOCKING
+    
+    // go through all directions (up, down, left, right, front, back) to find legal moves
+    
+    Move delta[6] = {
+        Move(1, 0, 0),
+        Move(-1, 0, 0),
+        Move(0, 1, 0),
+        Move(0, -1, 0),
+        Move(0, 0, 1),
+        Move(0, 0, -1),
+    };
 
-    for (int i=location.row+1;i<=5;i++) {
-        // moves.push_back(moves)
+    for (int di = 0; di < 6; di++) {
+        Coordinate cur;
+
+        
     }
 
-    for (int i=location.row-1;i>=1;i--) {
-       
+
+    int delta = 1;
+    for (int i=location.row;i<5;i++) {
+        if (board.isVacant(Coordinate(i, location.col, location.lvl)))
+            moves.push_back(Move(delta++, 0, 0));    
+        else {
+            if (board.getPieceAt(Coordinate(i, location.col, location.lvl)).color != color)
+                moves.push_back(Move(delta++, 0, 0));    
+            break;
+        }
     }
 
-    for (int i=location.col+1;i<=5;i++) {
-       
-    }
 
-    for (int i=location.col-1;i>=1;i--) {
-       
+
+    delta = -1;
+    for (int i=location.row;i>=0;i--) {
+        if (board.isVacant(Coordinate(i, location.col, location.lvl)))
+            moves.push_back(Move(delta--, 0, 0));    
+        else {
+            moves.push_back(Move(delta--, 0, 0));    
+            break;
+        }
     }
     
-    for (int i=location.lvl+1;i>=5;i++) {
-       
-    }
 
-    for (int i=location.lvl-1;i<=1;i--) {
-       
-    }
+    
+
+    return moves;
 }
