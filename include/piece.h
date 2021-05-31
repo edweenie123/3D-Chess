@@ -2,7 +2,10 @@
 #define piece_h
 
 #include "coordinate.h"
+#include "move.h"
+#include "board.h"
 #include<string>
+#include<vector>
 
 using namespace std;
 
@@ -20,6 +23,9 @@ class Piece {
         Coordinate getLocation();
         void setLocation(int row, int col, int lvl);
         string toString();
+
+        vector<Move> getAllMovesInLine(vector<Move> directions, Board board);
+
 };
 
 #endif

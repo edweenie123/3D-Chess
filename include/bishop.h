@@ -1,5 +1,5 @@
-#ifndef rook_h
-#define rook_h
+#ifndef bishop_h
+#define bishop_h
 
 #include<vector>
 #include "piece.h"
@@ -9,7 +9,7 @@
 
 
 
-class Rook: public Piece {
+class Bishop: public Piece {
     public:
         using Piece::Piece; // use constructor of parent class
         static vector<Move> directions;
