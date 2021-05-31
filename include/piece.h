@@ -8,10 +8,6 @@ using namespace std;
 
 class Piece {
     private:
-        int row;
-        int col;
-        int lvl;
-        int color;
     public:
         bool isAlive;
         Coordinate location;

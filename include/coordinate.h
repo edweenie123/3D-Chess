@@ -2,6 +2,7 @@
 #define coordinate_h
 
 using namespace std;
+#include "move.h"
 #include<string>
 
 struct Coordinate {
@@ -9,6 +10,7 @@ struct Coordinate {
     public:
         int row, col, lvl;
         Coordinate();
+        Coordinate(Coordinate cur, Move delta);
         Coordinate(int row, int col, int lvl);
         string toString();
         // might add toChessNotation method

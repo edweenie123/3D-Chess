@@ -9,7 +9,7 @@
 
 class Rook: public Piece {
     public:
-        using Piece::Piece;
+        using Piece::Piece; // use constructor of parent class
         vector<Move> getMoves(Board board);
 };
 

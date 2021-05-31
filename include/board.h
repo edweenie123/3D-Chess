@@ -18,7 +18,8 @@ class Board {
         void updateLocation(Coordinate square, Move movement);
         string getGameState();
 
-        bool isVacant(Coordinate cord); // not defined
+        bool isVacant(Coordinate cord); // returns true if cord is vacant
+        bool isOnBoard(Coordinate cord); // return true if cord is on board
 
 
 };
