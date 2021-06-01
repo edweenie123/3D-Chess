@@ -10,7 +10,8 @@
 class Pawn: public Piece {
     public:
         using Piece::Piece; // use constructor of parent class
-        static vector<Move> directions;
+        static vector<Move> captureDirections; // capture a piece while moving
+        static vector<Move> passiveDirections; // move into a vacant cell
         vector<Move> getMoves(Board board);
         void Promote();
 };
