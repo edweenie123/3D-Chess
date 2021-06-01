@@ -1,5 +1,8 @@
 #include "../include/coordinate.h"
 
+Coordinate::Coordinate() {
+    row = col = lvl = 0;
+}
 
 Coordinate::Coordinate(int row_, int col_, int lvl_) {
     row = row_;

@@ -1,5 +1,6 @@
+#include "../include/coordinate.h"
 #include "../include/piece.h"
-
+#include "../include/board.h"
 
 Piece::Piece(int row_, int col_, int lvl_, int color_) {
     location = Coordinate{row_, col_, lvl_};
@@ -20,7 +21,7 @@ void Piece::setLocation(int row_, int col_, int lvl_) {
 
 vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
     vector<Move> moves;
-    
+
     // find all legal moves in a line
 
     for (auto dir : directions) {
@@ -35,7 +36,7 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
                 // only add the move if the piece at cur is of OPPOSITE color
                 if (board.getPieceAt(cur).color != color)
                     moves.push_back(curDelta);
-                
+
                 // exit the while loop as there is a piece blocking the piece's way
                 break;
             }
@@ -46,7 +47,7 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
             curDelta = curDelta + dir;
         }
     }
-    
+
     return moves;
 }
 

@@ -4,8 +4,9 @@
 #include "piece.h"
 #include "coordinate.h"
 #include "move.h"
-#include <bits/stdc++.h>
 using namespace std;
+
+class Piece;
 
 class Board {
     private:

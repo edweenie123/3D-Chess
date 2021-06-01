@@ -2,6 +2,7 @@
 #define knight_h
 
 #include<vector>
+#include<algorithm>
 #include "piece.h"
 #include "coordinate.h"
 #include "move.h"

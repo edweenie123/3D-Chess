@@ -3,11 +3,12 @@
 
 #include "coordinate.h"
 #include "move.h"
-#include "board.h"
 #include<string>
 #include<vector>
 
 using namespace std;
+
+class Board;
 
 class Piece {
     private:
@@ -24,7 +25,7 @@ class Piece {
         void setLocation(int row, int col, int lvl);
         string toString();
 
-        vector<Move> getAllMovesInLine(vector<Move> directions, Board board);
+        vector<Move> getAllMovesInLine(vector<Move>, Board);
 
 };
 
