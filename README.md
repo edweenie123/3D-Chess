@@ -6,11 +6,11 @@ This project is coded using C++ using object-oriented programming.
 
 ## Compile:
 ```
-g++ -c coordinate.cpp piece.cpp rook.cpp main.cpp 
+g++ -c coordinate.cpp move.cpp piece.cpp board.cpp king.cpp knight.cpp pawn.cpp queen.cpp rook.cpp unicorn.cpp bishop.cpp  turn.cpp solver.cpp main.cpp
 ```
 ## Link:
 ```
-g++ -o main coordinate.o piece.o rook.o main.o
+g++ -o main coordinate.o move.o piece.o board.o king.o knight.o pawn.o queen.o rook.o unicorn.o bishop.o turn.o solver.o main.o 
 ```
 
 ## Run:
