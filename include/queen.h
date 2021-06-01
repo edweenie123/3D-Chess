@@ -10,7 +10,7 @@
 class Queen: public Piece {
     public:
         using Piece::Piece; // use constructor of parent class
-        static vector<Move> directions;
+        // static vector<Move> directions;
         vector<Move> getMoves(Board board);
 };
 
