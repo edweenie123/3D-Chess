@@ -4,6 +4,9 @@ vector<Move> Pawn::getMoves(Board board) {
 
     vector<Move> moves;
 
+    vector<Move> captureDirections; // capture a piece while moving
+    vector<Move> passiveDirections; // move into a vacant cell
+
     // move (up/down) or straight 
     passiveDirections = {
         Move((color==0 ? 1 : -1), 0, 0), 
