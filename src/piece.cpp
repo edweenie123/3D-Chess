@@ -2,6 +2,11 @@
 #include "../include/piece.h"
 #include "../include/board.h"
 
+Piece::Piece() {
+    location = Coordinate{0, 0, 0};
+    color = 0;
+}
+
 Piece::Piece(int row_, int col_, int lvl_, int color_) {
     location = Coordinate{row_, col_, lvl_};
     color = color_;
