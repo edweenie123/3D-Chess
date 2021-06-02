@@ -16,6 +16,7 @@ class Board {
     public:
         Board();
         Piece getPieceAt(Coordinate square);
+        Piece getPieceAt(int row, int col, int lvl);
         void updateLocation(Coordinate square, Move movement);
         string getGameState();
 

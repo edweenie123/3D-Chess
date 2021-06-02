@@ -5,7 +5,7 @@
 #include "move.h"
 using namespace std;
 
-struct Coordinate {
+class Coordinate {
     private:
     public:
         int row, col, lvl;

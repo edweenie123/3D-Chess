@@ -67,6 +67,10 @@ Piece Board::getPieceAt(Coordinate square) {
     return board[square.row][square.col][square.lvl];
 }
 
+Piece Board::getPieceAt(int row, int col, int lvl) {
+    return board[row][col][lvl];
+}
+
 bool Board::isOnBoard(Coordinate c) {
     if (c.row >= 0 && c.row < 5 && c.col >= 0 && c.col < 5 && c.lvl >= 0 && c.lvl < 5) {
         return true; // this coordinate lies within te 5x5x5 board

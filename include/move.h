@@ -4,7 +4,7 @@
 #include<string>
 using namespace std;
 
-struct Move {
+class Move {
     private:
     public:
         int row, col, lvl;

@@ -5,7 +5,7 @@
 #include "move.h"
 using namespace std;
 
-struct Turn {
+class Turn {
     private:
     public:
         double score;
