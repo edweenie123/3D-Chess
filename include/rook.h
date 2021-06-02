@@ -9,6 +9,7 @@
 
 class Rook: public Piece {
     public:
+        static const char id = 'r';
         using Piece::Piece; // use constructor of parent class
         static vector<Move> directions;
         vector<Move> getMoves(Board board);
