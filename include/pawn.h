@@ -6,6 +6,7 @@
 #include "coordinate.h"
 #include "move.h"
 #include "board.h"
+#include "globals.h"
 
 class Pawn: public Piece {
     public:

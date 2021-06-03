@@ -30,5 +30,9 @@ int main() {
     assert(rook->isAlive);
     assert(rook->getId() == 'r');
 
+    // Piece* pawn = testBoard.getPieceAt(1, 1, 0);
+    // for (auto m : pawn->getMoves(testBoard))
+    //     cout<<m.toString()<<endl;
+
     cout << "Tests passed succesfully" << endl;
 }

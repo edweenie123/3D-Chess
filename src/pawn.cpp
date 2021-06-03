@@ -13,16 +13,16 @@ vector<Move> Pawn::getMoves(Board board) {
 
     // move (up/down) or straight 
     passiveDirections = {
-        Move((color==0 ? 1 : -1), 0, 0), 
-        Move(0, 0, (color==0 ? 1 : -1))
+        Move((color==WHITE ? 1 : -1), 0, 0), 
+        Move(0, 0, (color==WHITE ? 1 : -1))
     };
 
     // capture diagonally or diagonally (up/down)
     captureDirections = {
-        Move((color==0 ? 1 : -1), 1, 0),
-        Move((color==0 ? 1 : -1), -1, 0),
-        Move((color==0 ? 1 : -1), 1, (color==0 ? 1 : -1)),
-        Move((color==0 ? 1 : -1), -1, (color==0 ? 1 : -1))
+        Move((color==WHITE ? 1 : -1), 1, 0),
+        Move((color==WHITE ? 1 : -1), -1, 0),
+        Move((color==WHITE ? 1 : -1), 1, (color==WHITE ? 1 : -1)),
+        Move((color==WHITE ? 1 : -1), -1, (color==WHITE ? 1 : -1))
     };
 
     for (auto m : passiveDirections) {
