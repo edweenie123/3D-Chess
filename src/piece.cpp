@@ -16,6 +16,10 @@ int Piece::getColor() {
     return color;
 }
 
+char Piece::getId() {
+    return ' ';
+}
+
 Coordinate Piece::getLocation() {
     return location;
 }

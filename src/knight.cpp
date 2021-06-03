@@ -1,5 +1,9 @@
 #include "../include/knight.h"
 
+char Knight::getId() {
+    return 'n';
+}
+
 vector<Move> Knight::getMoves(Board board) {
 
     vector<Move> moves;

@@ -9,7 +9,7 @@
 
 class Bishop: public Piece {
     public:
-        static const char id = 'b';
+        char getId(); 
         using Piece::Piece; // use constructor of parent class
         static vector<Move> directions;
         vector<Move> getMoves(Board board);

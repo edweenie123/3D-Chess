@@ -1,6 +1,8 @@
 #include "../include/queen.h"
 
-
+char Queen::getId() {
+    return 'q';
+}
 
 vector<Move> Queen::getMoves(Board board) {
 

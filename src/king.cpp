@@ -1,5 +1,9 @@
 #include "../include/king.h"
 
+char King::getId() {
+    return 'k';
+}
+
 vector<Move> King::getMoves(Board board) {
 
     vector<Move> moves;

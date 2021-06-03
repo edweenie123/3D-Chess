@@ -12,6 +12,7 @@ int main() {
     Coordinate coordTest(1, 2, 3);
     Move movementTest(0, -1, 5), delta(5, 0, -2);
     Rook testRook = Rook(0, 0, 0, 0);
+    Board testBoard;
 
 
     // toString asserts
