@@ -24,7 +24,6 @@ class Piece {
         Coordinate getLocation();
         void setLocation(int row, int col, int lvl);
         string toString();
-        char getID();
         vector<Move> getAllMovesInLine(vector<Move>, Board);
 
         virtual vector<Move> getMoves(Board board);
