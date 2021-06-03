@@ -24,6 +24,13 @@ Coordinate Piece::getLocation() {
     return location;
 }
 
+// bool Piece::isEnemySquare(Piece other) {
+//     // make sure pieces have valid colors
+//     assert((color == BLACK || color == WHITE) && (other.color == BLACK || other.color == WHITE))
+
+//     return color != other.color;
+// }
+
 void Piece::setLocation(int row_, int col_, int lvl_) {
     location = Coordinate{row_, col_, lvl_};
 }
@@ -37,14 +44,16 @@ vector<Move> Piece::getMoves(Board board) {
 vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
     vector<Move> moves;
 
-    // find all legal moves in a line
+    // find all legal moves in "line" with directions
+    // used for queen, rook, bishop and unicorn getMoves() method
 
     for (auto dir : directions) {
         Coordinate cur = Coordinate(location.row, location.col, location.lvl);
         Move curDelta = Move(dir.row, dir.col, dir.lvl);
 
         while (true) {
-            cur = Coordinate(cur, curDelta);
+            // move the coordinate by the direction vector
+            cur = Coordinate(cur, dir);
 
             if (!board.isOnBoard(cur)) break;
             if (!board.isVacant(cur)) {
@@ -59,6 +68,7 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
             // coordinate at cur is empty therefore, the piece can move there
             moves.push_back(curDelta);
 
+            // increase the delta by the direction vector
             curDelta = curDelta + dir;
         }
     }

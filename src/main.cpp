@@ -15,6 +15,11 @@ int main() {
     Board testBoard;
     //Solver opponent(2);
 
+    // testBoard.updateLocation({0,2,0}, Move{2,-1,0});
+    // Piece* testPiece = testBoard.getPieceAt(2, 1, 0);
+    // for (auto m : testPiece->getMoves(testBoard))
+    //     cout<<m.toString()<<endl;
+
 
     // toString asserts
     assert(coordTest.toString() == "(1, 2, 3)");
@@ -66,6 +71,9 @@ int main() {
     assert(newPiece2->color == -1);
 
     assert(oldWhitePawn->isAlive == false);
+
+    
+
 
     cout << "Tests passed succesfully" << endl;
 }

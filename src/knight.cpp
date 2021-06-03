@@ -1,4 +1,5 @@
 #include "../include/knight.h"
+#include<iostream>
 
 char Knight::getId() {
     return 'n';
@@ -10,9 +11,9 @@ vector<Move> Knight::getMoves(Board board) {
 
     // initialize the ortho knight moves
     vector<vector<int>> orthoMoves = {
-        {1, 2, 0},
-        {-1, 2, 0},
-        {-2, 1, 0},
+        {0, 1, 2},
+        {-1, 0, 2},
+        {-2, 0, 1},
         {-2, -1, 0},
     };
 
@@ -28,7 +29,7 @@ vector<Move> Knight::getMoves(Board board) {
             // add the move only if the cell is vacant or is occupied by an enemy piece
             if (board.isVacant(posCord))
                 moves.push_back(posMove);
-            else if (board.getPieceAt(posCord)->color != color)
+            else if (board.isEnemySquare(posCord, color))
                 moves.push_back(posMove);
 
         } while (next_permutation(orthoMoves[i].begin(), orthoMoves[i].end()));

@@ -3,6 +3,7 @@
 
 #include "coordinate.h"
 #include "move.h"
+#include "globals.h"
 #include<string>
 #include<vector>
 
@@ -25,6 +26,8 @@ class Piece {
         void setLocation(int row, int col, int lvl);
         string toString();
         vector<Move> getAllMovesInLine(vector<Move>, Board);
+        // bool isEnemy(Piece other);
+
 
         virtual vector<Move> getMoves(Board board);
         virtual char getId();

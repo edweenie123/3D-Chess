@@ -78,11 +78,24 @@ bool Board::isOnBoard(Coordinate c) {
 }
 
 bool Board::isVacant(Coordinate c) {
-    Piece curPiece = *board[c.row][c.col][c.lvl];
-    if (curPiece.isAlive) {
+    if (!isOnBoard(c)) return false;
+
+    
+
+    Piece* curPiece = board[c.row][c.col][c.lvl];
+    if (curPiece->isAlive) {
         return false; // this square is occupied
     }
     return true;
+}
+
+bool Board::isEnemySquare(Coordinate c, int pieceColor) {
+    if (isVacant(c)) return false;
+    if (!isOnBoard(c)) return false;
+
+    Piece* pieceAtC = getPieceAt(c);
+    // return true if the piece at C is an enemy of pieceColor
+    return pieceAtC->color != pieceColor;
 }
 
 void Board::updateLocation(Coordinate square, Move movement) {
