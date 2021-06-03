@@ -13,6 +13,7 @@ int main() {
     Move movementTest(0, -1, 5), delta(5, 0, -2);
     Rook testRook = Rook(0, 0, 0, 0);
     Board testBoard;
+    //Solver opponent(2);
 
 
     // toString asserts
@@ -25,8 +26,9 @@ int main() {
     assert((movementTest + delta).toString() == "Move by (10, -1, 1) cells");
     assert((coordTest + delta).toString() == "(6, 1, 6)");
 
-
-
+    Piece* rook = testBoard.getPieceAt(0, 0, 0);
+    assert(rook->isAlive);
+    assert(rook->getId() == 'r');
 
     cout << "Tests passed succesfully" << endl;
 }

@@ -31,10 +31,12 @@ double Solver::evaluate(Board &board){
     for(int row = 0; row < 5; ++row){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
+                cout << (*board.getPieceAt(row, col, lvl)).isAlive << endl;
                 if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
-                //cout << to_string(board.getPieceAt(row, col, lvl).id) + "?" << endl;
-                //cout << board.getPieceAt(row, col, lvl).color << endl;
-                score += pieceWeight[board.getPieceAt(row, col, lvl)->id] * max(0, board.getPieceAt(row, col, lvl)->color);
+                cout << "??" << endl;
+                //cout << to_string(board.getPieceAt(row, col, lvl)->getId()) + "?" << endl;
+                //cout << board.getPieceAt(row, col, lvl)->color << endl;
+                //score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * max(0, board.getPieceAt(row, col, lvl)->color);
             }
         }
     }
@@ -42,7 +44,11 @@ double Solver::evaluate(Board &board){
 }
 
 vector<Turn> Solver::genMoves(Board board, int colour){
-    // Todo: implement minimax algo here
+    /*int verdict = board.getGameState();
+    vector<Turn> moves;
+    if(verdict == 1){ // Checkmate
+
+    }*/
     return {Turn(0, Coordinate(0, 0, 0), Move(0, 0, 0))};
 }
 
@@ -52,6 +58,19 @@ Turn Solver::nextMove(Board board, int colour){
 }
 
 Turn Solver::solve(Board board, int depth, int colour){
+    /*int verdict = board.getGameState();
+    // First, look for checks
+    if(verdict == board.BLACK_CHECK){
+        d
+        return -INF;
+    } else if(verdict == board.BLACK_CHECK){
+        return
+    }
+
+    if(depth == 0){
+        return evaluate(board);
+    }*/
+
     // Todo: implement minimax algo here
     return Turn(0, Coordinate(0, 0, 0), Move(0, 0, 0));
 }
