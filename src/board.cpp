@@ -86,19 +86,20 @@ bool Board::isVacant(Coordinate c) {
 }
 
 void Board::updateLocation(Coordinate square, Move movement) {
-    Piece curPiece = *getPieceAt(square);
+    Piece* curPiece = getPieceAt(square);
 
     // FIRST check if the move is legal
-    int newRow = curPiece.location.row + movement.row;
-    int newCol = curPiece.location.col + movement.col;
-    int newLvl = curPiece.location.lvl + movement.lvl;
-    Piece nextSquare = *board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
+    int newRow = curPiece->location.row + movement.row;
+    int newCol = curPiece->location.col + movement.col;
+    int newLvl = curPiece->location.lvl + movement.lvl;
+    Coordinate newCord = {newRow, newCol, newLvl};
+    Piece* nextSquare = board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
 
     bool legal = true;
 
     if (isOnBoard({newRow, newCol, newLvl}) == false) {
         legal = false;
-    } else if (isVacant({newRow, newCol, newLvl}) == false && nextSquare.color == curPiece.color) {
+    } else if (isVacant({newRow, newCol, newLvl}) == false && nextSquare->color == curPiece->color) {
         legal = false;
     }
     // haven't added king checks, and check checks (king can't place itself in a check)
@@ -107,22 +108,23 @@ void Board::updateLocation(Coordinate square, Move movement) {
     // The move should be legal, so we update it on the board,and for the piece
 
     // update the piece
-    curPiece.location.row = newRow;
-    curPiece.location.col = newCol;
-    curPiece.location.lvl = newLvl;
+    curPiece->location.row = newRow;
+    curPiece->location.col = newCol;
+    curPiece->location.lvl = newLvl;
 
     // We need to update the board
     /* To Denote an empty cell, we simply use a dead piece */
-    board[curPiece.location.row][curPiece.location.col][curPiece.location.lvl] = new Piece();
-    board[curPiece.location.row][curPiece.location.col][curPiece.location.lvl]->isAlive = false;
+    board[square.row][square.col][square.lvl] = new Piece();
+    board[square.row][square.col][square.lvl]->isAlive = false;
 
     // update board with the piece's new location
 
-    // if there is a black piece currently occupying the new location, we destroy it
+    // if there is a piece of opposite colour currently occupying the new location, we destroy it
     if (!isVacant({newRow, newCol, newLvl})) {
-        nextSquare.isAlive = false;
+        nextSquare->isAlive = false;
     }
-    nextSquare = curPiece;
+    board[newRow][newCol][newLvl] = curPiece;
+    //nextSquare = curPiece;
 }
 
 string Board::getGameState() {

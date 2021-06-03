@@ -30,5 +30,42 @@ int main() {
     assert(rook->isAlive);
     assert(rook->getId() == 'r');
 
+    /* Testing updateLocation() stuff */
+
+    // Try moving a white pawn
+    Piece* pawn = testBoard.getPieceAt(1, 0, 0);
+    cout << pawn->getId() << '\n';
+    Move pawnMove(1, 0, 0);
+    testBoard.updateLocation({1, 0, 0}, pawnMove);
+
+    Piece* oldPiece = testBoard.getPieceAt(1, 0, 0);
+    assert(!oldPiece->isAlive);
+    cout << oldPiece->getId() << '\n';
+
+    Piece* newPiece = testBoard.getPieceAt(2, 0, 0);
+    assert(newPiece->isAlive);
+    cout << newPiece->getId() << '\n';
+    //assert(newPiece->getId() == 'p');
+
+    // Try moving black unicorn to (1, 1, 0)
+    Piece* oldWhitePawn = testBoard.getPieceAt(1, 1, 0);
+    assert(oldWhitePawn->isAlive);
+    assert(oldWhitePawn->getId() == 'p');
+    assert(oldWhitePawn->color == 1);
+
+    Piece* unicorn = testBoard.getPieceAt(4, 4, 3);
+    assert(unicorn->isAlive);
+    assert(unicorn->getId() == 'u');
+    assert(unicorn->color == -1);
+    Move unicornMove(-3, -3, -3);
+    testBoard.updateLocation({4, 4, 3}, unicornMove);
+
+    Piece* newPiece2 = testBoard.getPieceAt(1, 1, 0);
+    assert(newPiece2->isAlive);
+    assert(newPiece2->getId() == 'u');
+    assert(newPiece2->color == -1);
+
+    assert(oldWhitePawn->isAlive == false);
+
     cout << "Tests passed succesfully" << endl;
 }
