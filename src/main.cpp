@@ -4,6 +4,7 @@
 #include "../include/move.h"
 #include "../include/piece.h"
 #include "../include/rook.h"
+#include "../include/solver.h"
 
 using namespace std;
 
