@@ -6,7 +6,7 @@ This project is coded using C++ using object-oriented programming.
 
 ## Compile:
 ```
-g++ -c globals.cpp coordinate.cpp move.cpp piece.cpp board.cpp king.cpp knight.cpp pawn.cpp queen.cpp rook.cpp unicorn.cpp bishop.cpp  turn.cpp solver.cpp main.cpp
+g++ -c globals.cpp coordinate.cpp move.cpp piece.cpp board.cpp king.cpp knight.cpp pawn.cpp queen.cpp rook.cpp unicorn.cpp bishop.cpp turn.cpp solver.cpp main.cpp
 ```
 ## Link:
 ```
