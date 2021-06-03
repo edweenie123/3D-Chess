@@ -10,9 +10,7 @@ class Piece;
 
 class Board {
     private:
-        Piece board[5][5][5];
-        // map<string, bool> whitePieces; // dead or alive white pieces
-        // map<string, bool> blackPieces; // the like for black pieces
+        Piece* board[5][5][5];
     public:
         Board();
         Piece getPieceAt(Coordinate square);
@@ -22,8 +20,6 @@ class Board {
 
         bool isVacant(Coordinate cord); // returns true if cord is vacant
         bool isOnBoard(Coordinate cord); // return true if cord is on board
-
-
 };
 
 #endif
