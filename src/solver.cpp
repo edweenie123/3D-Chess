@@ -31,10 +31,10 @@ double Solver::evaluate(Board &board){
     for(int row = 0; row < 5; ++row){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
-                if(!board.getPieceAt(row, col, lvl).isAlive) continue;
+                if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
                 //cout << to_string(board.getPieceAt(row, col, lvl).id) + "?" << endl;
                 //cout << board.getPieceAt(row, col, lvl).color << endl;
-                score += pieceWeight[board.getPieceAt(row, col, lvl).id] * max(0, board.getPieceAt(row, col, lvl).color);
+                score += pieceWeight[board.getPieceAt(row, col, lvl)->id] * max(0, board.getPieceAt(row, col, lvl)->color);
             }
         }
     }

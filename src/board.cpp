@@ -128,12 +128,12 @@ Board::Board() {
     // }
 }
 
-Piece Board::getPieceAt(Coordinate square) {
-    return *board[square.row][square.col][square.lvl];
+Piece* Board::getPieceAt(Coordinate square) {
+    return board[square.row][square.col][square.lvl];
 }
 
-Piece Board::getPieceAt(int row, int col, int lvl) {
-    return *board[row][col][lvl];
+Piece* Board::getPieceAt(int row, int col, int lvl) {
+    return board[row][col][lvl];
 }
 
 bool Board::isOnBoard(Coordinate c) {
@@ -152,7 +152,7 @@ bool Board::isVacant(Coordinate c) {
 }
 
 void Board::updateLocation(Coordinate square, Move movement) {
-    Piece curPiece = getPieceAt(square);
+    Piece curPiece = *getPieceAt(square);
 
     // FIRST check if the move is legal
     int newRow = curPiece.location.row + movement.row;

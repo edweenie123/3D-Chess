@@ -39,7 +39,7 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
             if (!board.isOnBoard(cur)) break;
             if (!board.isVacant(cur)) {
                 // only add the move if the piece at cur is of OPPOSITE color
-                if (board.getPieceAt(cur).color != color)
+                if (board.getPieceAt(cur)->color != color)
                     moves.push_back(curDelta);
 
                 // exit the while loop as there is a piece blocking the piece's way

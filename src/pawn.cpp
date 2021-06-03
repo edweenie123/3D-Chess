@@ -34,7 +34,7 @@ vector<Move> Pawn::getMoves(Board board) {
         Coordinate potCord = Coordinate(location, m);
         
         // this move can only be made if cell contains an ENEMY piece
-        if (board.getPieceAt(potCord).color != color) moves.push_back(m);
+        if (board.getPieceAt(potCord)->color != color) moves.push_back(m);
     }
 
     return moves;

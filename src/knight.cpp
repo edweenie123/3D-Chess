@@ -24,7 +24,7 @@ vector<Move> Knight::getMoves(Board board) {
             // add the move only if the cell is vacant or is occupied by an enemy piece
             if (board.isVacant(posCord))
                 moves.push_back(posMove);
-            else if (board.getPieceAt(posCord).color != color)
+            else if (board.getPieceAt(posCord)->color != color)
                 moves.push_back(posMove);
 
         } while (next_permutation(orthoMoves[i].begin(), orthoMoves[i].end()));

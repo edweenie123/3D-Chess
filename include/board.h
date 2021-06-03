@@ -13,8 +13,8 @@ class Board {
         Piece* board[5][5][5];
     public:
         Board();
-        Piece getPieceAt(Coordinate square);
-        Piece getPieceAt(int row, int col, int lvl);
+        Piece* getPieceAt(Coordinate square);
+        Piece* getPieceAt(int row, int col, int lvl);
         void updateLocation(Coordinate square, Move movement);
         string getGameState();
 
