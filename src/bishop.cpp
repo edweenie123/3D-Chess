@@ -15,6 +15,10 @@ vector<Move> Bishop::directions = {
     Move(0, -1, -1)
 };
 
+char Bishop::getId() {
+    return 'b';
+}
+
 vector<Move> Bishop::getMoves(Board board) {
     // get all moves in line based of piece directions
     return getAllMovesInLine(directions, board);

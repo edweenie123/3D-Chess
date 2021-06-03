@@ -9,7 +9,7 @@
 
 class Pawn: public Piece {
     public:
-        static const char id = 'p';
+        char getId(); 
         using Piece::Piece; // use constructor of parent class
         vector<Move> getMoves(Board board);
         void Promote();

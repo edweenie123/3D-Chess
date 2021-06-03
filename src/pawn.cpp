@@ -1,5 +1,9 @@
 #include "../include/pawn.h"
 
+char Pawn::getId() {
+    return 'p';
+}
+
 vector<Move> Pawn::getMoves(Board board) {
 
     vector<Move> moves;

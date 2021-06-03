@@ -1,5 +1,9 @@
 #include "../include/unicorn.h"
 
+char Unicorn::getId() {
+    return 'u';
+}
+
 vector<Move> Unicorn::directions = {
     Move(1, 1, 1),
     Move(-1, 1, 1),

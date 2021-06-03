@@ -1,5 +1,9 @@
 #include "../include/rook.h"
 
+char Rook::getId() {
+    return 'r';
+}
+
 vector<Move> Rook::directions = {
     Move(1, 0, 0),
     Move(-1, 0, 0),
