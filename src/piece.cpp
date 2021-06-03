@@ -28,6 +28,12 @@ void Piece::setLocation(int row_, int col_, int lvl_) {
     location = Coordinate{row_, col_, lvl_};
 }
 
+vector<Move> Piece::getMoves(Board board) {
+    // return an empty vector for v table to be happy
+    vector<Move> tmp;
+    return tmp;
+}
+
 vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
     vector<Move> moves;
 

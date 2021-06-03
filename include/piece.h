@@ -27,6 +27,7 @@ class Piece {
         char getID();
         vector<Move> getAllMovesInLine(vector<Move>, Board);
 
+        virtual vector<Move> getMoves(Board board);
         virtual char getId();
 };
 
