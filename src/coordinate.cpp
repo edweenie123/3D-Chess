@@ -29,6 +29,13 @@ Coordinate& Coordinate::operator+=(const Move &delta){
     return *this;
 }
 
+Coordinate& Coordinate::operator= (const Coordinate &coord){
+    row = coord.row;
+    col = coord.col;
+    lvl = coord.lvl;
+    return *this;
+}
+
 string Coordinate::toString() {
     return "(" + to_string(row) + ", " + to_string(col) + ", " + to_string(lvl) + ")";
 }

@@ -27,23 +27,20 @@ double Solver::evaluate(Board &board){
     }
     assert(difficulty == 2);
     // Hard difficulty: Sum of difference active piece scores
+    // As an extension, a different evaluation function should be derived which takes in the mobility of every piece
     double score = 0;
     for(int row = 0; row < 5; ++row){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
-                cout << (*board.getPieceAt(row, col, lvl)).isAlive << endl;
                 if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
-                cout << "??" << endl;
-                //cout << to_string(board.getPieceAt(row, col, lvl)->getId()) + "?" << endl;
-                //cout << board.getPieceAt(row, col, lvl)->color << endl;
-                //score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * max(0, board.getPieceAt(row, col, lvl)->color);
+                score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * board.getPieceAt(row, col, lvl)->color;
             }
         }
     }
     return score;
 }
 
-vector<Turn> Solver::genMoves(Board board, int colour){
+vector<Turn> Solver::genMoves(Board &board, int color){
     /*int verdict = board.getGameState();
     vector<Turn> moves;
     if(verdict == 1){ // Checkmate
@@ -57,21 +54,44 @@ Turn Solver::nextMove(Board board, int colour){
     return Turn(0, Coordinate(0, 0, 0), Move(0, 0, 0));
 }
 
-Turn Solver::solve(Board board, int depth, int colour){
+Turn Solver::solve(Board &board, int depth, int color){
+
+    // Will add checkmate and check conditions once those are implemented
+    // As a result, this is very untested
+
     /*int verdict = board.getGameState();
     // First, look for checks
     if(verdict == board.BLACK_CHECK){
-        d
         return -INF;
     } else if(verdict == board.BLACK_CHECK){
         return
-    }
-
-    if(depth == 0){
-        return evaluate(board);
     }*/
 
-    // Todo: implement minimax algo here
-    return Turn(0, Coordinate(0, 0, 0), Move(0, 0, 0));
+    if(depth == 0){
+        return Turn(evaluate(board), Coordinate(-1, -1, -1), Move(0, 0, 0));
+    }
+
+    Turn best(color == WHITE ? -INF : INF, Coordinate(-1, -1, -1), Move(0, 0, 0));
+    vector<Turn> legalMoves = genMoves(board, color);
+    for(Turn curMove : legalMoves){
+        Coordinate oldLoc = curMove.currentLocation;
+        Coordinate newLoc = curMove.currentLocation + curMove.change;
+        Piece* curPiece = board.getPieceAt(oldLoc);
+        Piece* oldPiece = board.getPieceAt(newLoc);
+        bool isOldAlive = oldPiece->isAlive;
+        board.updateLocation(oldLoc, curMove.change);
+        Turn candidate = Turn(solve(board, depth - 1, -color).score, oldLoc, curMove.change);
+        // Revert move
+        if(isOldAlive){
+            oldPiece->isAlive = true;
+            board.setPieceAt(oldPiece);
+        }
+        // White =  1 --> Maximizing
+        // Black = -1 --> Minimizing
+        if(candidate.score * color > best.score){
+            best = candidate;
+        }
+    }
+    return best;
 }
 

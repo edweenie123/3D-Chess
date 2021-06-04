@@ -13,6 +13,7 @@ class Move {
         string toString();
         Move operator+(const Move&);
         Move& operator+=(const Move&);
+        Move& operator=(const Move&);
 };
 
 #endif

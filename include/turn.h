@@ -12,6 +12,7 @@ class Turn {
         Coordinate currentLocation;
         Move change;
         Turn(double, Coordinate, Move);
+        Turn& operator= (const Turn&);
 };
 
 #endif

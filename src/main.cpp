@@ -11,9 +11,13 @@ using namespace std;
 int main() {
     Coordinate coordTest(1, 2, 3);
     Move movementTest(0, -1, 5), delta(5, 0, -2);
+    Move newMove = movementTest;
+    newMove.row = 1;
     Rook testRook = Rook(0, 0, 0, 0);
     Board testBoard;
-    //Solver opponent(2);
+    Solver opponent(2);
+
+    assert(abs(opponent.evaluate(testBoard)) < 1e-5);
 
     // testBoard.updateLocation({0,2,0}, Move{2,-1,0});
     // Piece* testPiece = testBoard.getPieceAt(2, 1, 0);
@@ -24,6 +28,7 @@ int main() {
     // toString asserts
     assert(coordTest.toString() == "(1, 2, 3)");
     assert(movementTest.toString() == "Move by (0, -1, 5) cells");
+    assert(newMove.toString() == "Move by (1, -1, 5) cells");
 
     // Addition overload asserts
     coordTest += movementTest;
@@ -71,8 +76,7 @@ int main() {
     assert(newPiece2->color == -1);
 
     assert(oldWhitePawn->isAlive == false);
-
-    
+    assert(abs(opponent.evaluate(testBoard) + 1) < 1e-5);
 
 
     cout << "Tests passed succesfully" << endl;

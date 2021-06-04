@@ -16,6 +16,7 @@ class Board {
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
         void updateLocation(Coordinate square, Move movement);
+        void setPieceAt(Piece *piece);
         string getGameState();
 
         bool isVacant(Coordinate cord); // returns true if cord is vacant

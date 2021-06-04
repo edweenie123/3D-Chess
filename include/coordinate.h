@@ -15,6 +15,7 @@ class Coordinate {
         string toString();
         Coordinate operator+(const Move&);
         Coordinate& operator+=(const Move&);
+        Coordinate& operator=(const Coordinate&);
         // might add toChessNotation method
 };
 

@@ -14,7 +14,7 @@ using namespace std;
 class Solver {
     private:
         int difficulty;
-        Turn solve(Board board, int depth, int colour);
+        Turn solve(Board &board, int depth, int color);
         static unordered_map<char, double> pieceWeight;
         // Random number generator
         static random_device m_rd;
@@ -25,7 +25,7 @@ class Solver {
         Solver(int);
         double evaluate(Board &board);
         Turn nextMove(Board board, int colour);
-        vector<Turn> genMoves(Board board, int colour);
+        vector<Turn> genMoves(Board &board, int color);
         static int randRange(int low, int high);
 };
 
