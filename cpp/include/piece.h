@@ -17,7 +17,7 @@ class Piece {
         bool isAlive = true;
         Coordinate location;
         int color;
-        char id;
+        // char id;
         Piece();
         Piece(int row, int col, int lvl, int color);
 
