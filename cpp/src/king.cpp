@@ -15,8 +15,12 @@ vector<Move> King::getMoves(Board board) {
                 if (a == 0 && b == 0 && c == 0) continue;
 
                 Move posMove = Move(a, b, c);
-                if (board.isVacant(Coordinate(location, posMove)))
+                Coordinate cur = Coordinate(location, posMove);
+                if (board.isVacant(cur))
                     moves.push_back(Move(a, b, c));
+                else if (board.isOnBoard(cur) && board.getPieceAt(cur)->color != color) {
+                    moves.push_back(Move(a, b, c));
+                }
             }
         }
     }

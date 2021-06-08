@@ -5,8 +5,13 @@
 #include "coordinate.h"
 #include "move.h"
 #include <vector>
+#include <iostream>
+#include <set>
 #include "globals.h"
 using namespace std;
+
+typedef pair<int, int> ii;
+typedef pair<ii, int> iii;
 
 class Piece;
 
@@ -19,11 +24,19 @@ class Board {
             vector<vector<vector<Piece*>>>(5, vector<vector<Piece*>>(5, vector<Piece*>(5, NULL)));
         // Piece* board[5][5][5];
 
+        set<iii> threatenedByWhite;
+        set<iii> threatenedByBlack;
+
         Board();
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
+        void updateThreatenedSquares();
         void updateLocation(Coordinate square, Move movement);
         void setPieceAt(Piece *piece);
+        void printBoard();
+
+        bool isChecked(int pieceColor); // is king of color "pieceColor" checked?
+        bool isCheckmated(int pieceColor); // is king of color "pieceColor" checkmated? (only run this is isChecked() == true)
         string getGameState();
 
         bool isVacant(Coordinate cord); // returns true if cord is vacant
