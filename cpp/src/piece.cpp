@@ -54,7 +54,6 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
         while (true) {
             // move the coordinate by the direction vector
             cur = Coordinate(cur, dir);
-
             if (!board.isOnBoard(cur)) break;
             if (!board.isVacant(cur)) {
                 // only add the move if the piece at cur is of OPPOSITE color
@@ -64,7 +63,6 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
                 // exit the while loop as there is a piece blocking the piece's way
                 break;
             }
-
             // coordinate at cur is empty therefore, the piece can move there
             moves.push_back(curDelta);
 
