@@ -5,6 +5,11 @@
 using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS() {
+    class_<Move>("Move")
+        .property("row", &Move::row)
+        .property("col", &Move::col)
+        .property("lvl", &Move::lvl)
+        ; 
     class_<Piece>("Piece")
         .constructor<int, int, int, int>()
         .function("getMoves", &Piece::getMoves)

@@ -1,15 +1,12 @@
 .square {
-    height: 50px;
-    width: 50px;
     display: inline-block;
     margin: 0;
     padding: 0;
     vertical-align: top;
+    /* width, height: 30px; */
 }
 
 .boardLvl {
-    width: 250px;
-    height: 250px;
     display: inline-block;
     border: solid 5px black;
     margin: 5px;
@@ -18,21 +15,31 @@
 }
 
 .chessImg {
-    display: block;
-    /* margin: auto; */
-    /* width: 50%; */
+    /* center image horizontally and vertically */
+    position: relative;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 95%;
+    height: 95%;
 }
 
-
-/* .image {
-font-size: 10px;
-text-align: center;
-} */
-
 #darkCol {
+    /* animation: spinny 1s; */
     background-color: brown;
 }
 
 #lightCol {
+    /* animation: spinny 2s; */
     background-color: beige;
+}
+
+@keyframes spinny {
+    0% {
+        transform: rotateY(180deg)
+    }
+    100% {
+        transform: rotate(0deg)
+    }
 }
