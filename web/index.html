@@ -5,35 +5,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>Document</title>
 </head>
 
 <body>
-    MoShI mOsHi
-    <script src="gen/main.js"></script>
+    <div id="board"></div>
+    <script type="text/javascript" src="gen/main.js"></script>
+    <script>
+    </script>
+    <script type="text/javascript" src="js/board.js"></script>
     <script>
         Module.onRuntimeInitialized = _ => {
-            // try printing the board
-
-            setTimeout(function() {
-                var b = new Module.Board();
-                var strLine = "";
-
-                for (var i = 0; i < 5; i++) {
-                    console.log("Board ", (i + 1))
-                    for (var j = 0; j < 5; j++) {
-                        for (var k = 0; k < 5; k++) {
-                            var pieceId = b.board.get(j).get(k).get(i).getId();
-                            var pieceLet = String.fromCharCode(pieceId);
-                            if (pieceLet == ' ') pieceLet = '.'
-                            strLine += pieceLet + " ";
-                        }
-                        console.log(strLine + "          " + j);
-                        strLine = "";
-                    }
-                }
-            }, 5)
-
+            var board = new Board();
+            board.renderBoard();
+            board.renderPieces();
         };
     </script>
 </body>

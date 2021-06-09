@@ -9,6 +9,7 @@ EMSCRIPTEN_BINDINGS() {
         .constructor<int, int, int, int>()
         .function("getMoves", &Piece::getMoves)
         .function("getId", &Piece::getId)
+        .function("getColor", &Piece::getColor)
         ;
     class_<Rook, base<Piece>>("Rook")
         .constructor<int, int, int, int>()

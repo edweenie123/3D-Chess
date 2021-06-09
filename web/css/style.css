@@ -1,0 +1,38 @@
+.square {
+    height: 50px;
+    width: 50px;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+.boardLvl {
+    width: 250px;
+    height: 250px;
+    display: inline-block;
+    border: solid 5px black;
+    margin: 5px;
+    /* need this since inline-block of square creates space between divs */
+    font-size: 0px;
+}
+
+.chessImg {
+    display: block;
+    /* margin: auto; */
+    /* width: 50%; */
+}
+
+
+/* .image {
+font-size: 10px;
+text-align: center;
+} */
+
+#darkCol {
+    background-color: brown;
+}
+
+#lightCol {
+    background-color: beige;
+}
