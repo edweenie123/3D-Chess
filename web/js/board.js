@@ -8,8 +8,32 @@ class Board {
   constructor() {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
-    this.squareSize = 40;
+    this.squareSize = 60;
     this.cppBoard = new Module.Board();
+    this.turn = -1; // 1 for white, -1 for black
+  }
+
+  changeTurn() {
+    this.turn = (this.turn===1) ? -1 : 1;
+
+    for (var lvl = 0; lvl < this.size; lvl++) {
+      for (var row = 0; row < this.size; row++) {
+        for (var col = 0; col < this.size; col++) {
+          var piece = this.getPiece(row, col, lvl);
+          if (!piece.isAlive) continue;
+          
+          console.log("here", [row, col, lvl])
+          var pieceColor = piece.getColor();
+          var image = this.getSquareImage(row, col, lvl);
+          image.style.pointerEvents = (pieceColor === this.turn) ? "auto" : "none";
+        }
+      }
+    }
+  }
+
+  hasImage(row, col, lvl) {
+    var image = Array.from(this.getSquareDiv(row, col, lvl).childNodes).find((elem) => elem.className == "chessImg");
+    return image != undefined;
   }
 
   // returns a the piece object located at a specific coordinate
@@ -22,6 +46,26 @@ class Board {
     return this.boardDiv.childNodes[lvl].childNodes[
       (this.size - 1 - row) * this.size + col
     ];
+  }
+
+  getSquareImage(row, col, lvl) {
+    var square = this.getSquareDiv(row, col, lvl);
+    var image = Array.from(square.childNodes).find(
+      (elem) => elem.className === "chessImg"
+    );
+    console.assert(image != undefined, {msg: "image not found!", cord: [row, col, lvl]});
+
+    return image;
+  }
+
+  getHighlightDiv(row, col, lvl) {
+    var square = this.getSquareDiv(row, col, lvl);
+    var highLight = Array.from(square.childNodes).find(
+      (elem) => elem.className === "tint"
+    );
+    console.assert(highLight != undefined, "highLight div not found!");
+
+    return highLight;
   }
 
   // create a div for each square of the board
@@ -37,10 +81,14 @@ class Board {
           // set the color of the square to get checkboard pattern
           square.className += (lvl + row + col) % 2 ? " lightCol" : " darkCol";
           square.dataset["coordinate"] = [this.size - 1 - row, col, lvl];
-
+          // add tint div to the square
           var tint = document.createElement("DIV");
-          tint.className = "tint"
-          square.appendChild(tint)
+          tint.className = "tint";
+          tint.addEventListener("click", (event) =>
+            this.updatePiecePosition(event)
+          );
+
+          square.appendChild(tint);
           boardLvl.appendChild(square);
         }
       }
@@ -72,8 +120,8 @@ class Board {
         for (var col = 0; col < this.size; col++) {
           // get the id of the piece located at this coordinate
           var piece = this.getPiece(row, col, lvl);
+          if (!piece.isAlive) continue;
           var pieceId = String.fromCharCode(piece.getId());
-          if (pieceId === " ") continue;
 
           // obtain the image name based off the piece id
           var imageName =
@@ -85,7 +133,7 @@ class Board {
 
           // add onclick event listener to each piece
           image.addEventListener("click", (event) =>
-            this.displayLegalMoves(event, this)
+            this.displayLegalMoves(event)
           );
           // add the piece image as a child of the current div
           var square = this.getSquareDiv(row, col, lvl);
@@ -95,12 +143,10 @@ class Board {
     }
   }
 
-  highLightSquare(square) {
-    square.childNodes.forEach((elem) => {
-      if (elem.className === "tint") {
-        elem.style.display = "block";
-      }
-    })
+  highLightSquare(row, col, lvl) {
+    var highLight = this.getHighlightDiv(row, col, lvl);
+    // console.log("hightlight ", highLight)
+    highLight.style.display = "block";
   }
 
   removeAllHighLight() {
@@ -108,35 +154,64 @@ class Board {
 
     Array.prototype.forEach.call(allTints, (elem) => {
       elem.style.display = "none";
-    })
+    });
   }
 
-  // var self = this;
-  displayLegalMoves(event, board) {
+  // activates when user clicks on a piece
+  displayLegalMoves(event) {
     this.removeAllHighLight();
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
       .map((x) => parseInt(x));
 
-    console.log("bruh", row, col, lvl);
-    var piece = board.getPiece(row, col, lvl);
-    var moves = piece.getMoves(this.cppBoard);
+    var piece = this.getPiece(row, col, lvl);
+    var moves = piece.getMoves(this.cppBoard, true);
 
     for (var i = 0; i < moves.size(); i++) {
       var m = moves.get(i);
       var nRow = row + m.row;
       var nCol = col + m.col;
       var nLvl = lvl + m.lvl;
-      
+
+      this.highLightSquare(nRow, nCol, nLvl);
+
+      var highLight = this.getHighlightDiv(nRow, nCol, nLvl);
+      highLight.dataset["pieceLoc"] = [row, col, lvl];
+      highLight.dataset["move"] = [m.row, m.col, m.lvl];
       // this.getSquareDiv(nRow, nCol, nLvl).childNodes()
-      this.highLightSquare(this.getSquareDiv(nRow, nCol, nLvl));
-      console.log(this.getSquareDiv(nRow, nCol, nLvl))
+      // console.log(this.getSquareDiv(nRow, nCol, nLvl))
       // console.log(moves.get(i));
     }
   }
 
-  // updatePiecePosition(event) {
-  //   console.log(event.target)
-  // }
+  // activates when user clicks on highlighted square
+  updatePiecePosition(event) {
+    this.removeAllHighLight();
+    var highLight = event.target;
+
+    const [pRow, pCol, pLvl] = highLight.dataset["pieceLoc"]
+      .split(",")
+      .map((x) => parseInt(x));
+
+    const [mRow, mCol, mLvl] = highLight.dataset["move"]
+      .split(",")
+      .map((x) => parseInt(x));
+
+    this.cppBoard.updateLocation(
+      new Module.Coordinate(pRow, pCol, pLvl),
+      new Module.Move(mRow, mCol, mLvl)
+    );
+
+    const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
+    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
+    
+    // delete the prexisting image at the new coordinate if it exists
+    if (this.hasImage(nRow, nCol, nLvl))
+      this.getSquareImage(nRow, nCol, nLvl).remove();
+
+    newSquare.appendChild(pieceImage);
+    this.changeTurn();
+  }
 }

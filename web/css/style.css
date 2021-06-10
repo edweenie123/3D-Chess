@@ -31,6 +31,8 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    /* stroke: red;
+    stroke-width: 10px; */
 }
 
 .darkCol {

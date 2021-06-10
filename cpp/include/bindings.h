@@ -6,13 +6,21 @@ using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS() {
     class_<Move>("Move")
+        .constructor<int, int, int>()
         .property("row", &Move::row)
         .property("col", &Move::col)
         .property("lvl", &Move::lvl)
         ; 
+    class_<Coordinate>("Coordinate")
+        .constructor<int, int, int>()
+        .property("row", &Coordinate::row)
+        .property("col", &Coordinate::col)
+        .property("lvl", &Coordinate::lvl)
+        ; 
     class_<Piece>("Piece")
         .constructor<int, int, int, int>()
         .function("getMoves", &Piece::getMoves)
+        .property("isAlive", &Piece::isAlive)
         .function("getId", &Piece::getId)
         .function("getColor", &Piece::getColor)
         ;
@@ -55,6 +63,7 @@ EMSCRIPTEN_BINDINGS() {
     class_<Board>("Board")
         .constructor()
         .property("board", &Board::board)
+        .function("updateLocation", &Board::updateLocation)
         ;
 
     register_vector<Piece*>("vp*");
