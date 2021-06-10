@@ -13,7 +13,7 @@ vector<Move> Rook::directions = {
     Move(0, 0, -1)
 };
 
-vector<Move> Rook::getMoves(Board board) {
+vector<Move> Rook::getMoves(Board board, bool prune) {
     // get all moves in line based of piece directions
-    return getAllMovesInLine(directions, board);
+    return getAllMovesInLine(directions, board, prune);
 }

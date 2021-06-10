@@ -15,7 +15,7 @@ vector<Move> Unicorn::directions = {
     Move(-1, -1, -1)
 };
 
-vector<Move> Unicorn::getMoves(Board board) {
+vector<Move> Unicorn::getMoves(Board board, bool prune) {
     // get all moves in line based of piece directions
-    return getAllMovesInLine(directions, board);
+    return getAllMovesInLine(directions, board, prune);
 }

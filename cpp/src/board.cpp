@@ -76,10 +76,12 @@ void Board::printBoard() {
 }
 
 Piece* Board::getPieceAt(Coordinate square) {
+    if (!isOnBoard(square)) return nullptr;
     return board[square.row][square.col][square.lvl];
 }
 
 Piece* Board::getPieceAt(int row, int col, int lvl) {
+    if (!isOnBoard({row, col, lvl})) return nullptr;
     return board[row][col][lvl];
 }
 
@@ -176,7 +178,7 @@ void Board::updateThreatenedSquares() {
                 if (board[i][j][k]->isAlive) {
                     vector<Move> possibleMoves;
                     if (board[i][j][k]->getId() == 'p') {
-                        possibleMoves = board[i][j][k]->getMoves(*this);
+                        possibleMoves = board[i][j][k]->getMoves(*this, false);
                         // filter down the passive moves for the pawn
                         for (int i = possibleMoves.size() - 1; i >= 0; --i) {
                             // count the number of 0's in this move
@@ -189,7 +191,7 @@ void Board::updateThreatenedSquares() {
                                 possibleMoves.erase(possibleMoves.begin() + i);
                             }
                         }
-                    } else possibleMoves = board[i][j][k]->getMoves(*this);
+                    } else possibleMoves = board[i][j][k]->getMoves(*this, false);
                     for (Move m : possibleMoves) {
                         if (board[i][j][k]->color == WHITE) {
                             threatenedByWhite.insert({{i + m.row, j + m.col}, k + m.lvl});
@@ -238,7 +240,8 @@ bool Board::isCheckmated(int pieceColor) {
             for (int k = 0; k < 5; ++k) {
                 if (board[i][j][k]->color == pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
-                    for (Move m : board[i][j][k]->getMoves(*this)) {
+                    for (Move m : board[i][j][k]->getMoves(*this, false)) {
+                        //cout << "TRYING: " << m.row << ' ' << m.col << ' ' << m.lvl << '\n';
                         char id = (*this).getPieceAt({i, j, k})->getId();
                         Piece* oldPiece = (*this).getPieceAt({i + m.row, j + m.col, k + m.lvl});
                         updateLocation({i, j, k}, m);

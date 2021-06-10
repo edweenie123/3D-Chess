@@ -4,9 +4,13 @@ char King::getId() {
     return 'k';
 }
 
-vector<Move> King::getMoves(Board board) {
+vector<Move> King::getMoves(Board board, bool prune) {
 
     vector<Move> moves;
+
+    int row = location.row;
+    int col = location.col;
+    int lvl = location.lvl;
 
     // generate all the directions the king can go in
     for (auto a : {-1, 0, 1}) {
@@ -25,7 +29,10 @@ vector<Move> King::getMoves(Board board) {
         }
     }
 
-
+    if (prune) {
+        // Prune out all the moves that are illegal (places its king in check)
+        return pruneMoves(moves, board, location);
+    }
 
     return moves;
 }

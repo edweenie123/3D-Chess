@@ -4,7 +4,7 @@ char Queen::getId() {
     return 'q';
 }
 
-vector<Move> Queen::getMoves(Board board) {
+vector<Move> Queen::getMoves(Board board, bool prune) {
 
     vector<Move> moveDirections;
 
@@ -19,5 +19,5 @@ vector<Move> Queen::getMoves(Board board) {
     }
 
     // get all moves in line based of piece directions
-    return getAllMovesInLine(moveDirections, board);
+    return getAllMovesInLine(moveDirections, board, prune);
 }

@@ -13,7 +13,7 @@ class Knight: public Piece {
         char getId(); 
         using Piece::Piece; // use constructor of parent class
         // static vector<Move> directions;
-        vector<Move> getMoves(Board board);
+        vector<Move> getMoves(Board board, bool prune);
 };
 
 #endif

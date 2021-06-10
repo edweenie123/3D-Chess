@@ -4,7 +4,7 @@ char Pawn::getId() {
     return 'p';
 }
 
-vector<Move> Pawn::getMoves(Board board) {
+vector<Move> Pawn::getMoves(Board board, bool prune) {
 
     vector<Move> moves;
 
@@ -36,6 +36,11 @@ vector<Move> Pawn::getMoves(Board board) {
         
         // this move can only be made if cell contains an ENEMY piece
         if (board.isEnemySquare(potCord, color)) moves.push_back(m);
+    }
+
+    if (prune) {
+        // Prune out all the moves that are illegal (places its king in check)
+        return pruneMoves(moves, board, location);
     }
 
     return moves;

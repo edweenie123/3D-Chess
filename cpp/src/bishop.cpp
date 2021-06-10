@@ -19,7 +19,7 @@ char Bishop::getId() {
     return 'b';
 }
 
-vector<Move> Bishop::getMoves(Board board) {
+vector<Move> Bishop::getMoves(Board board, bool prune) {
     // get all moves in line based of piece directions
-    return getAllMovesInLine(directions, board);
+    return getAllMovesInLine(directions, board, prune);
 }

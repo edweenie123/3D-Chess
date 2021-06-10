@@ -5,9 +5,13 @@ char Knight::getId() {
     return 'n';
 }
 
-vector<Move> Knight::getMoves(Board board) {
+vector<Move> Knight::getMoves(Board board, bool prune) {
 
     vector<Move> moves;
+
+    int row = location.row;
+    int col = location.col;
+    int lvl = location.lvl;
 
     // initialize the ortho knight moves
     vector<vector<int>> orthoMoves = {
@@ -35,6 +39,9 @@ vector<Move> Knight::getMoves(Board board) {
         } while (next_permutation(orthoMoves[i].begin(), orthoMoves[i].end()));
 
     }
-
+    if (prune) {
+        // Prune out all the moves that are illegal (places its king in check)
+        return pruneMoves(moves, board, location);
+    }
     return moves;
 }

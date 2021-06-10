@@ -35,14 +35,48 @@ void Piece::setLocation(int row_, int col_, int lvl_) {
     location = Coordinate{row_, col_, lvl_};
 }
 
-vector<Move> Piece::getMoves(Board board) {
+vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord) {
+    int row = cord.row;
+    int col = cord.col;
+    int lvl = cord.lvl;
+    // Prune out all the moves that are illegal (place's its king in check)
+    bool illegalMove = false;
+    for (int i = moves.size() - 1; i >= 0; --i) {
+        Move m = moves[i];
+
+        // Try simulating this move
+        Piece* oldPiece = board.getPieceAt({row + m.row, col + m.col, lvl + m.lvl});
+        board.updateLocation(location, m);
+        board.updateThreatenedSquares();
+        if (board.isChecked(color)) {
+            // prune this move
+            illegalMove = true;
+        }
+        // Undo the simulated move
+        board.updateLocation({row + m.row, col + m.col, lvl + m.lvl}, {-m.row, -m.col, -m.lvl});
+        if (oldPiece->getId() != ' ') {
+            board.board[row + m.row][col + m.col][lvl + m.lvl] = oldPiece;
+            oldPiece->isAlive = true;
+        }
+        if (illegalMove) {
+            moves.erase(moves.begin() + i);
+        }
+    }
+    return moves;
+}
+
+vector<Move> Piece::getMoves(Board board, bool prune) {
     // return an empty vector for v table to be happy
     vector<Move> tmp;
     return tmp;
 }
 
-vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
+vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool prune) {
     vector<Move> moves;
+
+    int row = location.row;
+    int col = location.col;
+    int lvl = location.lvl;
 
     // find all legal moves in "line" with directions
     // used for queen, rook, bishop and unicorn getMoves() method
@@ -69,8 +103,12 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board) {
             // increase the delta by the direction vector
             curDelta = curDelta + dir;
         }
-    }
 
+    }
+    if (prune) {
+        // Prune out all the moves that are illegal (places its king in check)
+        return pruneMoves(moves, board, location);
+    }
     return moves;
 }
 

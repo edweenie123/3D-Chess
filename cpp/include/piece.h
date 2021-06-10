@@ -25,11 +25,12 @@ class Piece {
         Coordinate getLocation();
         void setLocation(int row, int col, int lvl);
         string toString();
-        vector<Move> getAllMovesInLine(vector<Move>, Board);
+        vector<Move> getAllMovesInLine(vector<Move>, Board, bool); // bool is to specify if we want to prune for checks
+        vector<Move> pruneMoves(vector<Move>, Board, Coordinate);
         // bool isEnemy(Piece other);
 
 
-        virtual vector<Move> getMoves(Board board);
+        virtual vector<Move> getMoves(Board, bool);
         virtual char getId();
 };
 
