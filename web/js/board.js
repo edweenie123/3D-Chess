@@ -8,31 +8,35 @@ class Board {
   constructor() {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
-    this.squareSize = 60;
+    this.squareSize = 67; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
   }
 
   changeTurn() {
-    this.turn = (this.turn===1) ? -1 : 1;
+    this.turn = this.turn === 1 ? -1 : 1;
 
+    // remove the pointer event of all white / black pieces depending on whose turn it is
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
           var piece = this.getPiece(row, col, lvl);
           if (!piece.isAlive) continue;
-          
-          console.log("here", [row, col, lvl])
+
           var pieceColor = piece.getColor();
           var image = this.getSquareImage(row, col, lvl);
-          image.style.pointerEvents = (pieceColor === this.turn) ? "auto" : "none";
+          image.style.pointerEvents =
+            pieceColor === this.turn ? "auto" : "none";
         }
       }
     }
   }
 
+  // returns true if a particular coordinate has a chess piece image associated with it
   hasImage(row, col, lvl) {
-    var image = Array.from(this.getSquareDiv(row, col, lvl).childNodes).find((elem) => elem.className == "chessImg");
+    var image = Array.from(this.getSquareDiv(row, col, lvl).childNodes).find(
+      (elem) => elem.className == "chessImg"
+    );
     return image != undefined;
   }
 
@@ -53,19 +57,22 @@ class Board {
     var image = Array.from(square.childNodes).find(
       (elem) => elem.className === "chessImg"
     );
-    console.assert(image != undefined, {msg: "image not found!", cord: [row, col, lvl]});
+    console.assert(image != undefined, {
+      msg: "image not found!",
+      cord: [row, col, lvl],
+    });
 
     return image;
   }
 
-  getHighlightDiv(row, col, lvl) {
+  getTintDiv(row, col, lvl, className) {
     var square = this.getSquareDiv(row, col, lvl);
-    var highLight = Array.from(square.childNodes).find(
-      (elem) => elem.className === "tint"
+    var tint = Array.from(square.childNodes).find(
+      (elem) => elem.className === className
     );
-    console.assert(highLight != undefined, "highLight div not found!");
+    console.assert(tint != undefined, "tint div not found!");
 
-    return highLight;
+    return tint;
   }
 
   // create a div for each square of the board
@@ -81,14 +88,20 @@ class Board {
           // set the color of the square to get checkboard pattern
           square.className += (lvl + row + col) % 2 ? " lightCol" : " darkCol";
           square.dataset["coordinate"] = [this.size - 1 - row, col, lvl];
-          // add tint div to the square
-          var tint = document.createElement("DIV");
-          tint.className = "tint";
-          tint.addEventListener("click", (event) =>
+          
+          // add legal tint div to the square
+          var legalTint = document.createElement("DIV");
+          legalTint.className = "legalTint";
+          legalTint.addEventListener("click", (event) =>
             this.updatePiecePosition(event)
           );
+          square.appendChild(legalTint);
 
-          square.appendChild(tint);
+          // add last move tint div to the square
+          var lastMoveTint = document.createElement("DIV");
+          lastMoveTint.className = "lastMoveTint";
+          square.appendChild(lastMoveTint);
+
           boardLvl.appendChild(square);
         }
       }
@@ -143,14 +156,13 @@ class Board {
     }
   }
 
-  highLightSquare(row, col, lvl) {
-    var highLight = this.getHighlightDiv(row, col, lvl);
-    // console.log("hightlight ", highLight)
-    highLight.style.display = "block";
+  highLightSquare(row, col, lvl, className) {
+    var tint = this.getTintDiv(row, col, lvl, className);
+    tint.style.display = "block";
   }
 
-  removeAllHighLight() {
-    var allTints = document.getElementsByClassName("tint");
+  removeHighLights(className) {
+    var allTints = document.getElementsByClassName(className);
 
     Array.prototype.forEach.call(allTints, (elem) => {
       elem.style.display = "none";
@@ -159,7 +171,7 @@ class Board {
 
   // activates when user clicks on a piece
   displayLegalMoves(event) {
-    this.removeAllHighLight();
+    this.removeHighLights("legalTint");
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
@@ -174,30 +186,30 @@ class Board {
       var nCol = col + m.col;
       var nLvl = lvl + m.lvl;
 
-      this.highLightSquare(nRow, nCol, nLvl);
-
-      var highLight = this.getHighlightDiv(nRow, nCol, nLvl);
-      highLight.dataset["pieceLoc"] = [row, col, lvl];
-      highLight.dataset["move"] = [m.row, m.col, m.lvl];
-      // this.getSquareDiv(nRow, nCol, nLvl).childNodes()
-      // console.log(this.getSquareDiv(nRow, nCol, nLvl))
-      // console.log(moves.get(i));
+      this.highLightSquare(nRow, nCol, nLvl, "legalTint");
+      // add the coordinate of the peace and the move delta to each legalTint div
+      var legalTint = this.getTintDiv(nRow, nCol, nLvl, "legalTint");
+      legalTint.dataset["pieceLoc"] = [row, col, lvl];
+      legalTint.dataset["move"] = [m.row, m.col, m.lvl];
     }
   }
 
   // activates when user clicks on highlighted square
   updatePiecePosition(event) {
-    this.removeAllHighLight();
-    var highLight = event.target;
+    this.removeHighLights("legalTint");
+    this.removeHighLights("lastMoveTint");
+    var legalTint = event.target;
 
-    const [pRow, pCol, pLvl] = highLight.dataset["pieceLoc"]
+    // get the piece and move delta information from the legalTint div
+    const [pRow, pCol, pLvl] = legalTint.dataset["pieceLoc"]
       .split(",")
       .map((x) => parseInt(x));
 
-    const [mRow, mCol, mLvl] = highLight.dataset["move"]
+    const [mRow, mCol, mLvl] = legalTint.dataset["move"]
       .split(",")
       .map((x) => parseInt(x));
 
+    // update the cpp board to match the state of the GUI board
     this.cppBoard.updateLocation(
       new Module.Coordinate(pRow, pCol, pLvl),
       new Module.Move(mRow, mCol, mLvl)
@@ -205,11 +217,16 @@ class Board {
 
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
     var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
-    
+
     // delete the prexisting image at the new coordinate if it exists
     if (this.hasImage(nRow, nCol, nLvl))
       this.getSquareImage(nRow, nCol, nLvl).remove();
+
+    // add highlights to show previous move
+    this.highLightSquare(nRow, nCol, nLvl, "lastMoveTint");
+    this.highLightSquare(pRow, pCol, pLvl, "lastMoveTint");
 
     newSquare.appendChild(pieceImage);
     this.changeTurn();
