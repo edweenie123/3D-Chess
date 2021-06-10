@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     vertical-align: top;
+    position: relative;
     /* width, height: 30px; */
 }
 
@@ -16,23 +17,40 @@
 
 .chessImg {
     /* center image horizontally and vertically */
-    position: relative;
+    position: absolute;
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     width: 95%;
     height: 95%;
+    z-index: 10;
+    /* disable highlight on image */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-#darkCol {
+.darkCol {
     /* animation: spinny 1s; */
-    background-color: brown;
+    /* background-color: rgb(162, 110, 91); */
+    background-color: rgb(221, 169, 115);
 }
 
-#lightCol {
+.lightCol {
     /* animation: spinny 2s; */
-    background-color: beige;
+    /* background-color: #ebd1b9; */
+    background-color: rgb(250, 212, 164);
+}
+
+.tint {
+    /* positino: relative; */
+    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 0, 0, 0.568);
 }
 
 @keyframes spinny {

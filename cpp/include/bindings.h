@@ -58,6 +58,7 @@ EMSCRIPTEN_BINDINGS() {
         ;
 
     register_vector<Piece*>("vp*");
+    register_vector<Move>("vm");
     register_vector<vector<Piece*>>("vvp*");
     register_vector<vector<vector<Piece*>>>("vvvp*");
 }
