@@ -65,16 +65,6 @@ class Board {
     return image;
   }
 
-  getTintDiv(row, col, lvl, className) {
-    var square = this.getSquareDiv(row, col, lvl);
-    var tint = Array.from(square.childNodes).find(
-      (elem) => elem.className === className
-    );
-    console.assert(tint != undefined, "tint div not found!");
-
-    return tint;
-  }
-
   // create a div for each square of the board
   renderBoard() {
     for (var lvl = 0; lvl < this.size; lvl++) {
@@ -88,19 +78,6 @@ class Board {
           // set the color of the square to get checkboard pattern
           square.className += (lvl + row + col) % 2 ? " lightCol" : " darkCol";
           square.dataset["coordinate"] = [this.size - 1 - row, col, lvl];
-          
-          // add legal tint div to the square
-          var legalTint = document.createElement("DIV");
-          legalTint.className = "legalTint";
-          legalTint.addEventListener("click", (event) =>
-            this.updatePiecePosition(event)
-          );
-          square.appendChild(legalTint);
-
-          // add last move tint div to the square
-          var lastMoveTint = document.createElement("DIV");
-          lastMoveTint.className = "lastMoveTint";
-          square.appendChild(lastMoveTint);
 
           boardLvl.appendChild(square);
         }
@@ -156,22 +133,34 @@ class Board {
     }
   }
 
-  highLightSquare(row, col, lvl, className) {
-    var tint = this.getTintDiv(row, col, lvl, className);
-    tint.style.display = "block";
+  createTint(row, col, lvl, className) {
+    var tint = document.createElement("DIV");
+    tint.className = className;
+
+    if (className === "legalTint") {
+      tint.addEventListener("click", (event) =>
+        this.updatePiecePosition(event)
+      );
+    }
+
+    // add the tint to the appropriate square
+    var square = this.getSquareDiv(row, col, lvl);
+    this.getSquareDiv(row, col, lvl).insertBefore(tint, square.firstChild);
+
+    return tint;
   }
 
-  removeHighLights(className) {
+  removeTintType(className) {
     var allTints = document.getElementsByClassName(className);
 
-    Array.prototype.forEach.call(allTints, (elem) => {
-      elem.style.display = "none";
-    });
+    while (allTints[0]) {
+      allTints[0].remove();
+    }
   }
 
   // activates when user clicks on a piece
   displayLegalMoves(event) {
-    this.removeHighLights("legalTint");
+    this.removeTintType("legalTint");
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
@@ -186,9 +175,9 @@ class Board {
       var nCol = col + m.col;
       var nLvl = lvl + m.lvl;
 
-      this.highLightSquare(nRow, nCol, nLvl, "legalTint");
       // add the coordinate of the peace and the move delta to each legalTint div
-      var legalTint = this.getTintDiv(nRow, nCol, nLvl, "legalTint");
+      var legalTint = this.createTint(nRow, nCol, nLvl, "legalTint");
+      console.log("created at ", nRow, nCol, nLvl);
       legalTint.dataset["pieceLoc"] = [row, col, lvl];
       legalTint.dataset["move"] = [m.row, m.col, m.lvl];
     }
@@ -196,8 +185,8 @@ class Board {
 
   // activates when user clicks on highlighted square
   updatePiecePosition(event) {
-    this.removeHighLights("legalTint");
-    this.removeHighLights("lastMoveTint");
+    this.removeTintType("legalTint");
+    this.removeTintType("lastMoveTint");
     var legalTint = event.target;
 
     // get the piece and move delta information from the legalTint div
@@ -217,7 +206,7 @@ class Board {
 
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
     var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
+    // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
     // delete the prexisting image at the new coordinate if it exists
@@ -225,8 +214,8 @@ class Board {
       this.getSquareImage(nRow, nCol, nLvl).remove();
 
     // add highlights to show previous move
-    this.highLightSquare(nRow, nCol, nLvl, "lastMoveTint");
-    this.highLightSquare(pRow, pCol, pLvl, "lastMoveTint");
+    this.createTint(nRow, nCol, nLvl, "lastMoveTint");
+    this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     newSquare.appendChild(pieceImage);
     this.changeTurn();
