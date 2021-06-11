@@ -181,7 +181,7 @@ void Board::updateThreatenedSquares() {
                     if (board[i][j][k]->getId() == 'p') {
                         possibleMoves = board[i][j][k]->getMoves(*this, false);
                         // filter down the passive moves for the pawn
-                        for (int i = possibleMoves.size() - 1; i >= 0; --i) {
+                        for (int i = int(possibleMoves.size()) - 1; i >= 0; --i) {
                             // count the number of 0's in this move
                             int zeros = 0;
                             if (possibleMoves[i].row == 0) zeros++;

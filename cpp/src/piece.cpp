@@ -41,7 +41,7 @@ vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord)
     int lvl = cord.lvl;
     // Prune out all the moves that are illegal (places its king in check)
     bool illegalMove = false;
-    for (int i = moves.size() - 1; i >= 0; --i) {
+    for (int i = int(moves.size()) - 1; i >= 0; --i) {
         Move m = moves[i];
 
         // Try simulating this move
