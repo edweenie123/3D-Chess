@@ -28,6 +28,10 @@ Move& Move::operator= (const Move &delta){
     return *this;
 }
 
+Move Move::operator-(){
+    return Move(-row, -col, -lvl);
+}
+
 string Move::toString() {
     return "Move by (" + to_string(row) + ", " + to_string(col) + ", " + to_string(lvl) + ") cells";
 }

@@ -14,6 +14,7 @@ class Move {
         Move operator+(const Move&);
         Move& operator+=(const Move&);
         Move& operator=(const Move&);
+        Move operator-();
 };
 
 #endif

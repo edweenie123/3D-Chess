@@ -207,28 +207,10 @@ void Board::updateThreatenedSquares() {
 }
 
 bool Board::isChecked(int pieceColor) {
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            for (int k = 0; k < 5; ++k) {
-                if (board[i][j][k]->getId() == 'k') {
-                    // check if this king is threatened by the opposite colour
-                    if (board[i][j][k]->color == pieceColor) {
-                        // we found the right coloured king, now check if he is threatened
-                        if (pieceColor == WHITE) {
-                            if (threatenedByBlack.find({{i, j}, k}) != threatenedByBlack.end()) {
-                                // White is checked!
-                                return true;
-                            }
-                        } else {
-                            if (threatenedByWhite.find({{i, j}, k}) != threatenedByWhite.end()) {
-                                // Black is checked!
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    for(auto it : (pieceColor == WHITE ? threatenedByBlack : threatenedByWhite)){
+        Coordinate cur = Coordinate();
+        if(this->getPieceAt({it.first.first, it.first.second, it.second})->getId() == 'k')
+            return true;
     }
     return false;
 }
@@ -239,20 +221,26 @@ bool Board::isCheckmated(int pieceColor) {
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
-                if (board[i][j][k]->color == pieceColor) {
+                if (board[i][j][k]->color == pieceColor && board[i][j][k]->isAlive) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
-                        char id = (*this).getPieceAt({i, j, k})->getId();
-                        Piece* oldPiece = (*this).getPieceAt({i + m.row, j + m.col, k + m.lvl});
+                        Coordinate newCoord = Coordinate(i, j, k) + m;
+                        Piece* oldPiece = (*this).getPieceAt(newCoord);
                         updateLocation({i, j, k}, m);
                         updateThreatenedSquares();
                         if (isChecked(pieceColor) == false) {
+                            // undo the move before exiting
+                            updateLocation(newCoord, -m);
+                            if(oldPiece->getId() != ' '){
+                                board[newCoord.row][newCoord.col][newCoord.lvl] = oldPiece;
+                                oldPiece->isAlive = true;
+                            }
                             return false;
                         }
                         // undo the move
-                        updateLocation({i + m.row, j + m.col, k + m.lvl}, {-m.row, -m.col, -m.lvl});
-                        if (oldPiece->getId() != ' ') {
-                            board[i + m.row][j + m.col][k + m.lvl] = oldPiece;
+                        updateLocation(newCoord, -m);
+                        if(oldPiece->getId() != ' '){
+                            board[newCoord.row][newCoord.col][newCoord.lvl] = oldPiece;
                             oldPiece->isAlive = true;
                         }
                     }
@@ -270,8 +258,8 @@ bool Board::isStalemated(int pieceColor) {
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
-                if (board[i][j][k]->color == pieceColor) {
-                    if (board[i][j][k]->getMoves(*this, true).size()) {
+                if (board[i][j][k]->color == pieceColor && board[i][j][k]->isAlive) {
+                    if (!board[i][j][k]->getMoves(*this, true).empty()) {
                         // Found a legal valid move
                         return false;
                     }

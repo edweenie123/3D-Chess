@@ -4,6 +4,7 @@
 #include "turn.h"
 #include "board.h"
 #include "piece.h"
+#include <algorithm>
 #include <vector>
 #include <cassert>
 #include <random>
@@ -14,7 +15,7 @@ using namespace std;
 class Solver {
     private:
         int difficulty;
-        Turn solve(Board &board, int depth, int color);
+        Turn solve(Board &board, int depth, double ALPHA, double BETA, int color);
         static unordered_map<char, double> pieceWeight;
         // Random number generator
         static random_device m_rd;
@@ -23,7 +24,7 @@ class Solver {
     public:
         static const int INF = 1e7;
         Solver(int);
-        double evaluate(Board &board);
+        double evaluate(Board &board, bool fast);
         Turn nextMove(Board board, int colour);
         vector<Turn> genMoves(Board &board, int color);
         static int randRange(int low, int high);
