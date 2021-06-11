@@ -13,8 +13,8 @@
 
 #include "../include/solver.h"
 
-// Remove this if you want to run cpp locally
-#include "../include/bindings.h"
+// // Remove this if you want to run cpp locally
+// #include "../include/bindings.h"
 
 using namespace std;
 
@@ -110,6 +110,8 @@ int main() {
     assert(testBoard.isChecked(WHITE));
     assert(testBoard.isChecked(BLACK));
     assert(testBoard.isCheckmated(WHITE));
+    assert(!testBoard.isStalemated(WHITE));
+    assert(!testBoard.isStalemated(BLACK));
 
     cout << "Tests passed succesfully" << endl;
 }
