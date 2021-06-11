@@ -7,6 +7,7 @@
 #include "../include/pawn.h"
 #include "../include/knight.h"
 #include "../include/piece.h"
+#include <string.h>
 
 Board::Board() {
     // initialize the board
@@ -180,7 +181,7 @@ void Board::updateThreatenedSquares() {
                     if (board[i][j][k]->getId() == 'p') {
                         possibleMoves = board[i][j][k]->getMoves(*this, false);
                         // filter down the passive moves for the pawn
-                        for (int i = possibleMoves.size() - 1; i >= 0; --i) {
+                        for (int i = int(possibleMoves.size()) - 1; i >= 0; --i) {
                             // count the number of 0's in this move
                             int zeros = 0;
                             if (possibleMoves[i].row == 0) zeros++;
@@ -241,7 +242,6 @@ bool Board::isCheckmated(int pieceColor) {
                 if (board[i][j][k]->color == pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
-                        //cout << "TRYING: " << m.row << ' ' << m.col << ' ' << m.lvl << '\n';
                         char id = (*this).getPieceAt({i, j, k})->getId();
                         Piece* oldPiece = (*this).getPieceAt({i + m.row, j + m.col, k + m.lvl});
                         updateLocation({i, j, k}, m);
@@ -263,14 +263,50 @@ bool Board::isCheckmated(int pieceColor) {
     return true; // game over
 }
 
-string Board::getGameState() {
+bool Board::isStalemated(int pieceColor) {
+    // By definition of stalemate, the king should not be currently in check
+    if (isChecked(pieceColor)) return false;
+    // If we manage to find even one valid move for the current turn player, return false
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < 5; ++j) {
+            for (int k = 0; k < 5; ++k) {
+                if (board[i][j][k]->color == pieceColor) {
+                    if (board[i][j][k]->getMoves(*this, true).size()) {
+                        // Found a legal valid move
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+string Board::getGameState(int turnPlayer) {
     // Have a method that updates all the threatened squares after each move
-    // If king is currently in a threatened square, then report a check
-    
-    // If king is currently in a threatened square AND he has nowhere to go / no pieces to block or capture attacking pieces, then report a checkmate
-    // If the turn player has no possible moves he can play, then report a stalemate
+    updateThreatenedSquares();
 
-    // Check for stalemate on both sides
+    // Get your opponent's color
+    int opponent = (turnPlayer == WHITE ? -1 : 1);
 
-    return "placehold";
+    string yourColour = (turnPlayer == WHITE ? "White" : "Black");
+    string oppColour = (turnPlayer == WHITE ? "Black" : "White");
+
+    // Check for checkmate
+    if (isChecked(turnPlayer) && isCheckmated(turnPlayer)) {
+        return "Checkmate! " + oppColour + " Wins.";
+    }
+
+    // Check for a check
+    if (isChecked(turnPlayer)) {
+        return yourColour + " King is Checked!";
+    }
+
+    // Check for stalemate
+    if (isStalemated(turnPlayer)) {
+        return "Stalemate.";
+    }
+
+    // To indicate that no special events happened
+    return "No special events. Game proceeding normally...";
 }

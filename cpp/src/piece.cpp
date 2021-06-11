@@ -39,14 +39,14 @@ vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord)
     int row = cord.row;
     int col = cord.col;
     int lvl = cord.lvl;
-    // Prune out all the moves that are illegal (place's its king in check)
-    bool illegalMove = false;
-    for (int i = moves.size() - 1; i >= 0; --i) {
+    // Prune out all the moves that are illegal (places its king in check)
+    for (int i = int(moves.size()) - 1; i >= 0; --i) {
+		bool illegalMove = false;
         Move m = moves[i];
 
         // Try simulating this move
         Piece* oldPiece = board.getPieceAt({row + m.row, col + m.col, lvl + m.lvl});
-        board.updateLocation(location, m);
+        board.updateLocation({row, col, lvl}, m);
         board.updateThreatenedSquares();
         if (board.isChecked(color)) {
             // prune this move

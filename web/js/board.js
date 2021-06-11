@@ -78,15 +78,15 @@ class Board {
           // set the color of the square to get checkboard pattern
           square.className += (lvl + row + col) % 2 ? " lightCol" : " darkCol";
           square.dataset["coordinate"] = [this.size - 1 - row, col, lvl];
-          
+
           boardLvl.appendChild(square);
 
           // add event listener to remove legal tint
-          var removeLegal = document.createElement("DIV")
-          removeLegal.className = "removeLegal"
+          var removeLegal = document.createElement("DIV");
+          removeLegal.className = "removeLegal";
           removeLegal.addEventListener("click", (event) => {
             this.removeTintType("legalTint");
-          })
+          });
 
           square.appendChild(removeLegal);
         }
@@ -97,10 +97,10 @@ class Board {
     this.resizeBoard();
   }
 
-//   removeLegalTint(event) {
-//       console.log("poo")
-//       this.removeTintType("legalTint");
-//   }
+  //   removeLegalTint(event) {
+  //       console.log("poo")
+  //       this.removeTintType("legalTint");
+  //   }
   // resize each square and board level to match the size specfied by the "squareSize" attribute
   resizeBoard() {
     var allSquares = document.getElementsByClassName("square");
@@ -127,11 +127,9 @@ class Board {
           var pieceId = String.fromCharCode(piece.getId());
 
           // obtain the image name based off the piece id
-          var imageName =
-            "../img/" + pieceId + (piece.getColor() == 1 ? "l" : "d") + ".svg";
-          var image = document.createElement("img");
-
-          image.src = imageName;
+          var image = this.createChessImage(
+            pieceId + (piece.getColor() == 1 ? "l" : "d")
+          );
           image.className = "chessImg";
 
           // add onclick event listener to each piece
@@ -163,6 +161,12 @@ class Board {
     return tint;
   }
 
+  createChessImage(id) {
+    var img = document.createElement("img");
+    img.src = "../img/" + id + ".svg";
+    return img;
+  }
+
   removeTintType(className) {
     var allTints = document.getElementsByClassName(className);
 
@@ -190,7 +194,7 @@ class Board {
 
       // add the coordinate of the peace and the move delta to each legalTint div
       var legalTint = this.createTint(nRow, nCol, nLvl, "legalTint");
-    //   console.log("created at ", nRow, nCol, nLvl);
+      //   console.log("created at ", nRow, nCol, nLvl);
       legalTint.dataset["pieceLoc"] = [row, col, lvl];
       legalTint.dataset["move"] = [m.row, m.col, m.lvl];
     }
@@ -232,5 +236,15 @@ class Board {
 
     newSquare.appendChild(pieceImage);
     this.changeTurn();
+  }
+
+  // color = l -> white, color = d -> black
+  createPromotionPanel(color) {
+    var panel = document.createElement("DIV");
+    var queen = this.createChessImage("q" + color);
+    var knight = this.createChessImage("n" + color);
+    var rook = this.createChessImage("r" + color);
+    var bishop = this.createChessImage("w" + color);
+    var unicorn = this.createChessImage("u" + color);
   }
 }

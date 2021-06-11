@@ -37,7 +37,18 @@ class Board {
 
         bool isChecked(int pieceColor); // is king of color "pieceColor" checked?
         bool isCheckmated(int pieceColor); // is king of color "pieceColor" checkmated? (only run this is isChecked() == true)
-        string getGameState();
+        bool isStalemated(int pieceColor); // is side of color "pieceColor" stalemated?
+        string getGameState(int turnPlayer); // returns the state of the game in a string
+        /*
+        * Possible Game States:
+        *
+        * White King is Checked!
+        * Black King is Checked!
+        * Checkmate! White Wins.
+        * Checkmate! Black Wins.
+        * Stalemate.
+        * No special events. Game proceeding normally...
+        */
 
         bool isVacant(Coordinate cord); // returns true if cord is vacant
         bool isOnBoard(Coordinate cord); // return true if cord is on board
