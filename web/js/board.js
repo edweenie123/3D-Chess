@@ -5,14 +5,14 @@ To-do:
 */
 
 class Board {
-  constructor() {
+  constructor(col, diff) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
     this.squareSize = 67; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
-    this.cpuDifficulty = parseInt(prompt("pls enter mode")); // -1 for P vs P, [0-2] for CPU difficulty
-    this.opponent = new Module.Solver(this.cpuDifficulty);
+    this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
+    // this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
   changeTurn() {

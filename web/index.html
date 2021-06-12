@@ -6,10 +6,102 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@400;500&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 
-<body>
+<body onload="init()">
+	<div id="selec">
+		<h1><center>Welcome to 3D-Chess (Raumschach)!</center></h1>
+		<!-- Display game mode options to the user -->
+		<h2>Select your game mode: </h2>
+		<label>
+			<table>
+				<tr>
+					<td>
+						<input id="sel1" type="radio" name="test" value="-1" checked>
+						<div id="rad1" src="img/kd.svg"></div>
+					</td>
+					<td>
+						&nbsp;Player vs. Player
+					</td>
+				</tr>
+			</table>
+		</label>
+		<label>
+			<table>
+				<tr>
+					<td>
+						<input id="sel2" type="radio" name="test" value="0">
+						<div id="rad2" src="img/nd.svg"></div>
+					</td>
+					<td>
+						&nbsp;Player vs. AI (Easy)
+					</td>
+				</tr>
+			</table>
+		</label>
+		<label>
+			<table>
+				<tr>
+					<td>
+						<input id="sel3" type="radio" name="test" value="1">
+						<div id="rad3" src="img/rd.svg"></div>
+					</td>
+					<td>
+						&nbsp;Player vs. AI (Intermediate)
+					</td>
+				</tr>
+			</table>
+		</label>
+		<label>
+			<table>
+				<tr>
+					<td>
+						<input id="sel4" type="radio" name="test" value="2">
+						<div id="rad4" src="img/qd.svg"></div>
+					</td>
+					<td>
+						&nbsp;Player vs. AI (Hard)
+					</td>
+				</tr>
+			</table>
+		</label>
+		
+		<br>
+
+		<!-- Create a toggle button for the player to choose if they want to play as white and black -->
+		<h2>Play as: </h2>
+		<table>
+			<tr>
+				<td>
+					<p id="chosenColour"></p>
+				</td>
+				<td>
+					<label class="switch">
+						<input id="sel5" type="checkbox">
+						<span class="slider round" onclick="toggle()"></span>
+					</label>
+				</td>
+			</tr>
+		</table>
+
+		<!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
+		<center>
+			<table>
+				<tr>
+					<td>
+						<button type="button" onclick="submit()">Start Game!</button>
+					</td>
+					<td>
+						<button type="button" onclick="window.open('https://www.chessvariants.com/3d.dir/3d5.html', '_blank')">How it works</button>
+					</td>
+				</tr>
+			</table>
+		</center>
+	</div>
     <div id="board"></div>
     <div id="promotePanel">
         <div id="pieceHolder"></div>
@@ -19,15 +111,78 @@
     </script>
     <script type="text/javascript" src="js/board.js"></script>
     <script>
-        Module.onRuntimeInitialized = _ => {
-            var board = new Board();
-            board.renderBoard();
-            board.renderPieces();
-            board.changeTurn();
-            // document.body.addEventListener("click", () => board.removeTintType("legalTint"))
-            // setTimeout(board.createPromotionPanel(1, 0, 0, "l"), 1000)
-            
-        };
+
+		var board;
+		
+		Module.onRuntimeInitialized = _ => {
+			board = new Board();
+			board.renderBoard();
+			board.renderPieces();
+			// board.changeTurn();
+			// setTimeout(board.createPromotionPanel(1, 0, 0, "l"), 1000)
+			document.getElementById("board").style.display = "none";
+		};
+		
+		var gameMode = "NULL";
+		var colour = 1; // Assume player wants to play as white
+		if (document.getElementById("sel5").checked == true) {
+			colour = -1;
+		}
+		var chosenColour = "WHITE&nbsp;&nbsp;&nbsp;&nbsp;";
+		if (colour == -1) {
+			chosenColour = "BLACK&nbsp;&nbsp;&nbsp;&nbsp;";
+		}
+
+		function init() {
+			document.getElementById("chosenColour").innerHTML = chosenColour; 
+		}
+
+		function toggle() {
+			if (colour == 1) {
+				colour = -1;
+			} else {
+				colour = 1;
+			}
+			if (colour == 1) {
+				chosenColour = "WHITE&nbsp;&nbsp;&nbsp;&nbsp;";
+			} else {
+				chosenColour = "BLACK&nbsp;&nbsp;&nbsp;&nbsp;"
+			}
+			document.getElementById("chosenColour").innerHTML = chosenColour; 
+		}
+
+		function submit() {
+			if (document.getElementById("sel1").checked == true) {
+				gameMode = document.getElementById("sel1").value;
+			} else if (document.getElementById("sel2").checked == true) {
+				gameMode = document.getElementById("sel2").value;
+			} else if (document.getElementById("sel3").checked == true) {
+				gameMode = document.getElementById("sel3").value;
+			} else if (document.getElementById("sel4").checked == true) {
+				gameMode = document.getElementById("sel4").value;
+			}
+			console.log(gameMode);
+
+			if (document.getElementById("sel5").checked) {
+				// that means the player wants to play as black
+				colour = -1;
+			} else {
+				colour = 1;
+			}
+			console.log(colour);
+			
+			board.turn = colour;
+			board.cpuDifficulty = gameMode;
+			board.opponent = new Module.Solver(Number(board.cpuDifficulty));
+			document.getElementById("selec").innerHTML = "";
+			
+			document.getElementById("board").style.display = "block";
+			board.changeTurn();
+			
+			console.log(board.turn);
+			console.log(board.cpuDifficulty);
+		}
+		
     </script>
 </body>
 
