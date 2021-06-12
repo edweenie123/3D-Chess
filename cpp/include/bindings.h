@@ -16,6 +16,12 @@ EMSCRIPTEN_BINDINGS() {
         .property("row", &Coordinate::row)
         .property("col", &Coordinate::col)
         .property("lvl", &Coordinate::lvl)
+        ;
+    class_<Turn>("Turn")
+        .constructor<int, Coordinate, Move>()
+        .property("score", &Turn::score)
+        .property("currentLocation", &Turn::currentLocation)
+        .property("change", &Turn::change)
         ; 
     class_<Piece>("Piece")
         .constructor<int, int, int, int>()
@@ -59,13 +65,16 @@ EMSCRIPTEN_BINDINGS() {
         .function("getMoves", &Unicorn::getMoves)
         .function("getId", &Unicorn::getId)
         ;
-
     class_<Board>("Board")
         .constructor()
         .property("board", &Board::board)
         .function("updateLocation", &Board::updateLocation)
         ;
-
+    class_<Solver>("Solver")
+        .constructor<int>()
+        .function("nextMove", &Solver::nextMove)
+        .function("evaluate", &Solver::evaluate)
+        ;
     register_vector<Piece*>("vp*");
     register_vector<Move>("vm");
     register_vector<vector<Piece*>>("vvp*");

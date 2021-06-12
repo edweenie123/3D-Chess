@@ -166,17 +166,13 @@ void Board::updateLocation(Coordinate square, Move movement) {
     board[newRow][newCol][newLvl] = curPiece;
 }
 
-void Board::updateThreatenedSquares() {
-    /* Update all the threatened squares */
-
-    // clear both sets
-    threatenedByWhite.clear();
-    threatenedByBlack.clear();
+bool Board::isChecked(int pieceColor) {
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
                 // if the current cell contains a piece, process its possible moves
-                if (board[i][j][k]->isAlive) {
+                // only process enemy pieces
+                if (board[i][j][k]->isAlive && board[i][j][k]->color != pieceColor) {
                     vector<Move> possibleMoves;
                     if (board[i][j][k]->getId() == 'p') {
                         possibleMoves = board[i][j][k]->getMoves(*this, false);
@@ -194,23 +190,13 @@ void Board::updateThreatenedSquares() {
                         }
                     } else possibleMoves = board[i][j][k]->getMoves(*this, false);
                     for (Move m : possibleMoves) {
-                        if (board[i][j][k]->color == WHITE) {
-                            threatenedByWhite.insert({{i + m.row, j + m.col}, k + m.lvl});
-                        } else {
-                            threatenedByBlack.insert({{i + m.row, j + m.col}, k + m.lvl});
+                        if (board[i + m.row][j + m.col][k + m.lvl]->getId() == 'k') {
+                            return true;
                         }
                     }
                 }
             }
         }
-    }
-}
-
-bool Board::isChecked(int pieceColor) {
-    for(auto it : (pieceColor == WHITE ? threatenedByBlack : threatenedByWhite)){
-        Coordinate cur = Coordinate();
-        if(this->getPieceAt({it.first.first, it.first.second, it.second})->getId() == 'k')
-            return true;
     }
     return false;
 }
@@ -227,7 +213,6 @@ bool Board::isCheckmated(int pieceColor) {
                         Coordinate newCoord = Coordinate(i, j, k) + m;
                         Piece* oldPiece = (*this).getPieceAt(newCoord);
                         updateLocation({i, j, k}, m);
-                        updateThreatenedSquares();
                         if (isChecked(pieceColor) == false) {
                             // undo the move before exiting
                             updateLocation(newCoord, -m);
@@ -271,8 +256,6 @@ bool Board::isStalemated(int pieceColor) {
 }
 
 string Board::getGameState(int turnPlayer) {
-    // Have a method that updates all the threatened squares after each move
-    updateThreatenedSquares();
 
     // Get your opponent's color
     int opponent = (turnPlayer == WHITE ? -1 : 1);

@@ -16,6 +16,7 @@ class Solver {
     private:
         int difficulty;
         Turn solve(Board &board, int depth, double ALPHA, double BETA, int color);
+        double distance(Coordinate coord);
         static unordered_map<char, double> pieceWeight;
         // Random number generator
         static random_device m_rd;
@@ -24,7 +25,7 @@ class Solver {
     public:
         static const int INF = 1e7;
         Solver(int);
-        double evaluate(Board &board, bool fast);
+        double evaluate(Board &board);
         Turn nextMove(Board board, int colour);
         vector<Turn> genMoves(Board &board, int color);
         static int randRange(int low, int high);

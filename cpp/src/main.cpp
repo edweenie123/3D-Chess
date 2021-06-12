@@ -25,7 +25,7 @@ int main() {
     // newMove.row = 1;
     // Rook testRook = Rook(0, 0, 0, 0);
     Board testBoard;
-    // Solver opponent(2);
+    Solver opponent(2);
 
     // assert(abs(opponent.evaluate(testBoard)) < 1e-5);
 
@@ -91,14 +91,16 @@ int main() {
     //freopen("out.txt", "w", stdout);
 
     /* Testing check function */
-    testBoard.updateThreatenedSquares();
+
+    cout << "Begin running:" << endl;
+    Turn nx = opponent.nextMove(testBoard, WHITE);
+    cout << "Next move: " << nx.score << " | " << nx.currentLocation.toString() << " | " << nx.change.toString() << endl;
     // move the white king to somewhere he will get checked
     Piece* whiteKing = testBoard.getPieceAt(0, 2, 0);
     cout << whiteKing->getId() << '\n';
     Move kingMove(3, 0, 3);
     testBoard.updateLocation(whiteKing->location, kingMove);
     assert(whiteKing->location.row == 3 && whiteKing->location.col == 2 && whiteKing->location.lvl == 3);
-    testBoard.updateThreatenedSquares();
     cout << "Threatened by White: " << '\n';
     for (auto x : testBoard.threatenedByWhite) {
         cout << "R: " << x.first.first << " C: " << x.first.second << " L: " << x.second << '\n';
@@ -119,6 +121,5 @@ int main() {
     assert(!testBoard.isStalemated(BLACK));
     cout << "Hello?" << '\n';
     cout << testBoard.getGameState(WHITE) << '\n';
-
     cout << "Tests passed succesfully" << endl;
 }

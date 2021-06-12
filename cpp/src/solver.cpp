@@ -17,7 +17,11 @@ int Solver::randRange(int low, int high){
     return low + rng(m_rng) % range;
 }
 
-double Solver::evaluate(Board &board, bool fast = false){
+double Solver::distance(Coordinate coord){
+    return (6 - (abs(coord.row - 2) + abs(coord.col - 2) + abs(coord.lvl - 2))) / 6.0;
+}
+
+double Solver::evaluate(Board &board){
     if(difficulty == 0){
         // Beginner difficulty: Blind movement (The computer will choose by random)
         return 0;
@@ -25,14 +29,13 @@ double Solver::evaluate(Board &board, bool fast = false){
         // Normal difficulty: Random leaf values (Utilize the Beal effect)
         return randRange(-INF, INF);
     }
-    assert(difficulty == 2);
-    // Hard difficulty: Sum of difference active piece scores, each multiplied by the number of moves they can perform (mobility)
+    // Hard difficulty: Sum of difference active piece scores, each multiplied by their relative position to the center (calculated using manhattan distance)
     double score = 0;
     for(int row = 0; row < 5; ++row){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
                 if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
-                score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * board.getPieceAt(row, col, lvl)->color * (fast ? 1 : board.getPieceAt(row, col, lvl)->getMoves(board, false).size());
+                score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * board.getPieceAt(row, col, lvl)->color * distance({row, col, lvl});
             }
         }
     }
@@ -49,7 +52,6 @@ vector<Turn> Solver::genMoves(Board &board, int color){
                     for (Move m : board.board[i][j][k]->getMoves(board, false)) {
                         Piece* oldPiece = board.getPieceAt({i + m.row, j + m.col, k + m.lvl});
                         board.updateLocation({i, j, k}, m);
-                        board.updateThreatenedSquares();
                         if(!board.isChecked(color)) {
                             // Valid move
                             moves.push_back(Turn(0, Coordinate(i, j, k), m));
@@ -71,27 +73,25 @@ vector<Turn> Solver::genMoves(Board &board, int color){
 }
 
 Turn Solver::nextMove(Board board, int colour){
-    Turn nx = solve(board, 2, -INF, INF, colour);
-    return nx;
+    return solve(board, 3, -INF, INF, colour);
 }
 
 Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color){
   
     // First look for checkmates, then stalemates
-    board.updateThreatenedSquares();
     if(board.isChecked(color)){
-      if(board.isCheckmated(color)){
-        // White Mate --> -INF, Black Mate --> INF 
-        return Turn(INF * -color, Coordinate(-1, -1, -1), Move(0, 0, 0));
-      }
+        if(board.isCheckmated(color)){
+            // White Mate --> -INF, Black Mate --> INF 
+            return Turn(INF * -color, Coordinate(-1, -1, -1), Move(0, 0, 0));
+        }
     } else if(board.isStalemated(color)){
-      // Nobody wins
-      return Turn(0, Coordinate(-1, -1, -1), Move(0, 0, 0));
+        // Nobody wins
+        return Turn(0, Coordinate(-1, -1, -1), Move(0, 0, 0));
     }
 
     if(depth == 0){
-      // Evaluate board
-      return Turn(evaluate(board), Coordinate(-1, -1, -1), Move(0, 0, 0));
+        // Evaluate board
+        return Turn(evaluate(board), Coordinate(-1, -1, -1), Move(0, 0, 0));
     }
 
     Turn best(color == WHITE ? -INF : INF, Coordinate(-1, -1, -1), Move(0, 0, 0));
@@ -111,21 +111,21 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
         // White --> Maximizing
         // Black --> Minimizing
         if(color == WHITE){
-          ALPHA = max(ALPHA, best.score);
-          if(candidate.score > best.score){
-            best = candidate;
-            if(best.score >= BETA){ // alpha-beta pruning
-              break;
+            ALPHA = max(ALPHA, best.score);
+            if(candidate.score > best.score){
+                best = candidate;
+                if(best.score >= BETA){ // alpha-beta pruning
+                    break;
+                }
             }
-          }
         } else {
-          BETA = min(BETA, best.score);
-          if(candidate.score < best.score){
-            best = candidate;
-            if(best.score <= ALPHA){ // alpha-beta pruning
-              break;
+            BETA = min(BETA, best.score);
+            if(candidate.score < best.score){
+                best = candidate;
+                if(best.score <= ALPHA){ // alpha-beta pruning
+                    break;
+                }
             }
-          }
         }
     }
     return best;

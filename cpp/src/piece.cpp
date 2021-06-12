@@ -47,7 +47,6 @@ vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord)
         // Try simulating this move
         Piece* oldPiece = board.getPieceAt({row + m.row, col + m.col, lvl + m.lvl});
         board.updateLocation({row, col, lvl}, m);
-        board.updateThreatenedSquares();
         if (board.isChecked(color)) {
             // prune this move
             illegalMove = true;

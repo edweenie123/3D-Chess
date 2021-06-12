@@ -6,12 +6,8 @@
 #include "move.h"
 #include <vector>
 #include <iostream>
-#include <set>
 #include "globals.h"
 using namespace std;
-
-typedef pair<int, int> ii;
-typedef pair<ii, int> iii;
 
 class Piece;
 
@@ -20,17 +16,13 @@ class Board {
     public:
 
         // I can't get embind to work with arrays, so gotta use yucky vector lol
-        vector<vector<vector<Piece*>>> board = 
+        vector<vector<vector<Piece*>>> board =
             vector<vector<vector<Piece*>>>(5, vector<vector<Piece*>>(5, vector<Piece*>(5, NULL)));
         // Piece* board[5][5][5];
-
-        set<iii> threatenedByWhite;
-        set<iii> threatenedByBlack;
 
         Board();
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
-        void updateThreatenedSquares();
         void updateLocation(Coordinate square, Move movement);
         void setPieceAt(Piece *piece);
         void printBoard();
