@@ -11,6 +11,8 @@ class Board {
     this.squareSize = 67; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
+    this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
+    this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
   changeTurn() {
@@ -30,6 +32,7 @@ class Board {
         }
       }
     }
+    this.getNextComputerMove();
   }
 
   // returns true if a particular coordinate has a chess piece image associated with it
@@ -236,6 +239,52 @@ class Board {
 
     newSquare.appendChild(pieceImage);
     this.changeTurn();
+  }
+  
+  getNextComputerMove() {
+    // compute and parse next move to play
+    var nxTurn = this.opponent.nextMove(this.cppBoard, this.turn);
+    // current location
+    const pRow = nxTurn.currentLocation.row;
+    const pCol = nxTurn.currentLocation.col;
+    const pLvl = nxTurn.currentLocation.lvl;
+    // change in movement
+    const mRow = nxTurn.change.row;
+    const mCol = nxTurn.change.col;
+    const mLvl = nxTurn.change.lvl;
+    // update the cpp board to match the state of the GUI board
+    this.cppBoard.updateLocation(
+      new Module.Coordinate(pRow, pCol, pLvl),
+      new Module.Move(mRow, mCol, mLvl)
+    );
+    const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
+    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
+    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
+
+    // delete the prexisting image at the new coordinate if it exists
+    if (this.hasImage(nRow, nCol, nLvl))
+      this.getSquareImage(nRow, nCol, nLvl).remove();
+
+    // add highlights to show previous move
+    this.createTint(nRow, nCol, nLvl, "lastMoveTint");
+    this.createTint(pRow, pCol, pLvl, "lastMoveTint");
+
+    newSquare.appendChild(pieceImage);
+    this.turn = this.turn === 1 ? -1 : 1;
+    for (var lvl = 0; lvl < this.size; lvl++) {
+      for (var row = 0; row < this.size; row++) {
+        for (var col = 0; col < this.size; col++) {
+          var piece = this.getPiece(row, col, lvl);
+          if (!piece.isAlive) continue;
+
+          var pieceColor = piece.getColor();
+          var image = this.getSquareImage(row, col, lvl);
+          image.style.pointerEvents =
+            pieceColor === this.turn ? "auto" : "none";
+        }
+      }
+    }
   }
 
   // color = l -> white, color = d -> black

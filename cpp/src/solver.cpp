@@ -4,7 +4,7 @@ random_device Solver::m_rd;
 mt19937       Solver::m_rng(Solver::m_rd());
 uniform_int_distribution<int> Solver::rng(0, INF);
 unordered_map<char, double> Solver::pieceWeight = {
-    {'b', 3}, {'k', 200}, {'n', 3}, {'p', 1}, {'q', 9}, {'r', 5}, {'u', 3}
+    {'b', 3}, {'k', 1}, {'n', 3}, {'p', 2}, {'q', 6}, {'r', 5}, {'u', 3}
 };
 
 Solver::Solver(int difficulty_) {
@@ -35,7 +35,7 @@ double Solver::evaluate(Board &board){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
                 if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
-                score += pieceWeight[board.getPieceAt(row, col, lvl)->getId()] * board.getPieceAt(row, col, lvl)->color * distance({row, col, lvl});
+                score += (pieceWeight[board.getPieceAt(row, col, lvl)->getId()] + distance({row, col, lvl})) * board.getPieceAt(row, col, lvl)->color;
             }
         }
     }
@@ -73,7 +73,7 @@ vector<Turn> Solver::genMoves(Board &board, int color){
 }
 
 Turn Solver::nextMove(Board board, int colour){
-    return solve(board, 3, -INF, INF, colour);
+    return solve(board, 2, -INF, INF, colour);
 }
 
 Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color){

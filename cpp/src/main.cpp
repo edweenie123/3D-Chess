@@ -93,22 +93,12 @@ int main() {
     /* Testing check function */
 
     cout << "Begin running:" << endl;
-    Turn nx = opponent.nextMove(testBoard, WHITE);
-    cout << "Next move: " << nx.score << " | " << nx.currentLocation.toString() << " | " << nx.change.toString() << endl;
     // move the white king to somewhere he will get checked
     Piece* whiteKing = testBoard.getPieceAt(0, 2, 0);
     cout << whiteKing->getId() << '\n';
     Move kingMove(3, 0, 3);
     testBoard.updateLocation(whiteKing->location, kingMove);
     assert(whiteKing->location.row == 3 && whiteKing->location.col == 2 && whiteKing->location.lvl == 3);
-    cout << "Threatened by White: " << '\n';
-    for (auto x : testBoard.threatenedByWhite) {
-        cout << "R: " << x.first.first << " C: " << x.first.second << " L: " << x.second << '\n';
-    }
-    cout << "Threatened by Black: " << '\n';
-    for (auto x : testBoard.threatenedByBlack) {
-        cout << "R: " << x.first.first << " C: " << x.first.second << " L: " << x.second << '\n';
-    }
     cout << "Hello?" << '\n';
     assert(testBoard.isChecked(WHITE));
     cout << "Hello?" << '\n';
