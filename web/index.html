@@ -11,6 +11,9 @@
 
 <body>
     <div id="board"></div>
+    <div id="promotePanel">
+        <div id="pieceHolder"></div>
+    </div>
     <script type="text/javascript" src="gen/main.js"></script>
     <script>
     </script>
@@ -21,6 +24,8 @@
             board.renderBoard();
             board.renderPieces();
             board.changeTurn();
+            // setTimeout(board.createPromotionPanel(1, 0, 0, "l"), 1000)
+            
         };
     </script>
 </body>

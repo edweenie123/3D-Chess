@@ -13,7 +13,7 @@ class Pawn: public Piece {
         char getId(); 
         using Piece::Piece; // use constructor of parent class
         vector<Move> getMoves(Board board, bool prune);
-        void Promote();
+        void promote(Board& board, Piece* promotedPiece);
 };
 
 #endif
