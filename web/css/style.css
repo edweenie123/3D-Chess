@@ -129,3 +129,136 @@ body {
         opacity: 100%;
     }
 }
+
+/* Radio Buttons CSS */
+/* HIDE RADIO */
+[type=radio] { 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+    cursor: pointer;
+}
+
+/* CHECKED STYLES */
+/* [type=radio]:checked + img {
+    outline: 2px solid #f00;
+} */
+
+/* Radio button hover */
+#rad1 {
+    width: 42px;
+    height: 42px;
+    background: url("../img/kd.svg");
+}
+#rad1:hover {
+    background: url("../img/kl.svg");
+}
+[type=radio]:checked + #rad1 {
+    background: url("../img/kl.svg");
+}
+
+#rad2 {
+    width: 42px;
+    height: 42px;
+    background: url("../img/nd.svg");
+}
+#rad2:hover {
+    background: url("../img/nl.svg");
+}
+[type=radio]:checked + #rad2 {
+    background: url("../img/nl.svg");
+}
+
+#rad3 {
+    width: 42px;
+    height: 42px;
+    background: url("../img/rd.svg");
+}
+#rad3:hover {
+    background: url("../img/rl.svg");
+}
+[type=radio]:checked + #rad3 {
+    background: url("../img/rl.svg");
+}
+
+#rad4 {
+    width: 42px;
+    height: 42px;
+    background: url("../img/qd.svg");
+}
+#rad4:hover {
+    background: url("../img/ql.svg");
+}
+[type=radio]:checked + #rad4 {
+    background: url("../img/ql.svg");
+}
+
+/* Slider button CSS */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #edd;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #1a1b1d;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #1a1b1d;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+body {
+    font-family: 'Baloo Tammudu 2', cursive;
+}
