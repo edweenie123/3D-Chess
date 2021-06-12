@@ -9,6 +9,7 @@ body {
     vertical-align: top;
     position: relative;
     /* width, height: 30px; */
+    pointer-events: none;
 }
 
 .boardLvl {
@@ -30,7 +31,7 @@ body {
     transform: translate(-50%, -50%);
     width: 95%;
     height: 95%;
-    z-index: 10;
+    z-index: 3;
     /* disable highlight on image */
     -khtml-user-select: none;
     -o-user-select: none;
@@ -39,6 +40,7 @@ body {
     user-select: none;
     /* animation: fadeIn s  */
     filter: drop-shadow(2px 2px 2px rgba(34, 34, 34, 0.527));
+    /* filter: drop-shadow(0px 0px 5px rgba(255, 238, 0, 0.527)); */
 }
 
 .darkCol {
@@ -54,16 +56,23 @@ body {
 }
 
 .legalTint {
-    /* display: relative; */
+    position: absolute;
     width: 100%;
     height: 100%;
     background-color: rgba(255, 0, 0, 0.568);
-    z-index: -1;
+    z-index: 2;
+    pointer-events: auto;
 }
 
 .removeLegal {
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
 .lastMoveTint {
@@ -72,6 +81,19 @@ body {
     height: 100%;
     z-index: 1;
     background-color: rgba(255, 217, 0, 0.397);
+    pointer-events: none;
+}
+
+.pieceSelectTint {
+    /* display: relative; */
+    width: 100%;
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 2;
+    background-color: rgba(0, 255, 64, 0.397);
 }
 
 #promotePanel {
@@ -84,7 +106,7 @@ body {
     left: 0;
     z-index: 10;
     transition: 0.5s;
-    background-color: rgba(0, 0, 0, 0.822);
+    background-color: rgba(0, 0, 0, 0.682);
 }
 
 #pieceHolder {
@@ -103,13 +125,13 @@ body {
     margin: 1em;
     /* height: 20%; */
     transition: 0.5s;
+    /* filter: drop-shadow(0px 0px 10px rgba(255, 251, 0, 0.527)); */
 }
 
 .promoteImg:hover {
     /* width: 8em; */
     background-color: rgba(255, 255, 255, 0.349);
 
-    /* filter: drop-shadow(0px 0px 10px rgba(255, 251, 0, 0.527)); */
 }
 
 @keyframes spinny {
