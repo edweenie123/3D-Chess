@@ -4,6 +4,10 @@ To-do:
     rerender on window resize
 */
 
+// Set variables for playing sound effects
+// var capture = new Audio("../sfx/capture.wav");
+// var move-self = new Audio("../sfx/move-self.wav");
+    
 class Board {
   constructor(col, diff) {
     this.boardDiv = document.getElementById("board");
@@ -265,9 +269,11 @@ class Board {
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (this.hasImage(nRow, nCol, nLvl))
+    if (this.hasImage(nRow, nCol, nLvl)) {
+	  var capture = new Audio("../sfx/capture.wav");
+	  capture.play();
       this.getSquareImage(nRow, nCol, nLvl).remove();
-
+    }
     // remove previous tints
     this.removeTintType("legalTint");
     this.removeTintType("lastMoveTint");
