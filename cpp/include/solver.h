@@ -26,7 +26,7 @@ class Solver {
         static const int INF = 1e7;
         Solver(int);
         double evaluate(Board &board);
-        Turn nextMove(Board board, int colour);
+        Turn nextMove(Board &board, int colour);
         vector<Turn> genMoves(Board &board, int color);
         static int randRange(int low, int high);
 };

@@ -72,7 +72,7 @@ vector<Turn> Solver::genMoves(Board &board, int color){
     return moves;
 }
 
-Turn Solver::nextMove(Board board, int colour){
+Turn Solver::nextMove(Board &board, int colour){
     return solve(board, 2, -INF, INF, colour);
 }
 
@@ -82,7 +82,7 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
     if(board.isChecked(color)){
         if(board.isCheckmated(color)){
             // White Mate --> -INF, Black Mate --> INF 
-            return Turn(INF * -color, Coordinate(-1, -1, -1), Move(0, 0, 0));
+            return Turn(INF * -color, Coordinate(-2, -1, -1), Move(0, 0, 0));
         }
     } else if(board.isStalemated(color)){
         // Nobody wins
@@ -91,10 +91,10 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
 
     if(depth == 0){
         // Evaluate board
-        return Turn(evaluate(board), Coordinate(-1, -1, -1), Move(0, 0, 0));
+        return Turn(evaluate(board), Coordinate(-4, -1, -1), Move(0, 0, 0));
     }
 
-    Turn best(color == WHITE ? -INF : INF, Coordinate(-1, -1, -1), Move(0, 0, 0));
+    Turn best(color == WHITE ? -INF : INF, Coordinate(-3, -1, -1), Move(0, 0, 0));
     for(Turn curMove : genMoves(board, color)){
         // Move new piece
         Coordinate newLoc = curMove.currentLocation + curMove.change;
@@ -112,7 +112,7 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
         // Black --> Minimizing
         if(color == WHITE){
             ALPHA = max(ALPHA, best.score);
-            if(candidate.score > best.score){
+            if(candidate.score >= best.score){
                 best = candidate;
                 if(best.score >= BETA){ // alpha-beta pruning
                     break;
@@ -120,7 +120,7 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
             }
         } else {
             BETA = min(BETA, best.score);
-            if(candidate.score < best.score){
+            if(candidate.score <= best.score){
                 best = candidate;
                 if(best.score <= ALPHA){ // alpha-beta pruning
                     break;

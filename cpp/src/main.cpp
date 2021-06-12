@@ -91,25 +91,5 @@ int main() {
     //freopen("out.txt", "w", stdout);
 
     /* Testing check function */
-
-    cout << "Begin running:" << endl;
-    // move the white king to somewhere he will get checked
-    Piece* whiteKing = testBoard.getPieceAt(0, 2, 0);
-    cout << whiteKing->getId() << '\n';
-    Move kingMove(3, 0, 3);
-    testBoard.updateLocation(whiteKing->location, kingMove);
-    assert(whiteKing->location.row == 3 && whiteKing->location.col == 2 && whiteKing->location.lvl == 3);
-    cout << "Hello?" << '\n';
-    assert(testBoard.isChecked(WHITE));
-    cout << "Hello?" << '\n';
-    assert(testBoard.isChecked(BLACK));
-    cout << "Hello?" << '\n';
-    assert(testBoard.isCheckmated(WHITE));
-    cout << "Hello?" << '\n';
-    assert(!testBoard.isStalemated(WHITE));
-    cout << "Hello?" << '\n';
-    assert(!testBoard.isStalemated(BLACK));
-    cout << "Hello?" << '\n';
-    cout << testBoard.getGameState(WHITE) << '\n';
     cout << "Tests passed succesfully" << endl;
 }

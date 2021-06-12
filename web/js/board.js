@@ -11,7 +11,7 @@ class Board {
     this.squareSize = 67; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
-    this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
+    this.cpuDifficulty = parseInt(prompt("pls enter mode")); // -1 for P vs P, [0-2] for CPU difficulty
     this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
@@ -272,6 +272,12 @@ class Board {
     const mRow = nxTurn.change.row;
     const mCol = nxTurn.change.col;
     const mLvl = nxTurn.change.lvl;
+    
+    if(pRow < 0){
+      console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
+      console.log(`Solver return code: ${pRow}`);
+      return;
+    }
     // update the cpp board to match the state of the GUI board
     this.cppBoard.updateLocation(
       new Module.Coordinate(pRow, pCol, pLvl),
