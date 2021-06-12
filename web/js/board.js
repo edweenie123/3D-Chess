@@ -32,7 +32,7 @@ class Board {
         }
       }
     }
-    this.getNextComputerMove();
+    if(this.cpuDifficulty != -1) this.getNextComputerMove();
   }
 
   // returns true if a particular coordinate has a chess piece image associated with it
