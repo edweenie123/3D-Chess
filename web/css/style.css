@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 .square {
     display: inline-block;
     margin: 0;
@@ -68,6 +72,44 @@
     height: 100%;
     z-index: 1;
     background-color: rgba(255, 217, 0, 0.397);
+}
+
+#promotePanel {
+    display: none;
+    margin: 0;
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    transition: 0.5s;
+    background-color: rgba(0, 0, 0, 0.822);
+}
+
+#pieceHolder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+}
+
+.promoteImg {
+    /* position: fixed; */
+    width: 7em;
+    margin: 1em;
+    /* height: 20%; */
+    transition: 0.5s;
+}
+
+.promoteImg:hover {
+    /* width: 8em; */
+    background-color: rgba(255, 255, 255, 0.349);
+
+    /* filter: drop-shadow(0px 0px 10px rgba(255, 251, 0, 0.527)); */
 }
 
 @keyframes spinny {

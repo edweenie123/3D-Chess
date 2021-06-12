@@ -97,10 +97,6 @@ class Board {
     this.resizeBoard();
   }
 
-  //   removeLegalTint(event) {
-  //       console.log("poo")
-  //       this.removeTintType("legalTint");
-  //   }
   // resize each square and board level to match the size specfied by the "squareSize" attribute
   resizeBoard() {
     var allSquares = document.getElementsByClassName("square");
@@ -122,23 +118,17 @@ class Board {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
           // get the id of the piece located at this coordinate
-          var piece = this.getPiece(row, col, lvl);
-          if (!piece.isAlive) continue;
-          var pieceId = String.fromCharCode(piece.getId());
-
+          var cppPiece = this.getPiece(row, col, lvl);
+          if (!cppPiece.isAlive) continue;
+          var pieceId = String.fromCharCode(cppPiece.getId());
+          var pieceColor = cppPiece.getColor() == 1 ? "l" : "d";
           // obtain the image name based off the piece id
-          var image = this.createChessImage(
-            pieceId + (piece.getColor() == 1 ? "l" : "d")
-          );
-          image.className = "chessImg";
+          var pieceName = pieceId + pieceColor;
+          var piece = this.createChessPiece(pieceName);
 
-          // add onclick event listener to each piece
-          image.addEventListener("click", (event) =>
-            this.displayLegalMoves(event)
-          );
           // add the piece image as a child of the current div
           var square = this.getSquareDiv(row, col, lvl);
-          square.appendChild(image);
+          square.appendChild(piece);
         }
       }
     }
@@ -164,7 +154,22 @@ class Board {
   createChessImage(id) {
     var img = document.createElement("img");
     img.src = "../img/" + id + ".svg";
+    img.dataset["id"] = id;
     return img;
+  }
+
+  createChessPiece(id) {
+    var piece = this.createChessImage(id);
+
+    // add onclick event listener to each piece with IIFE (immediate invoked function expression)
+    ((id) => {
+      piece.addEventListener("click", (event) =>
+        this.displayLegalMoves(event, id)
+      );
+    })(id);
+
+    piece.className = "chessImg";
+    return piece;
   }
 
   removeTintType(className) {
@@ -176,7 +181,7 @@ class Board {
   }
 
   // activates when user clicks on a piece
-  displayLegalMoves(event) {
+  displayLegalMoves(event, pieceName) {
     this.removeTintType("legalTint");
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
@@ -197,15 +202,21 @@ class Board {
       //   console.log("created at ", nRow, nCol, nLvl);
       legalTint.dataset["pieceLoc"] = [row, col, lvl];
       legalTint.dataset["move"] = [m.row, m.col, m.lvl];
+      legalTint.dataset["pieceName"] = pieceName;
     }
+  }
+
+  // determines if a piece can promote given its name and row
+  canPromote(row, lvl, pieceName) {
+    if (pieceName == "pl") return row === 4 && lvl === 4;
+    if (pieceName == "pd") return row === 0 && lvl === 0;
+    return false;
   }
 
   // activates when user clicks on highlighted square
   updatePiecePosition(event) {
-    this.removeTintType("legalTint");
-    this.removeTintType("lastMoveTint");
     var legalTint = event.target;
-
+    var pieceName = legalTint.dataset["pieceName"];
     // get the piece and move delta information from the legalTint div
     const [pRow, pCol, pLvl] = legalTint.dataset["pieceLoc"]
       .split(",")
@@ -223,28 +234,101 @@ class Board {
 
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
     var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
     // delete the prexisting image at the new coordinate if it exists
     if (this.hasImage(nRow, nCol, nLvl))
       this.getSquareImage(nRow, nCol, nLvl).remove();
 
-    // add highlights to show previous move
+    // remove previous tints
+    this.removeTintType("legalTint");
+    this.removeTintType("lastMoveTint");
+
+    // add tints to show previous move
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     newSquare.appendChild(pieceImage);
-    this.changeTurn();
+
+      console.log(nRow, nLvl, pieceName);
+    if (this.canPromote(nRow, nLvl, pieceName)) {
+      this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
+    } else {
+      this.changeTurn();
+    }
   }
 
   // color = l -> white, color = d -> black
-  createPromotionPanel(color) {
-    var panel = document.createElement("DIV");
-    var queen = this.createChessImage("q" + color);
-    var knight = this.createChessImage("n" + color);
-    var rook = this.createChessImage("r" + color);
-    var bishop = this.createChessImage("w" + color);
-    var unicorn = this.createChessImage("u" + color);
+  createPromotionPanel(row, col, lvl, color) {
+    console.log("yes");
+
+    var panel = document.getElementById("promotePanel");
+    var pieceHolder = document.getElementById("pieceHolder");
+    panel.style.display = "block";
+
+    // remove all children of pieceHolder
+    while (pieceHolder.firstChild) {
+      pieceHolder.removeChild(pieceHolder.firstChild);
+    }
+
+    //
+    var pieces = [
+      this.createChessImage("q" + color),
+      this.createChessImage("n" + color),
+      this.createChessImage("r" + color),
+      this.createChessImage("u" + color),
+      this.createChessImage("b" + color),
+    ];
+
+    pieces.forEach((elem) => {
+      pieceHolder.appendChild(elem);
+      elem.className = "promoteImg";
+
+      // add event listener to each piece to promote
+      elem.addEventListener("click", (event) => {
+        this.promote(row, col, lvl, elem.dataset["id"]);
+      });
+    });
+  }
+
+  // replaces a pawn with promoted piece
+  promote(row, col, lvl, promoteId) {
+    console.log("promote", promoteId);
+    var panel = document.getElementById("promotePanel");
+    panel.style.display = "none";
+
+    // remove the existing pawn and replace it with the new piece
+    this.getSquareImage(row, col, lvl).remove();
+    var promotedPiece = this.createChessPiece(promoteId);
+    this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
+
+    // get the cpp pawn and promote it
+    var cppPawn = this.getPiece(row, col, lvl);
+    var color = promoteId[1] === "l" ? 1 : -1;
+    var cppPromotedPiece;
+
+    // create new cppPiece depending on the id of promoted piece
+    switch(promoteId[0]) {
+      case "q":
+        cppPromotedPiece = new Module.Queen(row, col, lvl, color);
+        break;
+      case "n":
+        cppPromotedPiece = new Module.Knight(row, col, lvl, color);
+        break;
+      case "r":
+        cppPromotedPiece = new Module.Rook(row, col, lvl, color);
+        break;
+      case "u":
+        cppPromotedPiece = new Module.Unicorn(row, col, lvl, color);
+        break;
+      case "b":
+        cppPromotedPiece = new Module.Bishop(row, col, lvl, color);
+        break;
+      default:
+        throw "ERROR: promoteId is invalid"
+    }
+
+    cppPawn.promote(this.cppBoard, cppPromotedPiece);
+    this.changeTurn();
   }
 }
