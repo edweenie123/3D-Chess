@@ -88,7 +88,7 @@ class Board {
           var removeLegal = document.createElement("DIV");
           removeLegal.className = "removeLegal";
           removeLegal.addEventListener("click", (event) => {
-            this.removeTintType("legalTint");
+            this.unselectPiece(event);
           });
 
           square.appendChild(removeLegal);
@@ -147,11 +147,29 @@ class Board {
       );
     }
 
+    if (className === "pieceSelectTint") {
+      tint.addEventListener("click", (event) => this.unselectPiece(event))
+    }
+
     // add the tint to the appropriate square
     var square = this.getSquareDiv(row, col, lvl);
     this.getSquareDiv(row, col, lvl).insertBefore(tint, square.firstChild);
 
     return tint;
+  }
+
+  unselectPiece(event) {
+    console.log("undo")
+    this.removeTintType("legalTint");
+
+    const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
+      .split(",")
+      .map((x) => parseInt(x));
+
+    // this.getSquareImage(row, col, lvl).style.pointerEvents = "auto";
+
+    this.removeTintType("pieceSelectTint");
+    // event.target.remove();
   }
 
   createChessImage(id) {
@@ -185,12 +203,19 @@ class Board {
 
   // activates when user clicks on a piece
   displayLegalMoves(event, pieceName) {
+    this.removeTintType("pieceSelectTint")
     this.removeTintType("legalTint");
+    
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
       .map((x) => parseInt(x));
 
+    var selectedTint = this.createTint(row, col, lvl, "pieceSelectTint");
+    selectedTint.dataset["coordinate"] = [row, col, lvl];
+    // event.target.style.pointerEvents = "none";
+
+    
     var piece = this.getPiece(row, col, lvl);
     var moves = piece.getMoves(this.cppBoard, true);
 
@@ -246,6 +271,7 @@ class Board {
     // remove previous tints
     this.removeTintType("legalTint");
     this.removeTintType("lastMoveTint");
+    this.removeTintType("pieceSelectTint");
 
     // add tints to show previous move
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
@@ -292,6 +318,7 @@ class Board {
     if (this.hasImage(nRow, nCol, nLvl))
       this.getSquareImage(nRow, nCol, nLvl).remove();
 
+    this.removeTintType("lastMoveTint");
     // add highlights to show previous move
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
