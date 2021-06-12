@@ -16,6 +16,7 @@ class Board {
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
+    this.compActive = false;
     // this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
@@ -32,11 +33,12 @@ class Board {
           var pieceColor = piece.getColor();
           var image = this.getSquareImage(row, col, lvl);
           image.style.pointerEvents =
-            pieceColor === this.turn ? "auto" : "none";
+            (pieceColor === this.turn) ? "auto" : "none";
         }
       }
     }
-    if(this.cpuDifficulty != -1) this.getNextComputerMove();
+    if(this.cpuDifficulty != -1 && this.compActive) this.getNextComputerMove();
+    if (this.cppBoard != -1) this.compActive = true;
   }
 
   // returns true if a particular coordinate has a chess piece image associated with it
