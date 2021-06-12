@@ -1,14 +1,12 @@
-# compiles c++ code to get WASM binary => main.wasm
-# bind WASM with js glue code => main.js
+# compiles c++ code to get WASM binary => a.out.wasm
+# bind WASM with js glue code => a.out.js
 
 rm build/ -rf
 mkdir build 
 cd build
-em++ -O3 --bind -c ../cpp/src/globals.cpp ../cpp/src/coordinate.cpp ../cpp/src/move.cpp ../cpp/src/piece.cpp ../cpp/src/board.cpp ../cpp/src/king.cpp ../cpp/src/knight.cpp ../cpp/src/pawn.cpp ../cpp/src/queen.cpp ../cpp/src/rook.cpp ../cpp/src/unicorn.cpp ../cpp/src/bishop.cpp ../cpp/src/turn.cpp ../cpp/src/solver.cpp ../cpp/src/main.cpp -s ALLOW_MEMORY_GROWTH=1 
-em++ --bind globals.o coordinate.o move.o piece.o board.o king.o knight.o pawn.o queen.o rook.o unicorn.o  bishop.o turn.o solver.o main.o -o main.js
-mv main.js ../web/gen/
-mv main.wasm ../web/gen/
-
+em++ -O3 --bind ../cpp/src/main.cpp ../cpp/src/globals.cpp ../cpp/src/coordinate.cpp ../cpp/src/move.cpp ../cpp/src/piece.cpp ../cpp/src/board.cpp ../cpp/src/king.cpp ../cpp/src/knight.cpp ../cpp/src/pawn.cpp ../cpp/src/queen.cpp ../cpp/src/rook.cpp ../cpp/src/unicorn.cpp ../cpp/src/bishop.cpp ../cpp/src/turn.cpp ../cpp/src/solver.cpp -s TOTAL_MEMORY=64MB
+mv a.out.js ../web/gen/
+mv a.out.wasm ../web/gen/
 
 
 # globals.cpp
