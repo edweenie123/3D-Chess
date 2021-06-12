@@ -39,6 +39,7 @@ EMSCRIPTEN_BINDINGS() {
         .constructor<int, int, int, int>()
         .function("getMoves", &Pawn::getMoves)
         .function("getId", &Pawn::getId)
+        .function("promote", &Pawn::promote, allow_raw_pointers())
         ;
     class_<Bishop, base<Piece>>("Bishop")
         .constructor<int, int, int, int>()

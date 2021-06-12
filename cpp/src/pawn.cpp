@@ -46,11 +46,9 @@ vector<Move> Pawn::getMoves(Board board, bool prune) {
     return moves;
 }
 
-void Pawn::Promote() {
-    /*
-    
-    replace this piece with any piece the user picks
-    perhaps this method should be in the board class ??
+void Pawn::promote(Board& board, Piece* promotedPiece) {
+    board.board[location.row][location.col][location.lvl] = promotedPiece;
 
-    */
+    // something bad might happen from deleting...
+    delete this;
 }
