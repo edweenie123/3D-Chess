@@ -78,12 +78,12 @@ void Board::printBoard() {
 }
 
 Piece* Board::getPieceAt(Coordinate square) {
-    //if (!isOnBoard(square)) return nullptr;
+    if (!isOnBoard(square)) return nullptr;
     return board[square.row][square.col][square.lvl];
 }
 
 Piece* Board::getPieceAt(int row, int col, int lvl) {
-    //if (!isOnBoard({row, col, lvl})) return nullptr;
+    if (!isOnBoard({row, col, lvl})) return nullptr;
     return board[row][col][lvl];
 }
 
@@ -126,8 +126,7 @@ void Board::updateLocation(Coordinate square, Move movement) {
     int newCol = curPiece->location.col + movement.col;
     int newLvl = curPiece->location.lvl + movement.lvl;
     Coordinate newCord = {newRow, newCol, newLvl};
-    // There shouldn't be any need to check whether the square is on the board if we check it before
-    //if (!isOnBoard(newCord)) return;
+    if (!isOnBoard(newCord)) return;
     Piece* nextSquare = board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
 
     if (!isVacant(newCord) && nextSquare->color == curPiece->color) return;
@@ -187,7 +186,7 @@ bool Board::isCheckmated(int pieceColor) {
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
-                if (board[i][j][k]->color == pieceColor && board[i][j][k]->isAlive) {
+                if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
                         Coordinate newCoord = Coordinate(i, j, k) + m;
@@ -216,7 +215,7 @@ bool Board::isStalemated(int pieceColor) {
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
-                if (board[i][j][k]->color == pieceColor && board[i][j][k]->isAlive) {
+                if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
                     if (board[i][j][k]->hasAnyMoves(*this, {i,j,k})) {
                         // Found a legal valid move
                         return false;
@@ -231,7 +230,7 @@ bool Board::isStalemated(int pieceColor) {
 string Board::getGameState(int turnPlayer) {
 
     // Get your opponent's color
-    int opponent = (turnPlayer == WHITE ? -1 : 1);
+    int opponent = -turnPlayer;
 
     string yourColour = (turnPlayer == WHITE ? "White" : "Black");
     string oppColour = (turnPlayer == WHITE ? "Black" : "White");
