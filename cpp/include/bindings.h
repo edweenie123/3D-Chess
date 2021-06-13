@@ -70,6 +70,7 @@ EMSCRIPTEN_BINDINGS() {
         .constructor()
         .property("board", &Board::board)
         .function("updateLocation", &Board::updateLocation)
+        .function("isChecked", &Board::isChecked)
         ;
     class_<Solver>("Solver")
         .constructor<int>()

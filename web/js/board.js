@@ -3,10 +3,6 @@ To-do:
     make board size dynamic (based of screen size)?
     rerender on window resize
 */
-
-// Set variables for playing sound effects
-// var capture = new Audio("../sfx/capture.wav");
-// var move-self = new Audio("../sfx/move-self.wav");
     
 class Board {
   constructor(col, diff) {
@@ -271,11 +267,30 @@ class Board {
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
     // delete the prexisting image at the new coordinate if it exists
+    var curChecked = false;
+    var curCaptured = false;
     if (this.hasImage(nRow, nCol, nLvl)) {
-	  var capture = new Audio("../sfx/capture.wav");
-	  capture.play();
+	  curCaptured = true;
       this.getSquareImage(nRow, nCol, nLvl).remove();
     }
+    
+    // check if this move puts the other player in check
+    if (this.cppBoard.isChecked(this.turn * -1)) {
+	  curChecked = true;
+	}
+	
+	// Play correct sound based on movement type performed
+	if (curChecked) {
+		var moveCheck = new Audio("../sfx/move-check.wav");
+		moveCheck.play();
+	} else if (curCaptured) {
+		var capture = new Audio("../sfx/capture.wav");
+		capture.play();
+	} else {
+		var moveSelf = new Audio("../sfx/move-self.wav");
+		moveSelf.play();
+	}
+	
     // remove previous tints
     this.removeTintType("legalTint");
     this.removeTintType("lastMoveTint");
@@ -287,7 +302,7 @@ class Board {
 
     newSquare.appendChild(pieceImage);
 
-      console.log(nRow, nLvl, pieceName);
+    console.log(nRow, nLvl, pieceName);
     if (this.canPromote(nRow, nLvl, pieceName)) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
     } else {
@@ -310,6 +325,9 @@ class Board {
     if(pRow < 0){
       console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
       console.log(`Solver return code: ${pRow}`);
+      // Play sound to signal game end
+      var gameEnd = new Audio("../sfx/game-end.wav");
+      gameEnd.play();
       return;
     }
     // update the cpp board to match the state of the GUI board
@@ -323,8 +341,30 @@ class Board {
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (this.hasImage(nRow, nCol, nLvl))
+    var curChecked = false;
+    var curCaptured = false;
+    
+    if (this.hasImage(nRow, nCol, nLvl)) {
+	  curCaptured = true;
       this.getSquareImage(nRow, nCol, nLvl).remove();
+	}
+	
+	// check if this move puts the other player in check
+	if (this.cppBoard.isChecked(this.turn)) {
+	  curChecked = true;
+	}
+	
+	// Play correct sound based on movement type performed
+	if (curChecked) {
+		var moveCheck = new Audio("../sfx/move-check.wav");
+		moveCheck.play();
+	} else if (curCaptured) {
+		var capture = new Audio("../sfx/capture.wav");
+		capture.play();
+	} else {
+		var moveOpponent = new Audio("../sfx/move-opponent.wav");
+		moveOpponent.play();
+	}
 
     this.removeTintType("lastMoveTint");
     // add highlights to show previous move
@@ -419,6 +459,8 @@ class Board {
     }
 
     cppPawn.promote(this.cppBoard, cppPromotedPiece);
+    var promote = new Audio("../sfx/promote.wav");
+    promote.play();
     this.changeTurn();
   }
 }
