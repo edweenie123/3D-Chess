@@ -4,6 +4,8 @@
 #include "turn.h"
 #include "board.h"
 #include "piece.h"
+#include "pawn.h"
+#include "queen.h"
 #include <algorithm>
 #include <vector>
 #include <cassert>
@@ -17,6 +19,7 @@ class Solver {
         int difficulty;
         Turn solve(Board &board, int depth, double ALPHA, double BETA, int color);
         double distance(Coordinate coord);
+        bool canPromote(Piece* piece);
         static unordered_map<char, double> pieceWeight;
         // Random number generator
         static random_device m_rd;

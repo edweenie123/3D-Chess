@@ -21,6 +21,12 @@ double Solver::distance(Coordinate coord){
     return (6 - (abs(coord.row - 2) + abs(coord.col - 2) + abs(coord.lvl - 2))) / 6.0;
 }
 
+bool Solver::canPromote(Piece* piece){
+    return piece->getId() == 'p' &&
+    ((piece->color == WHITE && piece->location.row + piece->location.lvl == 8) ||
+     (piece->color == BLACK && piece->location.row + piece->location.lvl == 0));
+}
+
 double Solver::evaluate(Board &board){
     if(difficulty == 0){
         // Beginner difficulty: Blind movement (The computer will choose by random)
@@ -67,7 +73,7 @@ vector<Turn> Solver::genMoves(Board &board, int color){
             }
         }
     }
-    // Shuffle moves for better pruning effect 
+    // Shuffle moves for better pruning effect
     shuffle(moves.begin(), moves.end(), m_rng);
     return moves;
 }
@@ -77,11 +83,11 @@ Turn Solver::nextMove(Board &board, int colour){
 }
 
 Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color){
-  
+
     // First look for checkmates, then stalemates
     if(board.isChecked(color)){
         if(board.isCheckmated(color)){
-            // White Mate --> -INF, Black Mate --> INF 
+            // White Mate --> -INF, Black Mate --> INF
             return Turn(INF * -color, Coordinate(-2, -1, -1), Move(0, 0, 0));
         }
     } else if(board.isStalemated(color)){
@@ -98,11 +104,20 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
     for(Turn curMove : genMoves(board, color)){
         // Move new piece
         Coordinate newLoc = curMove.currentLocation + curMove.change;
-        Piece* oldPiece = board.getPieceAt(newLoc);
+        Piece *pawn, *oldPiece = board.getPieceAt(newLoc);
         board.updateLocation(curMove.currentLocation, curMove.change);
+        bool promoted = canPromote(board.getPieceAt(newLoc));
+        if(promoted){
+            pawn = board.getPieceAt(newLoc);
+            ((Pawn*)pawn)->promote(board, new Queen(newLoc.row, newLoc.col, newLoc.lvl, color), false);
+        }
         // Recurse
         Turn candidate = Turn(solve(board, depth - 1, ALPHA, BETA, -color).score, curMove.currentLocation, curMove.change);
         // Revert move
+        if(promoted){
+            delete board.board[newLoc.row][newLoc.col][newLoc.lvl];
+            board.board[newLoc.row][newLoc.col][newLoc.lvl] = pawn;
+        }
         board.updateLocation(newLoc, -curMove.change);
         if(oldPiece->getId() != ' '){
             board.board[newLoc.row][newLoc.col][newLoc.lvl] = oldPiece;

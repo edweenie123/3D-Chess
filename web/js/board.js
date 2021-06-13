@@ -339,6 +339,8 @@ class Board {
     var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
     // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
+    var cppPiece = this.getPiece(nRow, nCol, nLvl);
+    var pieceName = String.fromCharCode(cppPiece.getId()) + (cppPiece.getColor() == 1 ? "l" : "d");
 
     // delete the prexisting image at the new coordinate if it exists
     var curChecked = false;
@@ -372,6 +374,12 @@ class Board {
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     newSquare.appendChild(pieceImage);
+    
+    if (this.canPromote(nRow, nLvl, pieceName)) {
+      // default to the best piece
+      this.promote(nRow, nCol, nLvl, "q" + pieceName[1]);
+    }
+    
     this.turn = this.turn === 1 ? -1 : 1;
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
@@ -457,8 +465,7 @@ class Board {
       default:
         throw "ERROR: promoteId is invalid"
     }
-
-    cppPawn.promote(this.cppBoard, cppPromotedPiece);
+    cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
     var promote = new Audio("../sfx/promote.wav");
     promote.play();
     this.changeTurn();

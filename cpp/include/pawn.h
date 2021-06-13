@@ -10,10 +10,10 @@
 
 class Pawn: public Piece {
     public:
-        char getId(); 
+        char getId();
         using Piece::Piece; // use constructor of parent class
         vector<Move> getMoves(Board board, bool prune);
-        void promote(Board& board, Piece* promotedPiece);
+        void promote(Board& board, Piece* promotedPiece, bool deletePiece);
 };
 
 #endif
