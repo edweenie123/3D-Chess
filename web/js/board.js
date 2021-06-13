@@ -14,6 +14,7 @@ class Board {
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compActive = false;
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
+    this.enemyChecked = false; // true if the other player's king is checked
     // this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
@@ -34,7 +35,7 @@ class Board {
         }
       }
     }
-    if (this.cpuDifficulty != -1 && this.compActive) 
+    if (this.cpuDifficulty != -1 && this.compActive)
       setTimeout(() => this.getNextComputerMove(), this.compDelay);
     if (this.cppBoard != -1) this.compActive = true;
   }
@@ -70,6 +71,22 @@ class Board {
     });
 
     return image;
+  }
+
+  getKingImg(color) {
+    for (var lvl = 0; lvl < this.size; lvl++) {
+      for (var row = 0; row < this.size; row++) {
+        for (var col = 0; col < this.size; col++) {
+          var piece = this.getPiece(row, col, lvl);
+          var pieceId = String.fromCharCode(piece.getId());
+          var pieceColor = piece.getColor();
+          if (pieceId === "k" && pieceColor === color) 
+            return this.getSquareImage(row, col, lvl);
+        }
+      }
+    }
+
+    throw "ERROR: king not found";
   }
 
   // create a div for each square of the board
@@ -248,6 +265,14 @@ class Board {
   updatePiecePosition(event) {
     var legalTint = event.target;
     var pieceName = legalTint.dataset["pieceName"];
+
+    // if the king was checked last turn, remove the checked shadow
+    if (this.enemyChecked === true) {
+      console.log("find king for ", this.turn)
+      this.getKingImg(this.turn).id = "";
+      this.enemyChecked = false;
+    }
+
     // get the piece and move delta information from the legalTint div
     const [pRow, pCol, pLvl] = legalTint.dataset["pieceLoc"]
       .split(",")
@@ -267,17 +292,21 @@ class Board {
     var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
-    // delete the prexisting image at the new coordinate if it exists
     var curChecked = false;
     var curCaptured = false;
+    // delete the prexisting image at the new coordinate if it exists
     if (this.hasImage(nRow, nCol, nLvl)) {
       curCaptured = true;
       this.getSquareImage(nRow, nCol, nLvl).remove();
     }
 
+
     // check if this move puts the other player in check
     if (this.cppBoard.isChecked(this.turn * -1)) {
       curChecked = true;
+      this.enemyChecked = true;
+      // add a shadow around the king to show that it is checked
+      this.getKingImg(this.turn * -1).id = "checked";
     }
 
     // Play correct sound based on movement type performed
@@ -314,6 +343,14 @@ class Board {
   getNextComputerMove() {
     // compute and parse next move to play
     var nxTurn = this.opponent.nextMove(this.cppBoard, this.turn);
+
+    // if the king was checked last turn, remove the checked shadow
+    if (this.enemyChecked === true) {
+      console.log("find king for ", this.turn)
+      this.getKingImg(this.turn).id = "";
+      this.enemyChecked = false;
+    }
+
     // current location
     const pRow = nxTurn.currentLocation.row;
     const pCol = nxTurn.currentLocation.col;
@@ -355,8 +392,10 @@ class Board {
     }
 
     // check if this move puts the other player in check
-    if (this.cppBoard.isChecked(this.turn)) {
+    if (this.cppBoard.isChecked(this.turn * -1)) {
       curChecked = true;
+      this.getKingImg(this.turn * -1).id = "checked";
+      this.enemyChecked = true;
     }
 
     // Play correct sound based on movement type performed

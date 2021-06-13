@@ -71,6 +71,7 @@ EMSCRIPTEN_BINDINGS() {
         .property("board", &Board::board)
         .function("updateLocation", &Board::updateLocation)
         .function("isChecked", &Board::isChecked)
+        .function("isCheckmated", &Board::isCheckmated)
         ;
     class_<Solver>("Solver")
         .constructor<int>()
