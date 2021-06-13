@@ -3,7 +3,7 @@ To-do:
     make board size dynamic (based of screen size)?
     rerender on window resize
 */
-    
+
 class Board {
   constructor(col, diff) {
     this.boardDiv = document.getElementById("board");
@@ -13,6 +13,7 @@ class Board {
     this.turn = -1; // 1 for white, -1 for black
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compActive = false;
+    this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
     // this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
@@ -29,11 +30,12 @@ class Board {
           var pieceColor = piece.getColor();
           var image = this.getSquareImage(row, col, lvl);
           image.style.pointerEvents =
-            (pieceColor === this.turn) ? "auto" : "none";
+            pieceColor === this.turn ? "auto" : "none";
         }
       }
     }
-    if(this.cpuDifficulty != -1 && this.compActive) this.getNextComputerMove();
+    if (this.cpuDifficulty != -1 && this.compActive) 
+      setTimeout(() => this.getNextComputerMove(), this.compDelay);
     if (this.cppBoard != -1) this.compActive = true;
   }
 
@@ -150,7 +152,7 @@ class Board {
     }
 
     if (className === "pieceSelectTint") {
-      tint.addEventListener("click", (event) => this.unselectPiece(event))
+      tint.addEventListener("click", (event) => this.unselectPiece(event));
     }
 
     // add the tint to the appropriate square
@@ -161,7 +163,7 @@ class Board {
   }
 
   unselectPiece(event) {
-    console.log("undo")
+    console.log("undo");
     this.removeTintType("legalTint");
 
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
@@ -205,9 +207,9 @@ class Board {
 
   // activates when user clicks on a piece
   displayLegalMoves(event, pieceName) {
-    this.removeTintType("pieceSelectTint")
+    this.removeTintType("pieceSelectTint");
     this.removeTintType("legalTint");
-    
+
     // obtain the coordinate of the image from the parent div and convert to int
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
@@ -217,7 +219,6 @@ class Board {
     selectedTint.dataset["coordinate"] = [row, col, lvl];
     // event.target.style.pointerEvents = "none";
 
-    
     var piece = this.getPiece(row, col, lvl);
     var moves = piece.getMoves(this.cppBoard, true);
 
@@ -270,27 +271,27 @@ class Board {
     var curChecked = false;
     var curCaptured = false;
     if (this.hasImage(nRow, nCol, nLvl)) {
-	  curCaptured = true;
+      curCaptured = true;
       this.getSquareImage(nRow, nCol, nLvl).remove();
     }
-    
+
     // check if this move puts the other player in check
     if (this.cppBoard.isChecked(this.turn * -1)) {
-	  curChecked = true;
-	}
-	
-	// Play correct sound based on movement type performed
-	if (curChecked) {
-		var moveCheck = new Audio("../sfx/move-check.wav");
-		moveCheck.play();
-	} else if (curCaptured) {
-		var capture = new Audio("../sfx/capture.wav");
-		capture.play();
-	} else {
-		var moveSelf = new Audio("../sfx/move-self.wav");
-		moveSelf.play();
-	}
-	
+      curChecked = true;
+    }
+
+    // Play correct sound based on movement type performed
+    if (curChecked) {
+      var moveCheck = new Audio("../sfx/move-check.wav");
+      moveCheck.play();
+    } else if (curCaptured) {
+      var capture = new Audio("../sfx/capture.wav");
+      capture.play();
+    } else {
+      var moveSelf = new Audio("../sfx/move-self.wav");
+      moveSelf.play();
+    }
+
     // remove previous tints
     this.removeTintType("legalTint");
     this.removeTintType("lastMoveTint");
@@ -309,7 +310,7 @@ class Board {
       this.changeTurn();
     }
   }
-  
+
   getNextComputerMove() {
     // compute and parse next move to play
     var nxTurn = this.opponent.nextMove(this.cppBoard, this.turn);
@@ -321,8 +322,8 @@ class Board {
     const mRow = nxTurn.change.row;
     const mCol = nxTurn.change.col;
     const mLvl = nxTurn.change.lvl;
-    
-    if(pRow < 0){
+
+    if (pRow < 0) {
       console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
       console.log(`Solver return code: ${pRow}`);
       // Play sound to signal game end
@@ -340,33 +341,35 @@ class Board {
     // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
     var cppPiece = this.getPiece(nRow, nCol, nLvl);
-    var pieceName = String.fromCharCode(cppPiece.getId()) + (cppPiece.getColor() == 1 ? "l" : "d");
+    var pieceName =
+      String.fromCharCode(cppPiece.getId()) +
+      (cppPiece.getColor() == 1 ? "l" : "d");
 
     // delete the prexisting image at the new coordinate if it exists
     var curChecked = false;
     var curCaptured = false;
-    
+
     if (this.hasImage(nRow, nCol, nLvl)) {
-	  curCaptured = true;
+      curCaptured = true;
       this.getSquareImage(nRow, nCol, nLvl).remove();
-	}
-	
-	// check if this move puts the other player in check
-	if (this.cppBoard.isChecked(this.turn)) {
-	  curChecked = true;
-	}
-	
-	// Play correct sound based on movement type performed
-	if (curChecked) {
-		var moveCheck = new Audio("../sfx/move-check.wav");
-		moveCheck.play();
-	} else if (curCaptured) {
-		var capture = new Audio("../sfx/capture.wav");
-		capture.play();
-	} else {
-		var moveOpponent = new Audio("../sfx/move-opponent.wav");
-		moveOpponent.play();
-	}
+    }
+
+    // check if this move puts the other player in check
+    if (this.cppBoard.isChecked(this.turn)) {
+      curChecked = true;
+    }
+
+    // Play correct sound based on movement type performed
+    if (curChecked) {
+      var moveCheck = new Audio("../sfx/move-check.wav");
+      moveCheck.play();
+    } else if (curCaptured) {
+      var capture = new Audio("../sfx/capture.wav");
+      capture.play();
+    } else {
+      var moveOpponent = new Audio("../sfx/move-opponent.wav");
+      moveOpponent.play();
+    }
 
     this.removeTintType("lastMoveTint");
     // add highlights to show previous move
@@ -374,12 +377,12 @@ class Board {
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     newSquare.appendChild(pieceImage);
-    
+
     if (this.canPromote(nRow, nLvl, pieceName)) {
       // default to the best piece
       this.promote(nRow, nCol, nLvl, "q" + pieceName[1]);
     }
-    
+
     this.turn = this.turn === 1 ? -1 : 1;
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
@@ -446,7 +449,7 @@ class Board {
     var cppPromotedPiece;
 
     // create new cppPiece depending on the id of promoted piece
-    switch(promoteId[0]) {
+    switch (promoteId[0]) {
       case "q":
         cppPromotedPiece = new Module.Queen(row, col, lvl, color);
         break;
@@ -463,7 +466,7 @@ class Board {
         cppPromotedPiece = new Module.Bishop(row, col, lvl, color);
         break;
       default:
-        throw "ERROR: promoteId is invalid"
+        throw "ERROR: promoteId is invalid";
     }
     cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
     var promote = new Audio("../sfx/promote.wav");
