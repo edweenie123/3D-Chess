@@ -6,103 +6,89 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@400;500&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400&display=swap" rel="stylesheet">
+    <title>3D-Chess</title>
 </head>
 
 <body>
     <div id="selec">
-        <h1>
-            <center>Welcome to 3D-Chess (Raumschach)!</center>
-        </h1>
-        <!-- Display game mode options to the user -->
-        <h2>Select your game mode: </h2>
-        <label>
-			<table>
-				<tr>
-					<td>
-						<input id="sel1" type="radio" name="test" value="-1" checked>
-						<div id="rad1" src="img/kd.svg"></div>
-					</td>
-					<td>
-						&nbsp;Player vs. Player
-					</td>
-				</tr>
-			</table>
-		</label>
-        <label>
-			<table>
-				<tr>
-					<td>
-						<input id="sel2" type="radio" name="test" value="0">
-						<div id="rad2" src="img/nd.svg"></div>
-					</td>
-					<td>
-						&nbsp;Player vs. AI (Easy)
-					</td>
-				</tr>
-			</table>
-		</label>
-        <label>
-			<table>
-				<tr>
-					<td>
-						<input id="sel3" type="radio" name="test" value="1">
-						<div id="rad3" src="img/rd.svg"></div>
-					</td>
-					<td>
-						&nbsp;Player vs. AI (Intermediate)
-					</td>
-				</tr>
-			</table>
-		</label>
-        <label>
-			<table>
-				<tr>
-					<td>
-						<input id="sel4" type="radio" name="test" value="2">
-						<div id="rad4" src="img/qd.svg"></div>
-					</td>
-					<td>
-						&nbsp;Player vs. AI (Hard)
-					</td>
-				</tr>
-			</table>
-		</label>
-
-        <br>
-
-        <!-- Create a toggle button for the player to choose if they want to play as white and black -->
-        <h2>Play as: </h2>
-        <table>
-            <tr>
-                <td>
-                    <p id="chosenColour"></p>
-                </td>
-                <td>
-                    <label class="switch">
-						<input id="sel5" type="checkbox">
-						<span class="slider round" id="playerToggle"></span>
-					</label>
-                </td>
-            </tr>
-        </table>
-
-        <!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
-        <center>
-            <table>
+        <div class="splashContent">
+            <h1 style="text-align:center; margin-bottom:0;">3D-CHESS</h1>
+            <h4 style="text-align:center; margin-top:0; font-weight:300;">RAUMSCHACH VARIANT</h4>
+            <!-- Display game mode options to the user -->
+            <h2>Game mode</h2>
+            <div class="modeContainer">
+                <label>
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="sel1" type="radio" name="test" value="-1" checked>
+                                <div id="rad1" src="img/kd.svg"></div>
+                            </td>
+                            <td><p>Player vs. Player</p></td>
+                        </tr>
+                    </table>
+                </label>
+                <label>
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="sel2" type="radio" name="test" value="0">
+                                <div id="rad2" src="img/nd.svg"></div>
+                            </td>
+                            <td><p>Player vs. Computer (Easy)</p></td>
+                        </tr>
+                    </table>
+                </label>
+                <label>
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="sel3" type="radio" name="test" value="1">
+                                <div id="rad3" src="img/rd.svg"></div>
+                            </td>
+                            <td><p>Player vs. Computer (Normal)</p></td>
+                        </tr>
+                    </table>
+                </label>
+                <label>
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="sel4" type="radio" name="test" value="2">
+                                <div id="rad4" src="img/qd.svg"></div>
+                            </td>
+                            <td><p>Player vs. Computer (Hard)</p></td>
+                        </tr>
+                    </table>
+                </label>
+            </div>
+            <!-- Create a toggle button for the player to choose if they want to play as white and black -->
+            <table style="width:100%;">
                 <tr>
+                    <td><p id="chosenColour">Play as</p></td>
                     <td>
-                        <button type="button" id="submitButton">Start Game!</button>
-                    </td>
-                    <td>
-                        <button type="button" onclick="window.open('https://www.chessvariants.com/3d.dir/3d5.html', '_blank')">How it works</button>
+                        <label class="switch">
+                            <input id="sel5" type="checkbox">
+                            <span class="slider round" id="playerToggle"></span>
+                        </label>
                     </td>
                 </tr>
             </table>
-        </center>
+
+            <!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
+            <center>
+                <table>
+                    <tr>
+                        <td><button type="button" id="submitButton">START</button></td>
+                        <td>
+                            <button type="button" onclick="window.open('https://www.chessvariants.com/3d.dir/3d5.html', '_blank')">Rules</button>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        </div>
     </div>
     <div id="board"></div>
     <div id="promotePanel">
@@ -115,7 +101,6 @@
     <script type="text/javascript" src="js/menu.js"></script>
     <script>
         var board;
-
         Module.onRuntimeInitialized = _ => {
             board = new Board();
             board.renderBoard();
@@ -123,7 +108,6 @@
             // board.changeTurn();
             // setTimeout(board.createPromotionPanel(1, 0, 0, "l"), 1000)
             document.getElementById("board").style.display = "none";
-
             var menu = new Menu(board);
         };
 

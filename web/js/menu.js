@@ -46,7 +46,7 @@ class Menu {
 
   init() {
     document.getElementById("chosenColour").innerHTML =
-      (this.colour === 1) ? "WHITE" : "BLACK";
+      "Play as " + ((this.colour === 1) ? "WHITE" : "BLACK");
   }
 }
 

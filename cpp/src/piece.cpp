@@ -41,24 +41,21 @@ vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord)
     int lvl = cord.lvl;
     // Prune out all the moves that are illegal (places its king in check)
     for (int i = int(moves.size()) - 1; i >= 0; --i) {
-		bool illegalMove = false;
         Move m = moves[i];
-
         // Try simulating this move
-        Piece* oldPiece = board.getPieceAt({row + m.row, col + m.col, lvl + m.lvl});
+        Piece* oldPiece = board.board[row + m.row][col + m.col][lvl + m.lvl];
         board.updateLocation({row, col, lvl}, m);
-        if (board.isChecked(color)) {
-            // prune this move
-            illegalMove = true;
-        }
+        // prune move if checked
+        bool illegalMove = board.isChecked(color);
         // Undo the simulated move
-        board.updateLocation({row + m.row, col + m.col, lvl + m.lvl}, {-m.row, -m.col, -m.lvl});
+        board.updateLocation({row + m.row, col + m.col, lvl + m.lvl}, -m);
         if (oldPiece->getId() != ' ') {
             board.board[row + m.row][col + m.col][lvl + m.lvl] = oldPiece;
             oldPiece->isAlive = true;
         }
         if (illegalMove) {
-            moves.erase(moves.begin() + i);
+            swap(moves[i], moves.back());
+            moves.pop_back();
         }
     }
     return moves;
@@ -82,15 +79,14 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool
 
     for (auto dir : directions) {
         Coordinate cur = Coordinate(location.row, location.col, location.lvl);
-        Move curDelta = Move(dir.row, dir.col, dir.lvl);
-
+        Move curDelta = dir;
         while (true) {
             // move the coordinate by the direction vector
             cur = Coordinate(cur, dir);
             if (!board.isOnBoard(cur)) break;
             if (!board.isVacant(cur)) {
                 // only add the move if the piece at cur is of OPPOSITE color
-                if (board.getPieceAt(cur)->color != color)
+                if (board.board[cur.row][cur.col][cur.lvl]->color != color)
                     moves.push_back(curDelta);
 
                 // exit the while loop as there is a piece blocking the piece's way
@@ -100,7 +96,7 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool
             moves.push_back(curDelta);
 
             // increase the delta by the direction vector
-            curDelta = curDelta + dir;
+            curDelta += dir;
         }
 
     }

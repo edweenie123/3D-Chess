@@ -87,28 +87,20 @@ Piece* Board::getPieceAt(int row, int col, int lvl) {
 }
 
 bool Board::isOnBoard(Coordinate c) {
-    if (c.row >= 0 && c.row < 5 && c.col >= 0 && c.col < 5 && c.lvl >= 0 && c.lvl < 5) {
-        return true; // this coordinate lies within te 5x5x5 board
-    }
-    return false;
+    // this coordinate lies within te 5x5x5 board
+    return c.row >= 0 && c.row < 5 && c.col >= 0 && c.col < 5 && c.lvl >= 0 && c.lvl < 5;
 }
 
 bool Board::isVacant(Coordinate c) {
     if (!isOnBoard(c)) return false;
-    Piece* curPiece = board[c.row][c.col][c.lvl];
-    if (curPiece->isAlive) {
-        return false; // this square is occupied
-    }
-    return true;
+    // this square is occupied
+    return !board[c.row][c.col][c.lvl]->isAlive;
 }
 
 bool Board::isEnemySquare(Coordinate c, int pieceColor) {
-    if (isVacant(c)) return false;
-    if (!isOnBoard(c)) return false;
-
-    Piece* pieceAtC = getPieceAt(c);
+    if (!isOnBoard(c) || isVacant(c)) return false;
     // return true if the piece at C is an enemy of pieceColor
-    return pieceAtC->color != pieceColor;
+    return board[c.row][c.col][c.lvl]->color != pieceColor;
 }
 
 
@@ -136,21 +128,12 @@ void Board::updateLocation(Coordinate square, Move movement) {
     if (!isOnBoard(newCord)) return;
     Piece* nextSquare = board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
 
-    bool legal = true;
-    if (isOnBoard(newCord) == false) {
-        legal = false;
-    } else if (isVacant(newCord) == false && nextSquare->color == curPiece->color) {
-        legal = false;
-    }
-    // haven't added king checks, and check checks (king can't place itself in a check)
-    if (!legal) return;
+    if (!isVacant(newCord) && nextSquare->color == curPiece->color) return;
 
     // The move should be legal, so we update it on the board,and for the piece
 
     // update the piece
-    curPiece->location.row = newRow;
-    curPiece->location.col = newCol;
-    curPiece->location.lvl = newLvl;
+    curPiece->location = newCord;
 
     // We need to update the board
     /* To Denote an empty cell, we simply use a dead piece */
@@ -160,22 +143,19 @@ void Board::updateLocation(Coordinate square, Move movement) {
     // update board with the piece's new location
 
     // if there is a piece of opposite colour currently occupying the new location, we destroy it
-    if (!isVacant({newRow, newCol, newLvl})) {
-        nextSquare->isAlive = false;
-    }
+    nextSquare->isAlive = false;
     board[newRow][newCol][newLvl] = curPiece;
 }
 
 bool Board::isChecked(int pieceColor) {
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            for (int k = 0; k < 5; ++k) {
+    for (int x = 0; x < 5; ++x) {
+        for (int y = 0; y < 5; ++y) {
+            for (int z = 0; z < 5; ++z) {
                 // if the current cell contains a piece, process its possible moves
                 // only process enemy pieces
-                if (board[i][j][k]->isAlive && board[i][j][k]->color != pieceColor) {
-                    vector<Move> possibleMoves;
-                    if (board[i][j][k]->getId() == 'p') {
-                        possibleMoves = board[i][j][k]->getMoves(*this, false);
+                if (board[x][y][z]->isAlive && board[x][y][z]->color != pieceColor) {
+                    vector<Move> possibleMoves = board[x][y][z]->getMoves(*this, false);
+                    if (board[x][y][z]->getId() == 'p') {
                         // filter down the passive moves for the pawn
                         for (int i = int(possibleMoves.size()) - 1; i >= 0; --i) {
                             // count the number of 0's in this move
@@ -185,12 +165,14 @@ bool Board::isChecked(int pieceColor) {
                             if (possibleMoves[i].lvl == 0) zeros++;
                             if (zeros > 1) {
                                 // its a passive move, delete it
+                                //swap(possibleMoves[i], possibleMoves.back());
+                                //possibleMoves.pop_back();
                                 possibleMoves.erase(possibleMoves.begin() + i);
                             }
                         }
-                    } else possibleMoves = board[i][j][k]->getMoves(*this, false);
+                    }
                     for (Move m : possibleMoves) {
-                        if (board[i + m.row][j + m.col][k + m.lvl]->getId() == 'k') {
+                        if (board[x + m.row][y + m.col][z + m.lvl]->getId() == 'k') {
                             return true;
                         }
                     }
@@ -211,23 +193,16 @@ bool Board::isCheckmated(int pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
                         Coordinate newCoord = Coordinate(i, j, k) + m;
-                        Piece* oldPiece = (*this).getPieceAt(newCoord);
+                        Piece* oldPiece = board[newCoord.row][newCoord.col][newCoord.lvl];
                         updateLocation({i, j, k}, m);
-                        if (isChecked(pieceColor) == false) {
-                            // undo the move before exiting
-                            updateLocation(newCoord, -m);
-                            if(oldPiece->getId() != ' '){
-                                board[newCoord.row][newCoord.col][newCoord.lvl] = oldPiece;
-                                oldPiece->isAlive = true;
-                            }
-                            return false;
-                        }
+                        bool checked = isChecked(pieceColor);
                         // undo the move
                         updateLocation(newCoord, -m);
                         if(oldPiece->getId() != ' '){
                             board[newCoord.row][newCoord.col][newCoord.lvl] = oldPiece;
                             oldPiece->isAlive = true;
                         }
+                        if(!checked) return false;
                     }
                 }
             }
