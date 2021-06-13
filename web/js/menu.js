@@ -1,7 +1,7 @@
 class Menu {
   constructor(board) {
     this.board = board;
-    this.colour = 1; // Assume player wants to play as white
+    this.colour = (document.getElementById("sel5").checked) ? -1 : 1; // Assume player wants to play as white
     this.gameMode;
     this.menuDiv = document.getElementById("selec");
     document.getElementById("playerToggle").onclick = () => {this.toggle()};
