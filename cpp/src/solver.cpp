@@ -3,8 +3,8 @@
 random_device Solver::m_rd;
 mt19937       Solver::m_rng(Solver::m_rd());
 uniform_int_distribution<int> Solver::rng(0, INF);
-unordered_map<char, double> Solver::pieceWeight = {
-    {'b', 3}, {'k', 1}, {'n', 3}, {'p', 2}, {'q', 6}, {'r', 5}, {'u', 3}
+unordered_map<char, int> Solver::pieceWeight = {
+    {'b', 30}, {'k', 100}, {'n', 30}, {'p', 20}, {'q', 60}, {'r', 50}, {'u', 30}
 };
 
 Solver::Solver(int difficulty_) {
@@ -17,8 +17,14 @@ int Solver::randRange(int low, int high){
     return low + rng(m_rng) % range;
 }
 
-double Solver::distance(Coordinate coord){
-    return (6 - (abs(coord.row - 2) + abs(coord.col - 2) + abs(coord.lvl - 2))) / 6.0;
+int Solver::distance(Coordinate coord){
+    return -(abs(coord.row - 2) * 3 + abs(coord.col - 2) + abs(coord.lvl - 2) * 6);
+}
+
+int Solver::pieceScore(Piece *piece){
+    // Hard difficulty: Sum of difference active piece scores, each multiplied by their relative position to the center (calculated using manhattan distance)
+    if(!piece->isAlive) return 0;
+    return (pieceWeight[piece->getId()] + distance(piece->location)) * piece->color;
 }
 
 bool Solver::canPromote(Piece* piece){
@@ -27,21 +33,12 @@ bool Solver::canPromote(Piece* piece){
      (piece->color == BLACK && piece->location.row + piece->location.lvl == 0));
 }
 
-double Solver::evaluate(Board &board){
-    if(difficulty == 0){
-        // Beginner difficulty: Blind movement (The computer will choose by random)
-        return 0;
-    } else if(difficulty == 1){
-        // Normal difficulty: Random leaf values (Utilize the Beal effect)
-        return randRange(-INF, INF);
-    }
-    // Hard difficulty: Sum of difference active piece scores, each multiplied by their relative position to the center (calculated using manhattan distance)
-    double score = 0;
+int Solver::evaluate(Board &board){
+    int score = 0;
     for(int row = 0; row < 5; ++row){
         for(int col = 0; col < 5; ++col){
             for(int lvl = 0; lvl < 5; ++lvl){
-                if(!board.getPieceAt(row, col, lvl)->isAlive) continue;
-                score += (pieceWeight[board.getPieceAt(row, col, lvl)->getId()] + distance({row, col, lvl})) * board.getPieceAt(row, col, lvl)->color;
+                score += pieceScore(board.getPieceAt(row, col, lvl));
             }
         }
     }
@@ -56,11 +53,12 @@ vector<Turn> Solver::genMoves(Board &board, int color){
                 if(board.board[i][j][k]->color == color && board.board[i][j][k]->isAlive){
                     // Go through all the moves, make sure you don't leave your king checked
                     for (Move m : board.board[i][j][k]->getMoves(board, false)) {
-                        Piece* oldPiece = board.getPieceAt({i + m.row, j + m.col, k + m.lvl});
+                        Piece* oldPiece = board.board[i + m.row][j + m.col][k + m.lvl];
+                        int newScore = -pieceScore(board.board[i][j][k]) - pieceScore(oldPiece);
                         board.updateLocation({i, j, k}, m);
                         if(!board.isChecked(color)) {
                             // Valid move
-                            moves.push_back(Turn(0, Coordinate(i, j, k), m));
+                            moves.push_back(Turn(newScore + pieceScore(board.board[i + m.row][j + m.col][k + m.lvl]), Coordinate(i, j, k), m));
                         }
                         // undo the move
                         board.updateLocation({i + m.row, j + m.col, k + m.lvl}, -m);
@@ -73,16 +71,37 @@ vector<Turn> Solver::genMoves(Board &board, int color){
             }
         }
     }
-    // Shuffle moves for better pruning effect
-    shuffle(moves.begin(), moves.end(), m_rng);
+    // Sort moves in decreasing score for better pruning effect
+    if(color == WHITE) sort(moves.begin(), moves.end(), [](const Turn &lhs, const Turn &rhs){ return lhs.score > rhs.score;});
+    else sort(moves.begin(), moves.end(), [](const Turn &lhs, const Turn &rhs){ return lhs.score < rhs.score;});
     return moves;
 }
 
 Turn Solver::nextMove(Board &board, int colour){
-    return solve(board, 2, -INF, INF, colour);
+    if(difficulty == 0){
+        // Easy mode -- randomly choose a move
+        vector<char> active;
+        vector<Turn> moves = genMoves(board, colour);
+        shuffle(moves.begin(), moves.end(), m_rng);
+        assert(!moves.empty());
+        for(auto turn : moves){
+            active.push_back(board.getPieceAt(turn.currentLocation)->getId());
+        }
+        sort(active.begin(), active.end());
+        active.erase(unique(active.begin(), active.end()), active.end());
+        // Choose a random piece
+        char tgt = active[randRange(0, active.size() - 1)];
+        for(auto turn : moves){
+            if(board.getPieceAt(turn.currentLocation)->getId() == tgt){
+                return turn;
+            }
+        }
+        assert(false);
+    }
+    return solve(board, 3, -INF, INF, colour, evaluate(board));
 }
 
-Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color){
+Turn Solver::solve(Board &board, int depth, int ALPHA, int BETA, int color, int score){
 
     // First look for checkmates, then stalemates
     if(board.isChecked(color)){
@@ -97,7 +116,7 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
 
     if(depth == 0){
         // Evaluate board
-        return Turn(evaluate(board), Coordinate(-4, -1, -1), Move(0, 0, 0));
+        return Turn(difficulty == 1 ? score + randRange(-30, 30) : score, Coordinate(-4, -1, -1), Move(0, 0, 0));
     }
 
     Turn best(color == WHITE ? -INF : INF, Coordinate(-3, -1, -1), Move(0, 0, 0));
@@ -105,14 +124,17 @@ Turn Solver::solve(Board &board, int depth, double ALPHA, double BETA, int color
         // Move new piece
         Coordinate newLoc = curMove.currentLocation + curMove.change;
         Piece *pawn, *oldPiece = board.getPieceAt(newLoc);
+        int newScore = score + curMove.score;
         board.updateLocation(curMove.currentLocation, curMove.change);
         bool promoted = canPromote(board.getPieceAt(newLoc));
         if(promoted){
             pawn = board.getPieceAt(newLoc);
+            newScore -= pieceScore(board.getPieceAt(newLoc));
             ((Pawn*)pawn)->promote(board, new Queen(newLoc.row, newLoc.col, newLoc.lvl, color), false);
+            newScore += pieceScore(board.getPieceAt(newLoc));
         }
         // Recurse
-        Turn candidate = Turn(solve(board, depth - 1, ALPHA, BETA, -color).score, curMove.currentLocation, curMove.change);
+        Turn candidate = Turn(solve(board, depth - 1, ALPHA, BETA, -color, newScore).score, curMove.currentLocation, curMove.change);
         // Revert move
         if(promoted){
             delete board.board[newLoc.row][newLoc.col][newLoc.lvl];

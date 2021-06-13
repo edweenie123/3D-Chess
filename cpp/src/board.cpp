@@ -32,6 +32,7 @@ Board::Board() {
         board[1][i][0] = new Pawn(1, i, 0, WHITE);
     }
 
+
     // set pieces for Level B
     board[0][0][1] = new Bishop(0, 0, 1, WHITE);
     board[0][3][1] = new Bishop(0, 3, 1, WHITE);
@@ -77,12 +78,12 @@ void Board::printBoard() {
 }
 
 Piece* Board::getPieceAt(Coordinate square) {
-    if (!isOnBoard(square)) return nullptr;
+    //if (!isOnBoard(square)) return nullptr;
     return board[square.row][square.col][square.lvl];
 }
 
 Piece* Board::getPieceAt(int row, int col, int lvl) {
-    if (!isOnBoard({row, col, lvl})) return nullptr;
+    //if (!isOnBoard({row, col, lvl})) return nullptr;
     return board[row][col][lvl];
 }
 
@@ -125,7 +126,8 @@ void Board::updateLocation(Coordinate square, Move movement) {
     int newCol = curPiece->location.col + movement.col;
     int newLvl = curPiece->location.lvl + movement.lvl;
     Coordinate newCord = {newRow, newCol, newLvl};
-    if (!isOnBoard(newCord)) return;
+    // There shouldn't be any need to check whether the square is on the board if we check it before
+    //if (!isOnBoard(newCord)) return;
     Piece* nextSquare = board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
 
     if (!isVacant(newCord) && nextSquare->color == curPiece->color) return;
@@ -159,15 +161,11 @@ bool Board::isChecked(int pieceColor) {
                         // filter down the passive moves for the pawn
                         for (int i = int(possibleMoves.size()) - 1; i >= 0; --i) {
                             // count the number of 0's in this move
-                            int zeros = 0;
-                            if (possibleMoves[i].row == 0) zeros++;
-                            if (possibleMoves[i].col == 0) zeros++;
-                            if (possibleMoves[i].lvl == 0) zeros++;
+                            int zeros = (possibleMoves[i].row == 0) + (possibleMoves[i].col == 0) + (possibleMoves[i].lvl == 0);
                             if (zeros > 1) {
                                 // its a passive move, delete it
-                                //swap(possibleMoves[i], possibleMoves.back());
-                                //possibleMoves.pop_back();
-                                possibleMoves.erase(possibleMoves.begin() + i);
+                                swap(possibleMoves[i], possibleMoves.back());
+                                possibleMoves.pop_back();
                             }
                         }
                     }
@@ -219,7 +217,7 @@ bool Board::isStalemated(int pieceColor) {
         for (int j = 0; j < 5; ++j) {
             for (int k = 0; k < 5; ++k) {
                 if (board[i][j][k]->color == pieceColor && board[i][j][k]->isAlive) {
-                    if (!board[i][j][k]->getMoves(*this, true).empty()) {
+                    if (board[i][j][k]->hasAnyMoves(*this, {i,j,k})) {
                         // Found a legal valid move
                         return false;
                     }

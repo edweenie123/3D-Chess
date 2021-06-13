@@ -8,10 +8,10 @@ using namespace std;
 class Turn {
     private:
     public:
-        double score;
+        int score;
         Coordinate currentLocation;
         Move change;
-        Turn(double, Coordinate, Move);
+        Turn(int, Coordinate, Move);
         Turn& operator= (const Turn&);
 };
 

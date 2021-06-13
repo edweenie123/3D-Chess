@@ -70,20 +70,13 @@ vector<Move> Piece::getMoves(Board board, bool prune) {
 vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool prune) {
     vector<Move> moves;
 
-    int row = location.row;
-    int col = location.col;
-    int lvl = location.lvl;
-
     // find all legal moves in "line" with directions
     // used for queen, rook, bishop and unicorn getMoves() method
 
     for (auto dir : directions) {
-        Coordinate cur = Coordinate(location.row, location.col, location.lvl);
+        Coordinate cur = location + dir;
         Move curDelta = dir;
-        while (true) {
-            // move the coordinate by the direction vector
-            cur = Coordinate(cur, dir);
-            if (!board.isOnBoard(cur)) break;
+        while (board.isOnBoard(cur)) {
             if (!board.isVacant(cur)) {
                 // only add the move if the piece at cur is of OPPOSITE color
                 if (board.board[cur.row][cur.col][cur.lvl]->color != color)
@@ -94,9 +87,10 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool
             }
             // coordinate at cur is empty therefore, the piece can move there
             moves.push_back(curDelta);
-
             // increase the delta by the direction vector
             curDelta += dir;
+            // move the coordinate by the direction vector
+            cur += dir;
         }
 
     }
@@ -107,7 +101,24 @@ vector<Move> Piece::getAllMovesInLine(vector<Move> directions, Board board, bool
     return moves;
 }
 
-
-// string Piece::toString() {
-//     // return "isAlive = " + isAlive + " location = ";
-// }
+bool Piece::hasAnyMoves(Board board, Coordinate cord){
+    int row = cord.row;
+    int col = cord.col;
+    int lvl = cord.lvl;
+    // Prune out all the moves that are illegal (places its king in check)
+    for (auto m : getMoves(board, false)) {
+        // Try simulating this move
+        Piece* oldPiece = board.board[row + m.row][col + m.col][lvl + m.lvl];
+        board.updateLocation({row, col, lvl}, m);
+        // prune move if checked
+        bool illegalMove = board.isChecked(color);
+        // Undo the simulated move
+        board.updateLocation({row + m.row, col + m.col, lvl + m.lvl}, -m);
+        if (oldPiece->getId() != ' ') {
+            board.board[row + m.row][col + m.col][lvl + m.lvl] = oldPiece;
+            oldPiece->isAlive = true;
+        }
+        if(!illegalMove) return true;
+    }
+    return false;
+}

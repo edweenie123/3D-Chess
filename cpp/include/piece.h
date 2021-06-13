@@ -27,7 +27,7 @@ class Piece {
         string toString();
         vector<Move> getAllMovesInLine(vector<Move>, Board, bool); // bool is to specify if we want to prune for checks
         vector<Move> pruneMoves(vector<Move>, Board, Coordinate);
-
+        bool hasAnyMoves(Board, Coordinate); // Checks if a piece has any legal moves
         virtual vector<Move> getMoves(Board, bool);
         virtual char getId();
 };
