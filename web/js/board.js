@@ -55,7 +55,7 @@ class Board {
 
   // returns the div located at a specific coordiante
   getSquareDiv(row, col, lvl) {
-    return this.boardDiv.childNodes[lvl].childNodes[
+    return this.boardDiv.childNodes[this.size - 1 - lvl].childNodes[
       (this.size - 1 - row) * this.size + col
     ];
   }
@@ -91,7 +91,7 @@ class Board {
 
   // create a div for each square of the board
   renderBoard() {
-    for (var lvl = 0; lvl < this.size; lvl++) {
+    for (var lvl = this.size - 1; lvl >= 0; lvl--) {
       var boardLvl = document.createElement("DIV");
       boardLvl.className = "boardLvl";
 
