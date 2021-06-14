@@ -95,7 +95,7 @@
     </div>
     <center><div id="board"></div></center>
     <div id="buttonSwapView">
-		<center><button type="button" id="swapView" onclick="swapView()">Switch view (2D / 3D)</button></center>
+        <center><button type="button" id="swapView" onclick="swapView()">Switch view (2D / 3D)</button></center>
     </div>
     <div id="promotePanel">
         <div id="pieceHolder"></div>
@@ -117,36 +117,43 @@
             var menu = new Menu(board);
         };
 
-		var view2d = true; // default is the 2d view of the board
-		function swapView() {
-			let boardLevel = document.querySelectorAll(".boardLvl");
-			let boardPiece = document.querySelectorAll(".chessImg");
-			if (view2d == true) {
-				// Switch view to 3D view
-				view2d = false;
-				for (let i = 0; i < boardLevel.length; i++) {
-					boardLevel[i].style.display = "inherit";
-					boardLevel[i].style.transform = "rotateX(55deg) skew(-20deg)";
-					boardLevel[i].style.webkitTransform = "rotateX(55deg) skew(-20deg)";
-				}
-				for (let i = 0; i < boardPiece.length; i++) {
-					boardPiece[i].style.transform = "translate(-75%, -90%) rotateX(-55deg) rotateZ(5deg) skew(20deg) scale3d(1.0, 3.0, 1.0)";
-					boardPiece[i].style.webkitTransform = "translate(-75%, -90%) rotateX(-55deg) rotateZ(5deg) skew(20deg) scale3d(1.0, 3.0, 1.0)";
-				}
-			} else {
-				// Switch view to 2D view
-				view2d = true;
-				for (let i = 0; i < boardLevel.length; i++) {
-					boardLevel[i].style.display = "inline-block";
-					boardLevel[i].style.transform = "rotateX(0deg) skew(0deg)";
-					boardLevel[i].style.webkitTransform = "rotateX(0deg) skew(0deg)";
-				}
-				for (let i = 0; i < boardPiece.length; i++) {
-					boardPiece[i].style.transform = "translate(-50%, -50%)";
-					boardPiece[i].style.webkitTransform = "translate(-50%, -50%)";
-				}
-			}
-		}
+        var view2d = true; // default is the 2d view of the board
+        function swapView() {
+            let boardLevel = document.querySelectorAll(".boardLvl");
+            let boardPiece = document.querySelectorAll(".chessImg");
+            if (view2d) {
+                // Switch view to 3D view
+                view2d = false;
+                let height = parseInt(boardLevel[0].style.height.slice(0, -2));
+                let missing = height * (1 - Math.cos(63 * Math.PI / 180)) * 0.95;
+                let totalHeight = missing;
+                for (let i = 0; i < boardLevel.length; i++) {
+                    boardLevel[i].style.display = "inherit";
+                    boardLevel[i].style.transform = `translateY(${-i * missing}vh) rotateX(63deg) skew(336deg)`;
+                    boardLevel[i].style.webkitTransform = `translateY(${-i * missing}vh) rotateX(63deg) skew(336deg)`;
+                    boardLevel[i].style.boxShadow = "5px 9px 8px -1px rgba(0,0,0,0.57)";
+                    boardLevel[i].style.webkitBoxShadow = "5px 9px 8px -1px rgba(0,0,0,0.57)";
+                    totalHeight += height * Math.cos(63 * Math.PI / 180);
+                }
+                for (let i = 0; i < boardPiece.length; i++) {
+                    boardPiece[i].style.transform = "translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0)";
+                    boardPiece[i].style.webkitTransform = "translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0)";
+                }
+                document.getElementById("board").style.height = `${totalHeight * 1.1}vh`;
+            } else {
+                // Switch view to 2D view
+                view2d = true;
+                for (let i = 0; i < boardLevel.length; i++) {
+                    boardLevel[i].style.display = "inline-block";
+                    boardLevel[i].style.transform = "rotateX(0deg) skew(0deg)";
+                    boardLevel[i].style.webkitTransform = "rotateX(0deg) skew(0deg)";
+                }
+                for (let i = 0; i < boardPiece.length; i++) {
+                    boardPiece[i].style.transform = "translate(-50%, -50%)";
+                    boardPiece[i].style.webkitTransform = "translate(-50%, -50%)";
+                }
+            }
+        }
     </script>
 </body>
 
