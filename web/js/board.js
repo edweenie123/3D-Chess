@@ -149,9 +149,12 @@ class Board {
     });
 
     var allBoardLvl = document.getElementsByClassName("boardLvl");
-    Array.from(allBoardLvl).forEach((lvl) => {
-      lvl.style.width = this.squareSize * this.size + "vh";
-      lvl.style.height = this.squareSize * this.size + "vh";
+    Array.from(allBoardLvl).forEach((lvl, index) => {
+      let height = this.squareSize * this.size;
+      let missing = height * (1 - Math.cos(63 * Math.PI / 180)) * 0.95;
+      lvl.style.width = height + "vh";
+      lvl.style.height = height + "vh";
+      lvl.style.transform = `translateY(${-index * missing}vh) rotateX(63deg) skew(336deg)`;
     });
   }
 

@@ -54,7 +54,6 @@ class Menu {
   }
 
   init() {
-	document.getElementById("buttonSwapView").style.display = "none";
     document.getElementById("chosenColour").innerHTML =
       `Play as <b>${((this.colour === 1) ? "WHITE" : "BLACK")}</b>`;
   }
