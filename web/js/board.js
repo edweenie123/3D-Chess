@@ -5,7 +5,7 @@ To-do:
 */
 
 class Board {
-  constructor(windowWidth) {
+  constructor() {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
     this.squareSize = 6; // size of each square on board in px

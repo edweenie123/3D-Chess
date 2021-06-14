@@ -20,7 +20,7 @@
             <h1 style="text-align:center; margin-bottom:0;">3D-CHESS</h1>
             <h4 style="text-align:center; margin-top:0;">RAUMSCHACH VARIANT</h4>
             <!-- Display game mode options to the user -->
-            <h2>GAME MODE</h2>
+            <h3 style="text-align:center; margin-bottom:0;">GAME MODE</h3>
             <div class="modeContainer">
                 <label>
                     <table>
@@ -40,7 +40,7 @@
                                 <input id="sel2" type="radio" name="test" value="0">
                                 <div id="rad2" src="img/nd.svg"></div>
                             </td>
-                            <td><p>Player vs. Computer (Easy)</p></td>
+                            <td style="padding:0;"><h4>Player vs. Computer (Easy)</h4></td>
                         </tr>
                     </table>
                 </label>
@@ -51,7 +51,7 @@
                                 <input id="sel3" type="radio" name="test" value="1">
                                 <div id="rad3" src="img/rd.svg"></div>
                             </td>
-                            <td><p>Player vs. Computer (Normal)</p></td>
+                            <td style="padding:0;"><h4>Player vs. Computer (Normal)</h4></td>
                         </tr>
                     </table>
                 </label>
@@ -62,31 +62,27 @@
                                 <input id="sel4" type="radio" name="test" value="2">
                                 <div id="rad4" src="img/qd.svg"></div>
                             </td>
-                            <td><p>Player vs. Computer (Hard)</p></td>
+                            <td style="padding:0;"><h4>Player vs. Computer (Hard)</h4></td>
                         </tr>
                     </table>
                 </label>
             </div>
             <!-- Create a toggle button for the player to choose if they want to play as white and black -->
-            <table style="width:100%;">
-                <tr>
-                    <td><p id="chosenColour">Play as</p></td>
-                    <td>
-                        <label class="switch">
-                            <input id="sel5" type="checkbox">
-                            <span class="slider round" id="playerToggle"></span>
-                        </label>
-                    </td>
-                </tr>
-            </table>
+            <span style="width:100%; padding: 0 2vw;">
+                <p id="chosenColour" style="display: inline-block;">Play as</p>
+                <label class="switch">
+                    <input id="sel5" type="checkbox">
+                    <span class="slider round" id="playerToggle"></span>
+                </label>
+            </span>
 
             <!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
-            <center>
+            <center style="margin-top: 1.5vh;">
                 <table>
                     <tr>
-                        <td><button type="button" id="submitButton">START</button></td>
+                        <td><a class="welcomeButton" id="submitButton">Play&nbsp ▶</a></td>
                         <td>
-                            <button type="button" onclick="window.open('https://www.chessvariants.com/3d.dir/3d5.html', '_blank')">Rules</button>
+                            <a class="welcomeButton" href="https://www.chessvariants.com/3d.dir/3d5.html" target="_blank")">&nbsp Rules &nbsp</button>
                         </td>
                     </tr>
                 </table>
@@ -98,14 +94,12 @@
         <div id="pieceHolder"></div>
     </div>
     <script type="text/javascript" src="gen/a.out.js"></script>
-    <script>
-    </script>
     <script type="text/javascript" src="js/board.js"></script>
     <script type="text/javascript" src="js/menu.js"></script>
     <script>
         var board;
         Module.onRuntimeInitialized = _ => {
-            board = new Board(window.innerWidth);
+            board = new Board();
             board.renderBoard();
             board.renderPieces();
             document.getElementById("board").style.display = "none";

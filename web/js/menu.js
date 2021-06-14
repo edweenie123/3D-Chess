@@ -29,7 +29,6 @@ class Menu {
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
-    document.getElementById("buttonSwapView").style.display = "block";
 
     if (this.gameMode != -1) {
       if (this.colour==1) this.board.changeClickability(true, false);
@@ -54,8 +53,7 @@ class Menu {
   }
 
   init() {
-    document.getElementById("chosenColour").innerHTML =
-      `Play as <b>${((this.colour === 1) ? "WHITE" : "BLACK")}</b>`;
+    document.getElementById("chosenColour").innerHTML = `Play as <b>${((this.colour === 1) ? "WHITE" : "BLACK")}</b>`;
   }
 }
 
