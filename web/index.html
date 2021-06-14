@@ -90,7 +90,10 @@
             </center>
         </div>
     </div>
-    <div id="board"></div>
+    <center><div id="board"></div></center>
+    <div id="buttonSwapView">
+		<center><button type="button" id="swapView" onclick="swapView()">Switch view (2D / 3D)</button></center>
+    </div>
     <div id="promotePanel">
         <div id="pieceHolder"></div>
     </div>
@@ -102,7 +105,7 @@
     <script>
         var board;
         Module.onRuntimeInitialized = _ => {
-            board = new Board();
+            board = new Board(window.innerWidth);
             board.renderBoard();
             board.renderPieces();
             // board.changeTurn();
@@ -111,6 +114,36 @@
             var menu = new Menu(board);
         };
 
+		var view2d = true; // default is the 2d view of the board
+		function swapView() {
+			let boardLevel = document.querySelectorAll(".boardLvl");
+			let boardPiece = document.querySelectorAll(".chessImg");
+			if (view2d == true) {
+				// Switch view to 3D view
+				view2d = false;
+				for (let i = 0; i < boardLevel.length; i++) {
+					boardLevel[i].style.display = "inherit";
+					boardLevel[i].style.transform = "rotateX(55deg) skew(-20deg)";
+					boardLevel[i].style.webkitTransform = "rotateX(55deg) skew(-20deg)";
+				}
+				for (let i = 0; i < boardPiece.length; i++) {
+					boardPiece[i].style.transform = "translate(-75%, -90%) rotateX(-55deg) rotateZ(5deg) skew(20deg) scale3d(1.0, 3.0, 1.0)";
+					boardPiece[i].style.webkitTransform = "translate(-75%, -90%) rotateX(-55deg) rotateZ(5deg) skew(20deg) scale3d(1.0, 3.0, 1.0)";
+				}
+			} else {
+				// Switch view to 2D view
+				view2d = true;
+				for (let i = 0; i < boardLevel.length; i++) {
+					boardLevel[i].style.display = "inline-block";
+					boardLevel[i].style.transform = "rotateX(0deg) skew(0deg)";
+					boardLevel[i].style.webkitTransform = "rotateX(0deg) skew(0deg)";
+				}
+				for (let i = 0; i < boardPiece.length; i++) {
+					boardPiece[i].style.transform = "translate(-50%, -50%)";
+					boardPiece[i].style.webkitTransform = "translate(-50%, -50%)";
+				}
+			}
+		}
     </script>
 </body>
 

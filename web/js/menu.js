@@ -30,6 +30,7 @@ class Menu {
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
+    document.getElementById("buttonSwapView").style.display = "block";
 
     board.changeTurn();
     console.log(board.turn);
@@ -45,6 +46,7 @@ class Menu {
   }
 
   init() {
+	document.getElementById("buttonSwapView").style.display = "none";
     document.getElementById("chosenColour").innerHTML =
       "Play as " + ((this.colour === 1) ? "WHITE" : "BLACK");
   }

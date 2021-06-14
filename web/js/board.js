@@ -5,10 +5,10 @@ To-do:
 */
 
 class Board {
-  constructor(col, diff) {
+  constructor(windowWidth) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
-    this.squareSize = 67; // size of each square on board in px
+    this.squareSize = (windowWidth - 100) / 25; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
