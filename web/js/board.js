@@ -14,7 +14,6 @@ class Board {
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compActive = false;
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
-    this.enemyChecked = false; // true if the other player's king is checked
     // this.opponent = new Module.Solver(this.cpuDifficulty);
   }
 
@@ -22,19 +21,22 @@ class Board {
     this.turn = this.turn === 1 ? -1 : 1;
 
     // remove the pointer event of all white / black pieces depending on whose turn it is
-    for (var lvl = 0; lvl < this.size; lvl++) {
-      for (var row = 0; row < this.size; row++) {
-        for (var col = 0; col < this.size; col++) {
-          var piece = this.getPiece(row, col, lvl);
-          if (!piece.isAlive) continue;
+    // if (this.cpuDifficulty === -1) {
+      for (var lvl = 0; lvl < this.size; lvl++) {
+        for (var row = 0; row < this.size; row++) {
+          for (var col = 0; col < this.size; col++) {
+            var piece = this.getPiece(row, col, lvl);
+            if (!piece.isAlive) continue;
 
-          var pieceColor = piece.getColor();
-          var image = this.getSquareImage(row, col, lvl);
-          image.style.pointerEvents =
-            pieceColor === this.turn ? "auto" : "none";
+            var pieceColor = piece.getColor();
+            var image = this.getSquareImage(row, col, lvl);
+            image.style.pointerEvents =
+              pieceColor === this.turn ? "auto" : "none";
+          }
         }
       }
-    }
+    // }
+
     if (this.cpuDifficulty != -1 && this.compActive)
       setTimeout(() => this.getNextComputerMove(), this.compDelay);
     if (this.cppBoard != -1) this.compActive = true;
@@ -74,13 +76,13 @@ class Board {
   }
 
   getKingImg(color) {
+    var desiredId = "k" + (color=== 1 ? "l" : "d");
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
-          var piece = this.getPiece(row, col, lvl);
-          var pieceId = String.fromCharCode(piece.getId());
-          var pieceColor = piece.getColor();
-          if (pieceId === "k" && pieceColor === color) 
+          if (!this.hasImage(row, col, lvl)) continue;
+
+          if (this.getSquareImage(row, col, lvl).dataset.id === desiredId) 
             return this.getSquareImage(row, col, lvl);
         }
       }
@@ -179,18 +181,15 @@ class Board {
     return tint;
   }
 
+  // gets called when the user unselects a piece to move
   unselectPiece(event) {
-    console.log("undo");
     this.removeTintType("legalTint");
 
     const [row, col, lvl] = event.target.parentElement.dataset["coordinate"]
       .split(",")
       .map((x) => parseInt(x));
 
-    // this.getSquareImage(row, col, lvl).style.pointerEvents = "auto";
-
     this.removeTintType("pieceSelectTint");
-    // event.target.remove();
   }
 
   createChessImage(id) {
@@ -261,17 +260,52 @@ class Board {
     return false;
   }
 
+  // get information about the move that was just made
+  getMoveInfo(nRow, nCol, nLvl, pieceName) {
+    var oppColor = -this.turn;
+    var info = {
+      enemyMated: this.cppBoard.isCheckmated(oppColor),
+      enemyChecked: this.cppBoard.isChecked(oppColor),
+      isStalemate: this.cppBoard.isStalemated(oppColor),
+      capturedPiece: this.hasImage(nRow, nCol, nLvl),
+      isPromotion: this.canPromote(nRow, nLvl, pieceName),
+    };
+
+    // print if checkmate or statemate happens
+    if (info.enemyMated || info.isStalemate) {
+      console.log(this.cppBoard.getGameState(oppColor))
+    }
+
+    return info;
+  }
+
+  handleCheckShadow(moveInfo) {
+    var friendlyKing = this.getKingImg(this.turn);
+    var enemyKing = this.getKingImg(this.turn * -1);
+
+    // remove the check effect from the friendly king
+    friendlyKing.id = "";
+
+    // add red shadow if enemy king is checked
+    if (moveInfo.enemyChecked) enemyKing.id = "checked";
+  }
+
+  handleSfx(moveInfo) {
+    var sound;
+    // Play correct sound based on movement type performed
+    if (moveInfo.enemyMated || moveInfo.isStalemate) sound = new Audio("../sfx/game-end.wav");
+    else if (moveInfo.enemyChecked) sound = new Audio("../sfx/move-check.wav");
+    else if (moveInfo.capturedPiece) sound = new Audio("../sfx/capture.wav");
+    // normal move sound effect
+    else sound = new Audio("../sfx/move-self.wav");
+
+    sound.play();
+  }
+
   // activates when user clicks on highlighted square
   updatePiecePosition(event) {
     var legalTint = event.target;
     var pieceName = legalTint.dataset["pieceName"];
-
-    // if the king was checked last turn, remove the checked shadow
-    if (this.enemyChecked === true) {
-      console.log("find king for ", this.turn)
-      this.getKingImg(this.turn).id = "";
-      this.enemyChecked = false;
-    }
 
     // get the piece and move delta information from the legalTint div
     const [pRow, pCol, pLvl] = legalTint.dataset["pieceLoc"]
@@ -289,37 +323,14 @@ class Board {
     );
 
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
-    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
 
-    var curChecked = false;
-    var curCaptured = false;
+    var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
+    this.handleCheckShadow(moveInfo);
+    this.handleSfx(moveInfo);
+
     // delete the prexisting image at the new coordinate if it exists
-    if (this.hasImage(nRow, nCol, nLvl)) {
-      curCaptured = true;
+    if (moveInfo.capturedPiece) 
       this.getSquareImage(nRow, nCol, nLvl).remove();
-    }
-
-
-    // check if this move puts the other player in check
-    if (this.cppBoard.isChecked(this.turn * -1)) {
-      curChecked = true;
-      this.enemyChecked = true;
-      // add a shadow around the king to show that it is checked
-      this.getKingImg(this.turn * -1).id = "checked";
-    }
-
-    // Play correct sound based on movement type performed
-    if (curChecked) {
-      var moveCheck = new Audio("../sfx/move-check.wav");
-      moveCheck.play();
-    } else if (curCaptured) {
-      var capture = new Audio("../sfx/capture.wav");
-      capture.play();
-    } else {
-      var moveSelf = new Audio("../sfx/move-self.wav");
-      moveSelf.play();
-    }
 
     // remove previous tints
     this.removeTintType("legalTint");
@@ -330,10 +341,12 @@ class Board {
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
+    // move the piece to its new square
+    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
     newSquare.appendChild(pieceImage);
 
-    console.log(nRow, nLvl, pieceName);
-    if (this.canPromote(nRow, nLvl, pieceName)) {
+    if (moveInfo.isPromotion) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
     } else {
       this.changeTurn();
@@ -344,13 +357,6 @@ class Board {
     // compute and parse next move to play
     var nxTurn = this.opponent.nextMove(this.cppBoard, this.turn);
 
-    // if the king was checked last turn, remove the checked shadow
-    if (this.enemyChecked === true) {
-      console.log("find king for ", this.turn)
-      this.getKingImg(this.turn).id = "";
-      this.enemyChecked = false;
-    }
-
     // current location
     const pRow = nxTurn.currentLocation.row;
     const pCol = nxTurn.currentLocation.col;
@@ -360,61 +366,45 @@ class Board {
     const mCol = nxTurn.change.col;
     const mLvl = nxTurn.change.lvl;
 
-    if (pRow < 0) {
-      console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
-      console.log(`Solver return code: ${pRow}`);
-      // Play sound to signal game end
-      var gameEnd = new Audio("../sfx/game-end.wav");
-      gameEnd.play();
-      return;
-    }
+    // if (pRow < 0) {
+    //   console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
+    //   console.log(`Solver return code: ${pRow}`);
+    //   // Play sound to signal game end
+    //   var gameEnd = new Audio("../sfx/game-end.wav");
+    //   gameEnd.play();
+    //   return;
+    // }
+
     // update the cpp board to match the state of the GUI board
     this.cppBoard.updateLocation(
       new Module.Coordinate(pRow, pCol, pLvl),
       new Module.Move(mRow, mCol, mLvl)
     );
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
-    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    // var oldSquare = this.getSquareDiv(pRow, pCol, pLvl);
-    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
+
+
     var cppPiece = this.getPiece(nRow, nCol, nLvl);
     var pieceName =
       String.fromCharCode(cppPiece.getId()) +
       (cppPiece.getColor() == 1 ? "l" : "d");
+    
+    var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
 
     // delete the prexisting image at the new coordinate if it exists
-    var curChecked = false;
-    var curCaptured = false;
-
-    if (this.hasImage(nRow, nCol, nLvl)) {
-      curCaptured = true;
+    if (moveInfo.capturedPiece) 
       this.getSquareImage(nRow, nCol, nLvl).remove();
-    }
 
-    // check if this move puts the other player in check
-    if (this.cppBoard.isChecked(this.turn * -1)) {
-      curChecked = true;
-      this.getKingImg(this.turn * -1).id = "checked";
-      this.enemyChecked = true;
-    }
-
-    // Play correct sound based on movement type performed
-    if (curChecked) {
-      var moveCheck = new Audio("../sfx/move-check.wav");
-      moveCheck.play();
-    } else if (curCaptured) {
-      var capture = new Audio("../sfx/capture.wav");
-      capture.play();
-    } else {
-      var moveOpponent = new Audio("../sfx/move-opponent.wav");
-      moveOpponent.play();
-    }
+    this.handleSfx(moveInfo);
+    this.handleCheckShadow(moveInfo);
 
     this.removeTintType("lastMoveTint");
     // add highlights to show previous move
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
+    // move the piece to its new square
+    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
     newSquare.appendChild(pieceImage);
 
     if (this.canPromote(nRow, nLvl, pieceName)) {
