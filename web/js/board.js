@@ -8,7 +8,7 @@ class Board {
   constructor(windowWidth) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
-    this.squareSize = (windowWidth - 100) / 25; // size of each square on board in px
+    this.squareSize = 6; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = -1; // 1 for white, -1 for black
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
@@ -127,14 +127,14 @@ class Board {
   resizeBoard() {
     var allSquares = document.getElementsByClassName("square");
     Array.from(allSquares).forEach((square) => {
-      square.style.width = this.squareSize + "px";
-      square.style.height = this.squareSize + "px";
+      square.style.width = this.squareSize + "vh";
+      square.style.height = this.squareSize + "vh";
     });
 
     var allBoardLvl = document.getElementsByClassName("boardLvl");
     Array.from(allBoardLvl).forEach((lvl) => {
-      lvl.style.width = this.squareSize * this.size + "px";
-      lvl.style.height = this.squareSize * this.size + "px";
+      lvl.style.width = this.squareSize * this.size + "vh";
+      lvl.style.height = this.squareSize * this.size + "vh";
     });
   }
 
