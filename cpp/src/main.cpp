@@ -25,7 +25,6 @@ int main() {
     // newMove.row = 1;
     // Rook testRook = Rook(0, 0, 0, 0);
     Board testBoard;
-    Solver opponent(2);
 
     // assert(abs(opponent.evaluate(testBoard)) < 1e-5);
 
