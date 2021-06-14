@@ -7,7 +7,7 @@ body {
     height: 100vh;
     position: absolute;
     z-index: 2;
-    background-color: #f2f2f2;
+    background-color: #303030;
     text-align: center;
     padding: 0;
     opacity: 1;
@@ -20,6 +20,37 @@ body {
     padding: 1vh 3vw;
     position: absolute;
     z-index: 2;
+}
+
+.splashBackground2{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: radial-gradient(rgba(0,0,0,0), #000000) no-repeat center;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.splashBackground{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: url("../img/kd.svg") no-repeat center;
+    background-size: auto 100%;
+    animation: spin 10s linear infinite;
+    z-index: -1;
+    filter: opacity(20%);
+}
+
+h4 {
+    font-weight: 300;
+    margin: 0;
+}
+
+@keyframes spin {
+    0% { transform: rotateY(0deg) rotateX(50deg) rotateZ(30deg);}
+    50% { transform: rotateY(180deg) rotateX(410deg) rotateZ(570deg);}
+    100% { transform: rotateY(360deg) rotateX(770deg) rotateZ(1110deg);}
 }
 
 .modeContainer {
@@ -325,4 +356,5 @@ input:checked + .slider:before {
 
 body {
     font-family: 'Heebo', sans-serif;
+    color: white;
 }
