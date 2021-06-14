@@ -362,7 +362,10 @@ class Board {
     this.handleSfx(moveInfo);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) this.getSquareImage(nRow, nCol, nLvl).remove();
+    if (moveInfo.capturedPiece) {
+      this.getSquareImage(nRow, nCol, nLvl).remove();
+      this.getHitbox(nRow, nCol, nLvl).remove();
+    } 
 
     // remove previous tints
     this.removeTintType("legalTint");
@@ -420,8 +423,10 @@ class Board {
     var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) this.getSquareImage(nRow, nCol, nLvl).remove();
-
+    if (moveInfo.capturedPiece) {
+      this.getSquareImage(nRow, nCol, nLvl).remove();
+      this.getHitbox(nRow, nCol, nLvl).remove();
+    }
     this.handleSfx(moveInfo);
     this.handleCheckShadow(moveInfo);
 
@@ -482,6 +487,7 @@ class Board {
 
     // remove the existing pawn and replace it with the new piece
     this.getSquareImage(row, col, lvl).remove();
+    this.getHitbox(row, col, lvl).remove();
     var [promotedPiece, promotedPieceHitbox] = this.createChessPiece(promoteId);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
