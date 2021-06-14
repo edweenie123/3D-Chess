@@ -266,9 +266,16 @@ class Board {
     var info = {
       enemyMated: this.cppBoard.isCheckmated(oppColor),
       enemyChecked: this.cppBoard.isChecked(oppColor),
+      isStalemate: this.cppBoard.isStalemated(oppColor),
       capturedPiece: this.hasImage(nRow, nCol, nLvl),
       isPromotion: this.canPromote(nRow, nLvl, pieceName),
     };
+
+    // print if checkmate or statemate happens
+    if (info.enemyMated || info.isStalemate) {
+      console.log(this.cppBoard.getGameState(oppColor))
+    }
+
     return info;
   }
 
@@ -286,7 +293,7 @@ class Board {
   handleSfx(moveInfo) {
     var sound;
     // Play correct sound based on movement type performed
-    if (moveInfo.enemyMated) sound = new Audio("../sfx/game-end.wav");
+    if (moveInfo.enemyMated || moveInfo.isStalemate) sound = new Audio("../sfx/game-end.wav");
     else if (moveInfo.enemyChecked) sound = new Audio("../sfx/move-check.wav");
     else if (moveInfo.capturedPiece) sound = new Audio("../sfx/capture.wav");
     // normal move sound effect

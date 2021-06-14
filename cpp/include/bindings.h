@@ -72,6 +72,8 @@ EMSCRIPTEN_BINDINGS() {
         .function("updateLocation", &Board::updateLocation)
         .function("isChecked", &Board::isChecked)
         .function("isCheckmated", &Board::isCheckmated)
+        .function("isStalemated", &Board::isStalemated)
+        .function("getGameState", &Board::getGameState)
         ;
     class_<Solver>("Solver")
         .constructor<int>()
