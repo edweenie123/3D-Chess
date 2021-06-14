@@ -10,36 +10,40 @@ class Board {
     this.size = 5;
     this.squareSize = 6; // size of each square on board in px
     this.cppBoard = new Module.Board();
-    this.turn = -1; // 1 for white, -1 for black
+    this.turn = 1; // 1 for white, -1 for black
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
-    this.compActive = false;
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
     // this.opponent = new Module.Solver(this.cpuDifficulty);
+  }
+
+  changeClickability(clickWhite, clickBlack) {
+    for (var lvl = 0; lvl < this.size; lvl++) {
+      for (var row = 0; row < this.size; row++) {
+        for (var col = 0; col < this.size; col++) {
+          var piece = this.getPiece(row, col, lvl);
+          if (!piece.isAlive) continue;
+
+          var pieceColor = piece.getColor();
+          var hitbox = this.getHitbox(row, col, lvl);
+
+          if (pieceColor == 1)
+            hitbox.style.pointerEvents = clickWhite ? "auto" : "none";
+          if (pieceColor == -1)
+            hitbox.style.pointerEvents = clickBlack ? "auto" : "none";
+        }
+      }
+    }
   }
 
   changeTurn() {
     this.turn = this.turn === 1 ? -1 : 1;
 
     // remove the pointer event of all white / black pieces depending on whose turn it is
-    // if (this.cpuDifficulty === -1) {
-      for (var lvl = 0; lvl < this.size; lvl++) {
-        for (var row = 0; row < this.size; row++) {
-          for (var col = 0; col < this.size; col++) {
-            var piece = this.getPiece(row, col, lvl);
-            if (!piece.isAlive) continue;
+    if (this.cpuDifficulty==-1) this.changeClickability(this.turn===1, this.turn===-1);
+    else this.changeClickability(false, false);
 
-            var pieceColor = piece.getColor();
-            var image = this.getSquareImage(row, col, lvl);
-            image.style.pointerEvents =
-              pieceColor === this.turn ? "auto" : "none";
-          }
-        }
-      }
-    // }
-
-    if (this.cpuDifficulty != -1 && this.compActive)
+    if (this.cpuDifficulty != -1)
       setTimeout(() => this.getNextComputerMove(), this.compDelay);
-    if (this.cppBoard != -1) this.compActive = true;
   }
 
   // returns true if a particular coordinate has a chess piece image associated with it
@@ -75,14 +79,27 @@ class Board {
     return image;
   }
 
+  getHitbox(row, col, lvl) {
+    var square = this.getSquareDiv(row, col, lvl);
+    var hitbox = Array.from(square.childNodes).find(
+      (elem) => elem.className === "pieceHitbox"
+    );
+    console.assert(hitbox != undefined, {
+      msg: "hitbox not found!",
+      cord: [row, col, lvl],
+    });
+
+    return hitbox;
+  }
+
   getKingImg(color) {
-    var desiredId = "k" + (color=== 1 ? "l" : "d");
+    var desiredId = "k" + (color === 1 ? "l" : "d");
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
           if (!this.hasImage(row, col, lvl)) continue;
 
-          if (this.getSquareImage(row, col, lvl).dataset.id === desiredId) 
+          if (this.getSquareImage(row, col, lvl).dataset.id === desiredId)
             return this.getSquareImage(row, col, lvl);
         }
       }
@@ -150,11 +167,12 @@ class Board {
           var pieceColor = cppPiece.getColor() == 1 ? "l" : "d";
           // obtain the image name based off the piece id
           var pieceName = pieceId + pieceColor;
-          var piece = this.createChessPiece(pieceName);
+          var [piece, pieceHitbox] = this.createChessPiece(pieceName);
 
           // add the piece image as a child of the current div
           var square = this.getSquareDiv(row, col, lvl);
           square.appendChild(piece);
+          square.appendChild(pieceHitbox);
         }
       }
     }
@@ -201,16 +219,27 @@ class Board {
 
   createChessPiece(id) {
     var piece = this.createChessImage(id);
+    var pieceHitBox = document.createElement("DIV");
 
-    // add onclick event listener to each piece with IIFE (immediate invoked function expression)
+    // add onclick event listener to each piece's hitbox with IIFE (immediate invoked function expression)
     ((id) => {
-      piece.addEventListener("click", (event) =>
+      pieceHitBox.addEventListener("click", (event) =>
         this.displayLegalMoves(event, id)
       );
     })(id);
 
+    pieceHitBox.className = "pieceHitbox";
     piece.className = "chessImg";
-    return piece;
+    return [piece, pieceHitBox];
+  }
+
+  movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl) {
+    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
+    var pieceHitbox = this.getHitbox(pRow, pCol, pLvl);
+
+    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
+    newSquare.appendChild(pieceImage);
+    newSquare.appendChild(pieceHitbox);
   }
 
   removeTintType(className) {
@@ -273,7 +302,7 @@ class Board {
 
     // print if checkmate or statemate happens
     if (info.enemyMated || info.isStalemate) {
-      console.log(this.cppBoard.getGameState(oppColor))
+      console.log(this.cppBoard.getGameState(oppColor));
     }
 
     return info;
@@ -293,7 +322,8 @@ class Board {
   handleSfx(moveInfo) {
     var sound;
     // Play correct sound based on movement type performed
-    if (moveInfo.enemyMated || moveInfo.isStalemate) sound = new Audio("../sfx/game-end.wav");
+    if (moveInfo.enemyMated || moveInfo.isStalemate)
+      sound = new Audio("../sfx/game-end.wav");
     else if (moveInfo.enemyChecked) sound = new Audio("../sfx/move-check.wav");
     else if (moveInfo.capturedPiece) sound = new Audio("../sfx/capture.wav");
     // normal move sound effect
@@ -329,8 +359,7 @@ class Board {
     this.handleSfx(moveInfo);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) 
-      this.getSquareImage(nRow, nCol, nLvl).remove();
+    if (moveInfo.capturedPiece) this.getSquareImage(nRow, nCol, nLvl).remove();
 
     // remove previous tints
     this.removeTintType("legalTint");
@@ -342,9 +371,7 @@ class Board {
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     // move the piece to its new square
-    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
-    newSquare.appendChild(pieceImage);
+    this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
 
     if (moveInfo.isPromotion) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
@@ -382,17 +409,15 @@ class Board {
     );
     const [nRow, nCol, nLvl] = [pRow + mRow, pCol + mCol, pLvl + mLvl];
 
-
     var cppPiece = this.getPiece(nRow, nCol, nLvl);
     var pieceName =
       String.fromCharCode(cppPiece.getId()) +
       (cppPiece.getColor() == 1 ? "l" : "d");
-    
+
     var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
 
     // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) 
-      this.getSquareImage(nRow, nCol, nLvl).remove();
+    if (moveInfo.capturedPiece) this.getSquareImage(nRow, nCol, nLvl).remove();
 
     this.handleSfx(moveInfo);
     this.handleCheckShadow(moveInfo);
@@ -402,10 +427,7 @@ class Board {
     this.createTint(nRow, nCol, nLvl, "lastMoveTint");
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
-    // move the piece to its new square
-    var newSquare = this.getSquareDiv(nRow, nCol, nLvl);
-    var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
-    newSquare.appendChild(pieceImage);
+    this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
 
     if (this.canPromote(nRow, nLvl, pieceName)) {
       // default to the best piece
@@ -413,19 +435,7 @@ class Board {
     }
 
     this.turn = this.turn === 1 ? -1 : 1;
-    for (var lvl = 0; lvl < this.size; lvl++) {
-      for (var row = 0; row < this.size; row++) {
-        for (var col = 0; col < this.size; col++) {
-          var piece = this.getPiece(row, col, lvl);
-          if (!piece.isAlive) continue;
-
-          var pieceColor = piece.getColor();
-          var image = this.getSquareImage(row, col, lvl);
-          image.style.pointerEvents =
-            pieceColor === this.turn ? "auto" : "none";
-        }
-      }
-    }
+    this.changeClickability(this.turn==1, this.turn==-1);
   }
 
   // color = l -> white, color = d -> black
@@ -469,8 +479,9 @@ class Board {
 
     // remove the existing pawn and replace it with the new piece
     this.getSquareImage(row, col, lvl).remove();
-    var promotedPiece = this.createChessPiece(promoteId);
+    var [promotedPiece, promotedPieceHitbox] = this.createChessPiece(promoteId);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
+    this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
 
     // get the cpp pawn and promote it
     var cppPawn = this.getPiece(row, col, lvl);

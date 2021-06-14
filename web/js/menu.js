@@ -25,14 +25,22 @@ class Menu {
 
 
     board.cpuDifficulty = this.gameMode;
-    if (this.colour === -1) this.board.compActive = true;
     board.opponent = new Module.Solver(Number(board.cpuDifficulty));
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
     document.getElementById("buttonSwapView").style.display = "block";
 
-    board.changeTurn();
+    if (this.gameMode != -1) {
+      if (this.colour==1) this.board.changeClickability(true, false);
+      else {
+        this.board.changeClickability(false, false);
+        setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay);
+      } 
+    } else {
+      this.board.changeClickability(true, false);
+    }
+
     console.log(board.turn);
     console.log(board.cpuDifficulty);
     
