@@ -68,16 +68,36 @@
                 </label>
             </div>
             <!-- Create a toggle button for the player to choose if they want to play as white and black -->
-            <span style="width:100%; padding: 0 2vw;">
-                <p id="chosenColour" style="display: inline-block;">Play as</p>
-                <label class="switch">
-                    <input id="sel5" type="checkbox">
-                    <span class="slider round" id="playerToggle"></span>
-                </label>
-            </span>
+            <table class="colourSelect">
+                <tr>
+                    <td colspan="3">
+                        <h4 id="chosenColour" style="display: inline-block;">I PLAY AS</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>
+                            <input id="selWhite" type="radio" name="color" value="1" checked>
+                            <div id="radWhite" src="img/kd.svg"></div>
+                        </label>
+                    </td>
+                    <td>
+                        <label>
+                            <input id="selRand" type="radio" name="color" value="0">
+                            <div id="radRand" src="img/mixed.svg"></div>
+                        </label>
+                    </td>
+                    <td>
+                        <label>
+                            <input id="selBlack" type="radio" name="color" value="-1">
+                            <div id="radBlack" src="img/kd.svg"></div>
+                        </label>
+                    </td>
+                </tr>
+            </table>
 
             <!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
-            <center style="margin-top: 1.5vh;">
+            <center style="margin-top: 2vh;">
                 <table>
                     <tr>
                         <td><a class="welcomeButton" id="submitButton">Play&nbsp ▶</a></td>
