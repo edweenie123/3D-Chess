@@ -1,5 +1,6 @@
 class Menu {
-  constructor(board) {
+  constructor(board, panel) {
+    this.panel = panel;
     this.board = board;
     this.colour = (document.getElementById("sel5").checked) ? -1 : 1; // Assume player wants to play as white
     this.gameMode;
@@ -29,6 +30,8 @@ class Menu {
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
+    this.panel.panelDiv.style.display = "block";
+    this.panel.initialize(this.gameMode, this.colour);
 
     if (this.gameMode != -1) {
       if (this.colour==1) this.board.changeClickability(true, false);
