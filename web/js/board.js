@@ -17,18 +17,23 @@ class Board {
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
     // this.opponent = new Module.Solver(this.cpuDifficulty);
     this.panel = panel;
+    this.flippedSide = 1; // 1 = flipped towards white, -1 flipped towards black
+
+    this.boardLvlTransformWhite;
+    this.boardLvlTransformBlack;
 
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
   changeClickability(clickWhite, clickBlack) {
-	if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
-		if (!this.gameOver)
-			document.getElementById("status").innerHTML = "Computer is thinking...";
-	} else {
-		if (!this.gameOver)
-			document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
-	}
+    if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+      if (!this.gameOver)
+        document.getElementById("status").innerHTML = "Computer is thinking...";
+    } else {
+      if (!this.gameOver)
+        document.getElementById("status").innerHTML =
+          this.turn === 1 ? "White to move." : "Black to move.";
+    }
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
@@ -51,12 +56,12 @@ class Board {
     this.turn = this.turn === 1 ? -1 : 1;
 
     // remove the pointer event of all white / black pieces depending on whose turn it is
-    if (this.cpuDifficulty==-1) {
-		this.changeClickability(this.turn===1, this.turn===-1);
-	}
-    else {
-		this.changeClickability(false, false);
-	}
+    if (this.cpuDifficulty == -1) {
+      this.changeClickability(this.turn === 1, this.turn === -1);
+      this.flipTowards(this.turn);
+    } else {
+      this.changeClickability(false, false);
+    }
 
     if (this.cpuDifficulty != -1) {
       setTimeout(() => this.getNextComputerMove(), this.compDelay);
@@ -66,7 +71,7 @@ class Board {
   // returns true if a particular coordinate has a chess piece image associated with it
   hasImage(row, col, lvl) {
     var image = Array.from(this.getSquareDiv(row, col, lvl).childNodes).find(
-      (elem) => elem.className == "chessImg"
+      (elem) => elem.classList.contains("chessImg")
     );
     return image != undefined;
   }
@@ -85,8 +90,8 @@ class Board {
 
   getSquareImage(row, col, lvl) {
     var square = this.getSquareDiv(row, col, lvl);
-    var image = Array.from(square.childNodes).find(
-      (elem) => elem.className === "chessImg"
+    var image = Array.from(square.childNodes).find((elem) =>
+      elem.classList.contains("chessImg")
     );
     console.assert(image != undefined, {
       msg: "image not found!",
@@ -168,11 +173,41 @@ class Board {
     var allBoardLvl = document.getElementsByClassName("boardLvl");
     Array.from(allBoardLvl).forEach((lvl, index) => {
       let height = this.squareSize * this.size;
-      let missing = height * (1 - Math.cos(63 * Math.PI / 180)) * 0.95;
+      let missing = height * (1 - Math.cos((63 * Math.PI) / 180)) * 0.95;
       lvl.style.width = height + "vh";
       lvl.style.height = height + "vh";
-      lvl.style.transform = `translateY(${-index * missing}vh) rotateX(63deg) skew(336deg)`;
+      lvl.style.transform = `translateY(${
+        -index * missing
+      }vh) rotateX(63deg) skew(336deg)`;
     });
+  }
+
+  // flip the board so that it is from the perspective of a certain color
+  flipTowards(color) {
+    if (this.flippedSide == color) return; // the board is already flipped towards this color
+
+    var allBoardLvl = document.getElementsByClassName("boardLvl");
+
+    Array.from(allBoardLvl).forEach((lvl, index) => {
+      let height = this.squareSize * this.size;
+      let missing = height * (1 - Math.cos((63 * Math.PI) / 180)) * 0.95;
+      lvl.style.width = height + "vh";
+      lvl.style.height = height + "vh";
+      lvl.style.transform = `translateY(${
+        -index * missing
+      }vh) rotateX(63deg) skew(336deg)`;
+      // turn the board upside-down if flipping towards black
+      if (color == -1) lvl.style.transform += " rotateZ(180deg)";
+    });
+
+    // add css id of each piece to flip them
+    var allPieceImgs = document.querySelectorAll(".chessImg");
+    Array.from(allPieceImgs).forEach((pieceImg) => {
+      if (color == -1) pieceImg.classList.add("chessImgFlipped");
+      else pieceImg.classList.remove("chessImgFlipped");
+    });
+
+    this.flippedSide *= -1;
   }
 
   // create images of each piece to match the state of the board
@@ -262,7 +297,7 @@ class Board {
       // delete the prexisting image at the new coordinate if it exists
       this.getSquareImage(nRow, nCol, nLvl).remove();
       this.getHitbox(nRow, nCol, nLvl).remove();
-    } 
+    }
 
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
     var pieceHitbox = this.getHitbox(pRow, pCol, pLvl);
@@ -332,8 +367,9 @@ class Board {
 
     // print if checkmate or statemate happens
     if (info.enemyMated || info.isStalemate) {
-	  document.getElementById("status").innerHTML = this.cppBoard.getGameState(oppColor);
-	  this.gameOver = true;
+      document.getElementById("status").innerHTML =
+        this.cppBoard.getGameState(oppColor);
+      this.gameOver = true;
       console.log(this.cppBoard.getGameState(oppColor));
     }
 
@@ -389,7 +425,6 @@ class Board {
     var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
     this.handleCheckShadow(moveInfo);
     this.handleSfx(moveInfo);
-
 
     // remove previous tints
     this.removeTintType("legalTint");
@@ -462,7 +497,7 @@ class Board {
     }
 
     this.turn = this.turn === 1 ? -1 : 1;
-    this.changeClickability(this.turn==1, this.turn==-1);
+    this.changeClickability(this.turn == 1, this.turn == -1);
   }
 
   // color = l -> white, color = d -> black

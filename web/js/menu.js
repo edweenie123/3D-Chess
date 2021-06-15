@@ -25,6 +25,9 @@ class Menu {
         this.colour = -1;
     }
 
+    // flip the board towards black if user selected to be black
+    if (this.colour == -1) this.board.flipTowards(-1);
+
     console.log(this.gameMode);
     console.log(this.colour + " player");
 
