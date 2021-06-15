@@ -1,12 +1,9 @@
 class Menu {
   constructor(board) {
     this.board = board;
-    this.colour = (document.getElementById("sel5").checked) ? -1 : 1; // Assume player wants to play as white
     this.gameMode;
     this.menuDiv = document.getElementById("selec");
-    document.getElementById("playerToggle").onclick = () => {this.toggle()};
     document.getElementById("submitButton").onclick = () => {this.submit()};
-    this.init();
   }
 
   submit() {
@@ -19,9 +16,16 @@ class Menu {
     } else if (document.getElementById("sel4").checked == true) {
       this.gameMode = document.getElementById("sel4").value;
     }
+    
+    this.colour = [-1, 1][Math.floor(Math.random() * 2)];
+    if(document.getElementById("selWhite").checked){
+        this.colour = 1;
+    } else if(document.getElementById("selBlack").checked){
+        this.colour = -1;
+    }
 
     console.log(this.gameMode);
-    console.log(this.colour);
+    console.log(this.colour + " player");
 
 
     board.cpuDifficulty = this.gameMode;
@@ -50,25 +54,4 @@ class Menu {
     var gameStart = new Audio("../sfx/game-start.wav");
     gameStart.play();
   }
-
-  toggle() {
-    this.colour = this.colour === 1 ? -1 : 1;
-    this.init();
-  }
-
-  init() {
-    document.getElementById("chosenColour").innerHTML = `Play as <b>${((this.colour === 1) ? "WHITE" : "BLACK")}</b>`;
-  }
 }
-
-// var gameMode = "NULL";
-// var colour = 1;
-
-// if (document.getElementById("sel5").checked == true) {
-//   colour = -1;
-// }
-
-// var chosenColour = "WHITE&nbsp;&nbsp;&nbsp;&nbsp;";
-// if (colour == -1) {
-//   chosenColour = "BLACK&nbsp;&nbsp;&nbsp;&nbsp;";
-// }
