@@ -225,7 +225,19 @@ td > p {
 .promoteImg:hover {
     /* width: 8em; */
     background-color: rgba(255, 255, 255, 0.349);
+}
 
+#statusContainer {
+	display: none;
+}
+
+#status {
+	font-size: 15px;
+	color: white;
+	font-family: monospace;
+	position: fixed;
+	text-align: center;
+	z-index: 10;
 }
 
 @keyframes spinny {

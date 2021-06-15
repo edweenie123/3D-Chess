@@ -29,10 +29,14 @@ class Menu {
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
+    document.getElementById("statusContainer").style.display = "block";
 
     if (this.gameMode != -1) {
-      if (this.colour==1) this.board.changeClickability(true, false);
-      else {
+      if (this.colour==1) {
+		  this.board.changeClickability(true, false);
+		  this.board.aiColour = -1;
+      } else {
+		this.board.aiColour = 1;
         this.board.changeClickability(false, false);
         setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay);
       } 

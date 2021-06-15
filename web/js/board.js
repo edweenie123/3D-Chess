@@ -11,12 +11,22 @@ class Board {
     this.squareSize = 6; // size of each square on board in px
     this.cppBoard = new Module.Board();
     this.turn = 1; // 1 for white, -1 for black
+    this.aiColour = -1;
+    this.gameOver = false;
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
     // this.opponent = new Module.Solver(this.cpuDifficulty);
+    //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
   changeClickability(clickWhite, clickBlack) {
+	if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+		if (!this.gameOver)
+			document.getElementById("status").innerHTML = "Computer is thinking...";
+	} else {
+		if (!this.gameOver)
+			document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
+	}
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
@@ -39,11 +49,16 @@ class Board {
     this.turn = this.turn === 1 ? -1 : 1;
 
     // remove the pointer event of all white / black pieces depending on whose turn it is
-    if (this.cpuDifficulty==-1) this.changeClickability(this.turn===1, this.turn===-1);
-    else this.changeClickability(false, false);
+    if (this.cpuDifficulty==-1) {
+		this.changeClickability(this.turn===1, this.turn===-1);
+	}
+    else {
+		this.changeClickability(false, false);
+	}
 
-    if (this.cpuDifficulty != -1)
+    if (this.cpuDifficulty != -1) {
       setTimeout(() => this.getNextComputerMove(), this.compDelay);
+    }
   }
 
   // returns true if a particular coordinate has a chess piece image associated with it
@@ -305,6 +320,8 @@ class Board {
 
     // print if checkmate or statemate happens
     if (info.enemyMated || info.isStalemate) {
+	  document.getElementById("status").innerHTML = this.cppBoard.getGameState(oppColor);
+	  this.gameOver = true;
       console.log(this.cppBoard.getGameState(oppColor));
     }
 

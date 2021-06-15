@@ -13,7 +13,7 @@ Solver::Solver(int difficulty_) {
 
 int Solver::randRange(int low, int high){
     int range = high - low + 1;
-    assert(range > 0);
+    //assert(range > 0);
     return low + rng(m_rng) % range;
 }
 
@@ -83,7 +83,7 @@ Turn Solver::nextMove(Board &board, int colour){
         vector<char> active;
         vector<Turn> moves = genMoves(board, colour);
         shuffle(moves.begin(), moves.end(), m_rng);
-        assert(!moves.empty());
+        //assert(!moves.empty());
         for(auto turn : moves){
             active.push_back(board.getPieceAt(turn.currentLocation)->getId());
         }
@@ -96,7 +96,7 @@ Turn Solver::nextMove(Board &board, int colour){
                 return turn;
             }
         }
-        assert(false);
+        //assert(false);
     }
     return solve(board, 3, -INF, INF, colour, evaluate(board));
 }
