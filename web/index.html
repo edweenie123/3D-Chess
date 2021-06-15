@@ -109,6 +109,18 @@
             </center>
         </div>
     </div>
+
+    <div id="panel">
+        <div id="blackPlayer">
+            <p></p>
+            <div class="captureBox"></div>
+        </div>
+        <div id="whitePlayer">
+            <p></p>
+            <div class="captureBox"></div>
+        </div>
+    </div>
+
     <center><div id="board"></div></center>
 	<center><div id="statusContainer"><p id="status"></p></div></center>
 	
@@ -118,14 +130,18 @@
     <script type="text/javascript" src="gen/a.out.js"></script>
     <script type="text/javascript" src="js/board.js"></script>
     <script type="text/javascript" src="js/menu.js"></script>
+    <script type="text/javascript" src="js/panel.js"></script>
+    
     <script>
         var board;
         Module.onRuntimeInitialized = _ => {
-            board = new Board();
+            var panel = new Panel();
+            board = new Board(panel);
             board.renderBoard();
             board.renderPieces();
             document.getElementById("board").style.display = "none";
-            var menu = new Menu(board);
+            // document.getElementById()
+            var menu = new Menu(board, panel);
         };
     </script>
 </body>

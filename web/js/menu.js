@@ -1,5 +1,6 @@
 class Menu {
-  constructor(board) {
+  constructor(board, panel) {
+    this.panel = panel;
     this.board = board;
     this.gameMode;
     this.menuDiv = document.getElementById("selec");
@@ -33,6 +34,8 @@ class Menu {
 
     this.menuDiv.style.display = "none";
     document.getElementById("board").style.display = "block";
+    this.panel.panelDiv.style.display = "block";
+    this.panel.initialize(this.gameMode, this.colour);
     document.getElementById("statusContainer").style.display = "block";
 
     if (this.gameMode != -1) {

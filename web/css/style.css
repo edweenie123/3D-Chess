@@ -81,6 +81,54 @@ td > p {
     position: fixed;
 }
 
+#panel {
+    display: none;
+    position: fixed;
+    /* margin: 25px; */
+    /* left: 200px; */
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    width: 350px;
+    /* height: 300px;  */
+    background-color:#363434c0;
+    /* top: 50%; */
+    /* transform: translateY(-50%); */
+    border-radius: 5px;
+}
+
+.captureBox {
+    /* position: absolute; */
+    display: flex;
+    /* background-color: white; */
+    height: 30px;
+    width: auto;
+}
+
+#panel p {
+    padding: 0;
+    margin: 0;
+}
+
+#whitePlayer, #blackPlayer {
+    margin: 20px;
+}
+
+/* #whitePlayer img {
+    filter: drop-shadow(1px 1px 0px rgb(255, 255, 255)) 
+            drop-shadow(-1px -1px 0px rgb(255, 255, 255))
+            drop-shadow(1px -1px 0px rgb(255, 255, 255))
+            drop-shadow(-1px 1px 0px rgb(255, 255, 255));
+} */
+
+.capturedPiece {
+    /* margin: 0  5px 0 5px; */
+    height:100%;
+    width: auto;
+    /* width: 7%; */
+    height: auto;
+}
+
 .square {
     display: inline-block;
     margin: 0;

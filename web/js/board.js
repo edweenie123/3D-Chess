@@ -5,7 +5,7 @@ To-do:
 */
 
 class Board {
-  constructor() {
+  constructor(panel) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
     this.squareSize = 6; // size of each square on board in px
@@ -16,6 +16,8 @@ class Board {
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
     // this.opponent = new Module.Solver(this.cpuDifficulty);
+    this.panel = panel;
+
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
@@ -252,6 +254,16 @@ class Board {
   }
 
   movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl) {
+    if (this.hasImage(nRow, nCol, nLvl)) {
+      var prevImage = this.getSquareImage(nRow, nCol, nLvl);
+
+      // add the captured piece the panel
+      this.panel.addCapturedPiece(prevImage.dataset.id);
+      // delete the prexisting image at the new coordinate if it exists
+      this.getSquareImage(nRow, nCol, nLvl).remove();
+      this.getHitbox(nRow, nCol, nLvl).remove();
+    } 
+
     var pieceImage = this.getSquareImage(pRow, pCol, pLvl);
     var pieceHitbox = this.getHitbox(pRow, pCol, pLvl);
 
@@ -378,11 +390,6 @@ class Board {
     this.handleCheckShadow(moveInfo);
     this.handleSfx(moveInfo);
 
-    // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) {
-      this.getSquareImage(nRow, nCol, nLvl).remove();
-      this.getHitbox(nRow, nCol, nLvl).remove();
-    } 
 
     // remove previous tints
     this.removeTintType("legalTint");
@@ -439,11 +446,6 @@ class Board {
 
     var moveInfo = this.getMoveInfo(nRow, nCol, nLvl, pieceName);
 
-    // delete the prexisting image at the new coordinate if it exists
-    if (moveInfo.capturedPiece) {
-      this.getSquareImage(nRow, nCol, nLvl).remove();
-      this.getHitbox(nRow, nCol, nLvl).remove();
-    }
     this.handleSfx(moveInfo);
     this.handleCheckShadow(moveInfo);
 
