@@ -575,6 +575,7 @@ class Board {
     this.getSquareImage(row, col, lvl).remove();
     this.getHitbox(row, col, lvl).remove();
     var [promotedPiece, promotedPieceHitbox] = this.createChessPiece(promoteId);
+    promotedPiece.style.opacity = 1;
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
 
@@ -603,9 +604,14 @@ class Board {
       default:
         throw "ERROR: promoteId is invalid";
     }
+
     cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
     var promote = new Audio("../sfx/promote.wav");
     promote.play();
+
+    // enemy king may be in check now -> create red shadow
+    this.handleCheckShadow({enemyChecked: this.cppBoard.isChecked(this.turn*-1)});
+
     this.changeTurn();
   }
 }
