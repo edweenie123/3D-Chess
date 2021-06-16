@@ -49,7 +49,7 @@ class Menu {
       } else {
 		this.board.aiColour = 1;
         this.board.changeClickability(false, false);
-        setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay);
+        setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay + 3000);
       } 
     } else {
       this.board.changeClickability(true, false);
