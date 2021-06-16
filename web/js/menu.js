@@ -27,6 +27,7 @@ class Menu {
 
     // flip the board towards black if user selected to be black
     if (this.colour == -1) this.board.flipTowards(-1);
+    this.board.animateBoard();
 
     console.log(this.gameMode);
     console.log(this.colour + " player");
@@ -48,7 +49,7 @@ class Menu {
       } else {
 		this.board.aiColour = 1;
         this.board.changeClickability(false, false);
-        setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay);
+        setTimeout(() => this.board.getNextComputerMove(), this.board.compDelay + 3000);
       } 
     } else {
       this.board.changeClickability(true, false);

@@ -25,6 +25,38 @@ class Board {
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
+  animateBoard() {
+    var allBoardLvl = document.getElementsByClassName("boardLvl");
+    var allPieces = document.querySelectorAll(".chessImg");
+    var boardTime = 0.5;
+    var boardInterval = 0.25;
+    var pieceTime = 0.7;
+    var pieceInterval = 0.03;
+
+    Array.from(allBoardLvl).forEach((elem, ind) => {
+      setTimeout(
+        () => (elem.style.animation = `comeFromLeft ${boardTime}s forwards`),
+        ind * boardInterval * 1000
+      );
+    });
+
+    Array.from(allPieces).forEach((elem, ind) => {
+      setTimeout(
+        () => (elem.style.animation = `fadeIn ${pieceTime}s forwards`),
+        (boardInterval * 4 + boardTime + ind * pieceInterval) * 1000 - 200
+      );
+    });
+
+    // remove animation from pieces to avoid repeat animations
+    Array.from(allPieces).forEach((elem) => {
+      setTimeout(() => {
+        elem.style.animation = "";
+        elem.style.opacity = 1;
+      }, (boardTime + boardInterval*4 + pieceTime + pieceInterval * 39) * 1000);
+    });
+    console.log(boardTime + boardInterval*4 + pieceTime + pieceInterval * 39)
+  }
+
   changeClickability(clickWhite, clickBlack) {
     if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
       if (!this.gameOver)
@@ -198,6 +230,10 @@ class Board {
       }vh) rotateX(63deg) skew(336deg)`;
       // turn the board upside-down if flipping towards black
       if (color == -1) lvl.style.transform += " rotateZ(180deg)";
+
+      // change the offset of the drop shadow depending on whose side the board is facing
+      if (color == -1) lvl.style.boxShadow = "-5px -9px 8px -1px rgb(0 0 0 / 57%)";
+      else lvl.style.boxShadow = "5px 9px 8px -1px rgb(0 0 0 / 57%)";
     });
 
     // add css id of each piece to flip them
