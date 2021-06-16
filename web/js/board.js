@@ -5,7 +5,7 @@ To-do:
 */
 
 class Board {
-  constructor(panel) {
+  constructor(panel, moves) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
     this.squareSize = 6; // size of each square on board in px
@@ -21,6 +21,8 @@ class Board {
 
     this.boardLvlTransformWhite;
     this.boardLvlTransformBlack;
+    
+    this.moves = moves;
 
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
@@ -437,10 +439,18 @@ class Board {
 
     // move the piece to its new square
     this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
+    
+    // record the move
+    this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
 
     if (moveInfo.isPromotion) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
     } else {
+	  if (moveInfo.enemyMated) {
+		this.moves.appendSpecial(true, false, false, this.turn, '');
+	  } else if (moveInfo.enemyChecked) {
+		this.moves.appendSpecial(false, true, false, this.turn, '');
+	  }
       this.changeTurn();
     }
   }
@@ -486,10 +496,19 @@ class Board {
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
+    
+    // record the move
+    this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
 
     if (this.canPromote(nRow, nLvl, pieceName)) {
       // default to the best piece
       this.promote(nRow, nCol, nLvl, "q" + pieceName[1]);
+    } else {
+		if (moveInfo.enemyMated) {
+		  this.moves.appendSpecial(true, false, false, this.turn, '');
+	    } else if (moveInfo.enemyChecked) {
+			this.moves.appendSpecial(false, true, false, this.turn, '');
+		}
     }
 
     this.turn = this.turn === 1 ? -1 : 1;
@@ -509,7 +528,6 @@ class Board {
       pieceHolder.removeChild(pieceHolder.firstChild);
     }
 
-    //
     var pieces = [
       this.createChessImage("q" + color),
       this.createChessImage("n" + color),
@@ -567,9 +585,24 @@ class Board {
       default:
         throw "ERROR: promoteId is invalid";
     }
+    
     cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
     var promote = new Audio("../sfx/promote.wav");
     promote.play();
+    
+    var moveInfo = this.getMoveInfo(row, col, lvl, promoteId[0]);
+    this.handleCheckShadow(moveInfo);
+    this.handleSfx(moveInfo);
+    
+    // update moves list
+    if (moveInfo.enemyMated) {
+		this.moves.appendSpecial(true, false, true, this.turn, promoteId[0]);
+	} else if (moveInfo.enemyChecked) {
+		this.moves.appendSpecial(false, true, true, this.turn, promoteId[0]);
+	} else {
+		this.moves.appendSpecial(false, false, true, this.turn, promoteId[0]);
+	}
+    
     this.changeTurn();
   }
 }

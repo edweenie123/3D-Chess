@@ -128,6 +128,39 @@ td > p {
     height: auto;
 }
 
+#movesPanel {
+	display: none;
+	height: 50%;
+	width: 30%;
+	top: 0px;
+	right: 0px;
+	position: fixed;
+	overflow-y: auto;
+}
+
+
+#movesBox {
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#movesBox:td, #movesBox:th {
+	padding: 1px;
+}
+
+th {
+	font-family: Heebo;
+	font-size: 30px;
+	color: #ddd;
+	position: -webkit-sticky;
+	position: sticky;
+	text-align: center;
+	top: 0;
+	z-index: 10;
+	background: #333;
+}
+
 .square {
     display: inline-block;
     margin: 0;

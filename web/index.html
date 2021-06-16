@@ -122,8 +122,19 @@
     </div>
 
     <center><div id="board"></div></center>
-	<center><div id="statusContainer"><p id="status"></p></div></center>
-	
+	<div id="statusContainer"><p id="status"></p></div>
+	<div id="movesPanel">
+		<table id="movesBox">
+			<tr>
+				<th>
+					White's moves
+				</th>
+				<th>
+					Black's moves
+				</th>
+			</tr>
+		</table>
+	</div>
     <div id="promotePanel">
         <div id="pieceHolder"></div>
     </div>
@@ -131,12 +142,13 @@
     <script type="text/javascript" src="js/board.js"></script>
     <script type="text/javascript" src="js/menu.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
-    
+    <script type="text/javascript" src="js/moves.js"></script>
     <script>
         var board;
         Module.onRuntimeInitialized = _ => {
             var panel = new Panel();
-            board = new Board(panel);
+            var moves = new Moves();
+            board = new Board(panel, moves);
             board.renderBoard();
             board.renderPieces();
             document.getElementById("board").style.display = "none";
