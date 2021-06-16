@@ -28,11 +28,11 @@ class Board {
   changeClickability(clickWhite, clickBlack) {
     if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
       if (!this.gameOver)
-        document.getElementById("status").innerHTML = "Computer is thinking...";
+        document.getElementById("status").innerHTML = "Computer<br>is thinking";
     } else {
       if (!this.gameOver)
         document.getElementById("status").innerHTML =
-          this.turn === 1 ? "White to move." : "Black to move.";
+          this.turn === 1 ? "White<br>to move" : "Black<br>to move";
     }
     for (var lvl = 0; lvl < this.size; lvl++) {
       for (var row = 0; row < this.size; row++) {
@@ -457,15 +457,11 @@ class Board {
     const mRow = nxTurn.change.row;
     const mCol = nxTurn.change.col;
     const mLvl = nxTurn.change.lvl;
-
-    // if (pRow < 0) {
-    //   console.log(pRow == -1 ? "Stalemate." : "Checkmate.");
-    //   console.log(`Solver return code: ${pRow}`);
-    //   // Play sound to signal game end
-    //   var gameEnd = new Audio("../sfx/game-end.wav");
-    //   gameEnd.play();
-    //   return;
-    // }
+    
+    // Do not continue updating the board if the game has already ended
+    if(pRow < 0) {
+        return;
+    }
 
     // update the cpp board to match the state of the GUI board
     this.cppBoard.updateLocation(

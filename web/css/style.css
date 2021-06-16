@@ -89,19 +89,18 @@ td > p {
     bottom: 0;
     left: 0;
     z-index: 2;
-    width: 350px;
-    /* height: 300px;  */
+    width: 40vmin;
     background-color:#363434c0;
     /* top: 50%; */
     /* transform: translateY(-50%); */
-    border-radius: 5px;
+    border-radius: 0 1vmin 0 0;
 }
 
 .captureBox {
     /* position: absolute; */
     display: flex;
     /* background-color: white; */
-    height: 30px;
+    height: 4vh;
     width: auto;
 }
 
@@ -285,12 +284,18 @@ td > p {
 }
 
 #status {
-	font-size: 15px;
+	font-size: 4em;
 	color: white;
-	font-family: monospace;
 	position: fixed;
-	text-align: center;
+	text-align: right;
+    bottom: -4px;
+    right: 0;
 	z-index: 10;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    line-height: 0.8em;
+    font-weight: 500;
+    opacity: 0.5;
 }
 
 @keyframes spinny {
@@ -431,14 +436,13 @@ td > p {
     transition: all 0.2s ease;
     border-radius: 0.2em;
     box-sizing: border-box;
-    font-size: 3vw;
 }
 #radRand:hover {
     background: url("../img/mixed.svg") no-repeat center, #2d2d2d;
     cursor: pointer;
 }
 [type=radio]:checked + #radRand {
-     background: url("../img/mixed.svg") no-repeat center, #292929;
+    background: url("../img/mixed.svg") no-repeat center, #292929;
     border: 3px solid #e0e0e0;
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }

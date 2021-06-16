@@ -83,7 +83,10 @@ Turn Solver::nextMove(Board &board, int colour){
         vector<char> active;
         vector<Turn> moves = genMoves(board, colour);
         shuffle(moves.begin(), moves.end(), m_rng);
-        assert(!moves.empty());
+        // Just in case someone tried to get another move after a checkmate
+        if(moves.empty()){
+            return Turn(0, Coordinate(-1, 0, 0), Move(0, 0, 0));
+        }
         for(auto turn : moves){
             active.push_back(board.getPieceAt(turn.currentLocation)->getId());
         }
@@ -96,7 +99,7 @@ Turn Solver::nextMove(Board &board, int colour){
                 return turn;
             }
         }
-        assert(false);
+        return Turn(0, Coordinate(-1, 0, 0), Move(0, 0, 0));
     }
     return solve(board, 3, -INF, INF, colour, evaluate(board));
 }
