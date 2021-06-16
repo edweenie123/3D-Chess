@@ -25,6 +25,40 @@ class Board {
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
+  animateBoard() {
+    var allBoardLvl = document.getElementsByClassName("boardLvl");
+    var allPieces = document.querySelectorAll(".chessImg");
+    var boardTime = 0.5;
+    var boardInterval = 0.25;
+    var pieceTime = 1.5;
+    var pieceInterval = 0.03;
+
+    Array.from(allBoardLvl).forEach((elem, ind) => {
+      setTimeout(
+        () => (elem.style.animation = `comeFromLeft ${boardTime}s forwards`),
+        ind * boardInterval * 1000
+      );
+    });
+
+    Array.from(allPieces).forEach((elem, ind) => {
+      setTimeout(
+        () => (elem.style.animation = `fadeIn ${pieceTime}s forwards`),
+        (boardInterval * 4 + boardTime + ind * pieceInterval) * 1000 - 200
+      );
+    });
+
+    // remove animation from pieces to avoid repeat animations
+    Array.from(allPieces).forEach((elem) => {
+      setTimeout(() => {
+        elem.style.animation = "";
+        elem.style.opacity = 1;
+      }, (boardTime + boardInterval*4 + pieceTime + pieceInterval * 39) * 1000);
+    });
+    // Array.from(allPieces).forEach((elem, ind) => {
+    //   setTimeout(() => elem.style.animation = "fadeIn 1.5s forwards", 1500)
+    // });
+  }
+
   changeClickability(clickWhite, clickBlack) {
     if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
       if (!this.gameOver)
