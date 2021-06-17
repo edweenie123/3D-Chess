@@ -8,7 +8,6 @@ class Bar {
   update(score) {
       let sign = score < 0 ? -1 : 1;
       score = Math.abs(score);
-      console.log(`bar score: ${score}, width: ${this.normalize(score)}`);
 	  this.evalBar.style.width = `${50 + sign * this.normalize(score)}%`;
       this.indicator.innerHTML = `<b>EVAL</b> ${(sign * score / 10.0).toFixed(2)}`;
   }

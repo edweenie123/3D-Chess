@@ -33,7 +33,7 @@
     position: absolute;
     background: url("../img/kd.svg") no-repeat center;
     background-size: auto 100%;
-    /*animation: spin 40s linear infinite;*/
+    animation: spin 40s linear infinite;
     z-index: -1;
     filter: opacity(15%);
 }
