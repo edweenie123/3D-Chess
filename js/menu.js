@@ -61,7 +61,7 @@ class Menu {
     console.log(board.turn);
     console.log(board.cpuDifficulty);
     
-    var gameStart = new Audio("/sfx/game-start.wav");
+    var gameStart = new Audio("3D-Chess/sfx/game-start.wav");
     gameStart.play();
   }
 }
