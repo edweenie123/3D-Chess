@@ -4,7 +4,7 @@ random_device Solver::m_rd;
 mt19937       Solver::m_rng(Solver::m_rd());
 uniform_int_distribution<int> Solver::rng(0, INF);
 unordered_map<char, int> Solver::pieceWeight = {
-    {'b', 30}, {'k', 100}, {'n', 30}, {'p', 20}, {'q', 60}, {'r', 50}, {'u', 30}
+    {'b', 40}, {'k', 100}, {'n', 40}, {'p', 30}, {'q', 60}, {'r', 50}, {'u', 40}
 };
 
 Solver::Solver(int difficulty_) {
@@ -18,12 +18,16 @@ int Solver::randRange(int low, int high){
 }
 
 int Solver::distance(Coordinate coord){
-    return -(abs(coord.row - 2) * 3 + abs(coord.col - 2) + abs(coord.lvl - 2) * 6);
+    return -(abs(coord.row - 2) * 3 + abs(coord.col - 2) + abs(coord.lvl - 2) * 5);
 }
 
 int Solver::pieceScore(Piece *piece){
     // Hard difficulty: Sum of difference active piece scores, each multiplied by their relative position to the center (calculated using manhattan distance)
     if(!piece->isAlive) return 0;
+    if(piece->getId() == 'k'){
+        // The king should stay away from the center instead
+        return (pieceWeight[piece->getId()] - distance(piece->location)) * piece->color;
+    }
     return (pieceWeight[piece->getId()] + distance(piece->location)) * piece->color;
 }
 
@@ -78,7 +82,14 @@ vector<Turn> Solver::genMoves(Board &board, int color){
 }
 
 Turn Solver::nextMove(Board &board, int colour){
-    if(difficulty == 0){
+    // Count the number of pieces left to determine the stage of the game (start, middle, end)
+    int countPieces = 0;
+    for(int i = 0; i < 5; ++i)
+        for(int j = 0; j < 5; ++j)
+            for(int k = 0; k < 5; ++k)
+                if(board.board[i][j][k]->color == -colour && board.board[i][j][k]->isAlive)
+                    ++countPieces;
+    if(difficulty == 0 && countPieces >= 10){
         // Easy mode -- randomly choose a move
         vector<char> active;
         vector<Turn> moves = genMoves(board, colour);
@@ -119,7 +130,7 @@ Turn Solver::solve(Board &board, int depth, int ALPHA, int BETA, int color, int 
 
     if(depth == 0){
         // Evaluate board
-        return Turn(difficulty == 1 ? score + randRange(-30, 30) : score, Coordinate(-4, -1, -1), Move(0, 0, 0));
+        return Turn(score + (difficulty == 2 ? randRange(-3, 3) : randRange(-20, 20)), Coordinate(-4, -1, -1), Move(0, 0, 0));
     }
 
     Turn best(color == WHITE ? -INF : INF, Coordinate(-3, -1, -1), Move(0, 0, 0));

@@ -33,7 +33,7 @@
     position: absolute;
     background: url("../img/kd.svg") no-repeat center;
     background-size: auto 100%;
-    animation: spin 40s linear infinite;
+    /*animation: spin 40s linear infinite;*/
     z-index: -1;
     filter: opacity(15%);
 }
@@ -356,6 +356,24 @@ th {
 #playAgain {
 	position: fixed;
 	display: none;
+    top: 7vh;
+    left: 1vw;
+}
+
+.playAgainButton {
+    margin: 0;
+    padding: 0.5vh 2vw;
+    background-color: #292929;
+    color: #FFFFFF;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease-out;
+}
+
+.playAgainButton:hover{
+    cursor: pointer;
+    color: #292929;
+    background-color: #E6E6E6;
 }
 
 #statusContainer {
@@ -497,7 +515,6 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-
 #radRand {
     position: relative;
     width: 5vw;
@@ -518,7 +535,6 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-
 #radBlack {
     position: relative;
     width: 5vw;
@@ -538,6 +554,51 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
+#selectWarning {
+    position: fixed;
+    transform: translateY(calc(-2.5vw - 0.8em));
+    left: calc(50% - 5.75vw + 0.15em);
+    background: #0d0d0d;
+    padding: 0.5vw;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    opacity: 0;
+    border-radius: 0.3vw;
+    cursor: not-allowed;
+}
+
+#selectWarning p {
+    font-size: 0.5vw;
+    margin: 0;
+}
+
+#barBorder {
+    position: fixed;
+    height: 3vh;
+    width: 20vw;
+    top: 2vh;
+    left: 1vw;
+    border: 2px solid #dbdbdb;
+    background-color: #171717;
+    transition: all 0.2s ease-out;
+}
+
+#progressBar {
+    height: 3vh;
+    width: 50%;
+    background-color: #dbdbdb;
+    transition: all 0.2s ease-out;
+}
+
+#scoreIndicator {
+    color: #dbdbdb;
+    mix-blend-mode: difference;
+    margin: 0;
+    padding-left: 0.5em;
+    line-height: calc(3vh + 2px);
+    font-weight: 300;
+    position: fixed;
+}
 
 body {
     font-family: 'Heebo', sans-serif;

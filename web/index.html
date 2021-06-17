@@ -26,7 +26,7 @@
                     <table>
                         <tr>
                             <td>
-                                <input id="sel1" type="radio" name="test" value="-1" checked>
+                                <input id="sel1" type="radio" name="test" value="-1">
                                 <div id="rad1" src="img/kd.svg"></div>
                             </td>
                             <td style="padding:0;"><h4>Player vs. Player</h4></td>
@@ -37,7 +37,7 @@
                     <table>
                         <tr>
                             <td>
-                                <input id="sel2" type="radio" name="test" value="0">
+                                <input id="sel2" type="radio" name="test" value="0" checked>
                                 <div id="rad2" src="img/nd.svg"></div>
                             </td>
                             <td style="padding:0;"><h4>Player vs. Computer (Easy)</h4></td>
@@ -68,33 +68,39 @@
                 </label>
             </div>
             <!-- Create a toggle button for the player to choose if they want to play as white and black -->
-            <table class="colourSelect">
-                <tr>
-                    <td colspan="3">
-                        <h4 id="chosenColour" style="display: inline-block;">I PLAY AS</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label>
-                            <input id="selWhite" type="radio" name="color" value="1" checked>
-                            <div id="radWhite" src="img/kd.svg"></div>
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input id="selRand" type="radio" name="color" value="0">
-                            <div id="radRand" src="img/mixed.svg"></div>
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input id="selBlack" type="radio" name="color" value="-1">
-                            <div id="radBlack" src="img/kd.svg"></div>
-                        </label>
-                    </td>
-                </tr>
-            </table>
+            <div>
+                <table class="colourSelect">
+                    <tr>
+                        <td colspan="3">
+                            <h4 id="chosenColour" style="display: inline-block;">I PLAY AS</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>
+                                <input id="selWhite" type="radio" name="color" value="1" checked>
+                                <div id="radWhite" src="img/kd.svg"></div>
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                <input id="selRand" type="radio" name="color" value="0">
+                                <div id="radRand" src="img/mixed.svg"></div>
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                <input id="selBlack" type="radio" name="color" value="-1">
+                                <div id="radBlack" src="img/kd.svg"></div>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+                <div id="selectWarning">
+                    <p>You cannot select your color for 2-player mode</p>
+                </div>
+            </div>
+            
 
             <!-- Buttons for the user to start the game or read the rules / history of Raumschach -->
             <center style="margin-top: 2vh;">
@@ -137,8 +143,14 @@
 	</div>
 	
 	<div id="playAgain">
-		<button class="welcomeButton" onclick="location.reload()">New game</button>
+		<a class="playAgainButton" onclick="location.reload()">New game</a>
 	</div>
+    
+    <div id="barBorder">
+        <div id="progressBar">
+            <p id="scoreIndicator"><b>EVAL</b> 0.00</p>
+        </div>
+    </div>
 	
     <div id="promotePanel">
         <div id="pieceHolder"></div>
@@ -148,12 +160,14 @@
     <script type="text/javascript" src="js/menu.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/moves.js"></script>
+    <script type="text/javascript" src="js/bar.js"></script>
     <script>
         var board;
         Module.onRuntimeInitialized = _ => {
             var panel = new Panel();
             var moves = new Moves();
-            board = new Board(panel, moves);
+            var evalBar = new Bar();
+            board = new Board(panel, moves, evalBar);
             board.renderBoard();
             board.renderPieces();
             document.getElementById("board").style.display = "none";
