@@ -590,6 +590,8 @@ class Board {
     promotedPiece.style.opacity = 1;
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
+    if (this.flippedSide==-1)
+      promotedPiece.classList.add("chessImgFlipped"); // make sure the promoted piece is not updown
 
     // get the cpp pawn and promote it
     var cppPawn = this.getPiece(row, col, lvl);
