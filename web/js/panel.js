@@ -56,7 +56,7 @@ class Panel {
 	for (var i=0;i<pieces.length;i++) {
 		// put pieces of the same type closer together (decrease margin)
 		if (pieces[i].dataset.type == lastType) 
-			pieces[i].style.marginLeft = "-20px";
+			pieces[i].style.marginLeft = "-25px";
 		else pieces[i].style.margin = "0";
 
 		lastType = pieces[i].dataset.type;	

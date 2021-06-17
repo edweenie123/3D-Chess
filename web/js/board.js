@@ -1,9 +1,3 @@
-/*
-To-do:
-    make board size dynamic (based of screen size)?
-    rerender on window resize
-*/
-
 class Board {
   constructor(panel, moves) {
     this.boardDiv = document.getElementById("board");
