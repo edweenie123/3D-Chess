@@ -6,7 +6,7 @@ class Moves {
 
   addMove(pieceId, info, colour, curRow, curCol, curLvl, newRow, newCol, newLvl) {
 	  var imgFileName = String(pieceId.toLowerCase()) + ".svg";
-	  var movement = "<img src=\"../img/" + imgFileName + "\" width=\"20px\">" + String.fromCharCode('A'.charCodeAt(0) + curLvl) + String.fromCharCode('a'.charCodeAt(0) + curCol) + (1 + curRow) + (info.capturedPiece ? "x" : " ") + String.fromCharCode('A'.charCodeAt(0) + newLvl) + String.fromCharCode('a'.charCodeAt(0) + newCol) + (1 + newRow); 
+	  var movement = "<img src=\"/img/" + imgFileName + "\" width=\"20px\">" + String.fromCharCode('A'.charCodeAt(0) + curLvl) + String.fromCharCode('a'.charCodeAt(0) + curCol) + (1 + curRow) + (info.capturedPiece ? "x" : " ") + String.fromCharCode('A'.charCodeAt(0) + newLvl) + String.fromCharCode('a'.charCodeAt(0) + newCol) + (1 + newRow); 
 	  console.log(imgFileName);
 	  // Add this move to the table
 	  if (colour == 1) {
