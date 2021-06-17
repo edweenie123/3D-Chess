@@ -89,7 +89,7 @@ td > p {
     bottom: 0;
     left: 0;
     z-index: 2;
-    width: 50vmin;
+    width: 40vmin;
     background-color:#363434c0;
     /* top: 50%; */
     /* transform: translateY(-50%); */
@@ -99,8 +99,9 @@ td > p {
 .captureBox {
     /* position: absolute; */
     display: flex;
+    margin-left: -0.3vw;
     /* background-color: white; */
-    height: 4vh;
+    height: 3.3vh;
     width: auto;
 }
 
@@ -122,7 +123,7 @@ td > p {
 
 .capturedPiece {
     /* margin: 0  5px 0 5px; */
-    height:100%;
+    height: 100%;
     width: auto;
     /* width: 7%; */
     height: auto;
@@ -147,6 +148,19 @@ td > p {
 
 #movesBox:td, #movesBox:th {
 	padding: 1px;
+}
+
+/* change scroll bar for history */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.397);
 }
 
 th {
