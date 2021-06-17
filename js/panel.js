@@ -32,7 +32,7 @@ class Panel {
 
   makePiece(pieceName) {
     var img = document.createElement("img");
-    img.src = "3D-Chess/img/" + pieceName + ".svg";
+    img.src = "img/" + pieceName + ".svg";
     img.className = "capturedPiece";
     img.dataset.type = pieceName[0];
     return img;
