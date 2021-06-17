@@ -43,6 +43,7 @@ class Menu {
     this.panel.initialize(this.gameMode, this.colour);
     document.getElementById("statusContainer").style.display = "block";
     document.getElementById("movesPanel").style.display = "block";
+    document.getElementById("playAgain").style.display = "block";
 
     if (this.gameMode != -1) {
       if (this.colour==1) {
