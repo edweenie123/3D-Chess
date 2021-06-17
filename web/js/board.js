@@ -540,7 +540,6 @@ class Board {
 			this.moves.appendSpecial(false, true, false, this.turn, '');
 		}
     }
-
     this.turn = this.turn === 1 ? -1 : 1;
     this.changeClickability(this.turn == 1, this.turn == -1);
   }
@@ -636,6 +635,9 @@ class Board {
 		this.moves.appendSpecial(false, false, true, this.turn, promoteId[0]);
 	}
     
-    this.changeTurn();
+    if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+		return;
+	} else
+		this.changeTurn();
   }
 }
