@@ -4,7 +4,7 @@
 rm build/ -rf
 mkdir build 
 cd build
-em++ -O3 --bind ../cpp/src/main.cpp ../cpp/src/globals.cpp ../cpp/src/coordinate.cpp ../cpp/src/move.cpp ../cpp/src/piece.cpp ../cpp/src/board.cpp ../cpp/src/king.cpp ../cpp/src/knight.cpp ../cpp/src/pawn.cpp ../cpp/src/queen.cpp ../cpp/src/rook.cpp ../cpp/src/unicorn.cpp ../cpp/src/bishop.cpp ../cpp/src/turn.cpp ../cpp/src/solver.cpp -s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1
+em++ -O3 --bind ../cpp/src/main.cpp ../cpp/src/globals.cpp ../cpp/src/coordinate.cpp ../cpp/src/move.cpp ../cpp/src/piece.cpp ../cpp/src/board.cpp ../cpp/src/king.cpp ../cpp/src/knight.cpp ../cpp/src/pawn.cpp ../cpp/src/queen.cpp ../cpp/src/rook.cpp ../cpp/src/unicorn.cpp ../cpp/src/bishop.cpp ../cpp/src/turn.cpp ../cpp/src/empty.cpp ../cpp/src/solver.cpp -s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1
 mv a.out.js ../web/gen/
 mv a.out.wasm ../web/gen/
 
@@ -23,5 +23,6 @@ mv a.out.wasm ../web/gen/
 # bishop.cpp
 # turn.cpp
 # solver.cpp
+# empty.cpp
 # main.cpp
 

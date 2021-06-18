@@ -1,8 +1,7 @@
 #ifndef knight_h
 #define knight_h
 
-#include<vector>
-#include<algorithm>
+#include "globals.h"
 #include "piece.h"
 #include "coordinate.h"
 #include "move.h"

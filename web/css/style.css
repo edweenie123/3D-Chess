@@ -114,13 +114,6 @@ td > p {
     margin: 20px;
 }
 
-/* #whitePlayer img {
-    filter: drop-shadow(1px 1px 0px rgb(255, 255, 255)) 
-            drop-shadow(-1px -1px 0px rgb(255, 255, 255))
-            drop-shadow(1px -1px 0px rgb(255, 255, 255))
-            drop-shadow(-1px 1px 0px rgb(255, 255, 255));
-} */
-
 .capturedPiece {
     /* margin: 0  5px 0 5px; */
     height: 100%;
@@ -138,7 +131,6 @@ td > p {
 	position: fixed;
 	overflow-y: auto;
 }
-
 
 #movesBox {
 	position: relative;

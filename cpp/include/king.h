@@ -1,7 +1,7 @@
 #ifndef king_h
 #define king_h
 
-#include<vector>
+#include "globals.h"
 #include "piece.h"
 #include "coordinate.h"
 #include "move.h"

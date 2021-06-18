@@ -1,9 +1,8 @@
 #ifndef coordinate_h
 #define coordinate_h
 
-#include<string>
+#include "globals.h"
 #include "move.h"
-using namespace std;
 
 class Coordinate {
     private:

@@ -4,10 +4,7 @@
 #include "piece.h"
 #include "coordinate.h"
 #include "move.h"
-#include <vector>
-#include <iostream>
 #include "globals.h"
-using namespace std;
 
 class Piece;
 
@@ -18,7 +15,6 @@ class Board {
         // I can't get embind to work with arrays, so gotta use yucky vector lol
         vector<vector<vector<Piece*>>> board =
             vector<vector<vector<Piece*>>>(5, vector<vector<Piece*>>(5, vector<Piece*>(5, NULL)));
-        // Piece* board[5][5][5];
 
         Board();
         Piece* getPieceAt(Coordinate square);

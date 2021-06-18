@@ -16,6 +16,7 @@ int Piece::getColor() {
     return color;
 }
 
+/* This would not be here if emscripten allowed us to use pure virtual functions / abstract base classes (see piece.h) */
 char Piece::getId() {
     return ' ';
 }
@@ -23,13 +24,6 @@ char Piece::getId() {
 Coordinate Piece::getLocation() {
     return location;
 }
-
-// bool Piece::isEnemySquare(Piece other) {
-//     // make sure pieces have valid colors
-//     assert((color == BLACK || color == WHITE) && (other.color == BLACK || other.color == WHITE))
-
-//     return color != other.color;
-// }
 
 void Piece::setLocation(int row_, int col_, int lvl_) {
     location = Coordinate{row_, col_, lvl_};
@@ -58,8 +52,8 @@ vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord)
     return moves;
 }
 
+/* This would not be here if emscripten allowed us to use pure virtual functions / abstract base classes (see piece.h) */
 vector<Move> Piece::getMoves(Board board, bool prune) {
-    // return an empty vector for v table to be happy
     vector<Move> tmp;
     return tmp;
 }

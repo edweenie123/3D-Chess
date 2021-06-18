@@ -1,3 +1,5 @@
+/* Binding definitions. Makes methods in C++ backend available for javascript frontend */
+
 #ifndef bindings_h
 #define bindings_h
 
@@ -22,7 +24,7 @@ EMSCRIPTEN_BINDINGS() {
         .property("score", &Turn::score)
         .property("currentLocation", &Turn::currentLocation)
         .property("change", &Turn::change)
-        ; 
+        ;
     class_<Piece>("Piece")
         .constructor<int, int, int, int>()
         .function("getMoves", &Piece::getMoves)
@@ -65,6 +67,11 @@ EMSCRIPTEN_BINDINGS() {
         .constructor<int, int, int, int>()
         .function("getMoves", &Unicorn::getMoves)
         .function("getId", &Unicorn::getId)
+        ;
+    class_<Empty, base<Piece>>("Empty")
+        .constructor<int, int, int, int>()
+        .function("getMoves", &Empty::getMoves)
+        .function("getId", &Empty::getId)
         ;
     class_<Board>("Board")
         .constructor()

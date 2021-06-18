@@ -3,7 +3,7 @@
 
 #include "coordinate.h"
 #include "move.h"
-using namespace std;
+#include "globals.h"
 
 class Turn {
     private:

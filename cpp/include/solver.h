@@ -6,13 +6,7 @@
 #include "piece.h"
 #include "pawn.h"
 #include "queen.h"
-#include <algorithm>
-#include <vector>
-#include <cassert>
-#include <random>
-#include <unordered_map>
-#include <iostream> // For debugging
-using namespace std;
+#include "globals.h"
 
 class Solver {
     private:

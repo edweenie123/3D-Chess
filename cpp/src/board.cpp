@@ -7,15 +7,16 @@
 #include "../include/pawn.h"
 #include "../include/knight.h"
 #include "../include/piece.h"
-#include <string.h>
+#include "../include/empty.h"
+#include "../include/globals.h"
 
 Board::Board() {
     // initialize the board
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            for (int k = 0; k < 5; ++k) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            for (int k = 0; k < BOARD_SIZE; ++k) {
                 /* To Denote an empty cell, we simply use a dead piece */
-                board[i][j][k] = new Piece();
+                board[i][j][k] = new Empty();
                 board[i][j][k]->isAlive = false;
             }
         }
@@ -65,9 +66,9 @@ Board::Board() {
 }
 
 void Board::printBoard() {
-    for (int lvl = 0; lvl < 5; ++lvl) {
-        for (int row = 0; row < 5; ++row) {
-            for (int col = 0; col < 5; ++col) {
+    for (int lvl = 0; lvl < BOARD_SIZE; ++lvl) {
+        for (int row = 0; row < BOARD_SIZE; ++row) {
+            for (int col = 0; col < BOARD_SIZE; ++col) {
                 if (board[row][col][lvl]->getId() == ' ') cout << '.' << ' ';
                 else cout << board[row][col][lvl]->getId() << ' ';
             }
@@ -89,7 +90,7 @@ Piece* Board::getPieceAt(int row, int col, int lvl) {
 
 bool Board::isOnBoard(Coordinate c) {
     // this coordinate lies within te 5x5x5 board
-    return c.row >= 0 && c.row < 5 && c.col >= 0 && c.col < 5 && c.lvl >= 0 && c.lvl < 5;
+    return c.row >= 0 && c.row < BOARD_SIZE && c.col >= 0 && c.col < BOARD_SIZE && c.lvl >= 0 && c.lvl < BOARD_SIZE;
 }
 
 bool Board::isVacant(Coordinate c) {
@@ -138,7 +139,7 @@ void Board::updateLocation(Coordinate square, Move movement) {
 
     // We need to update the board
     /* To Denote an empty cell, we simply use a dead piece */
-    board[square.row][square.col][square.lvl] = new Piece();
+    board[square.row][square.col][square.lvl] = new Empty();
     board[square.row][square.col][square.lvl]->isAlive = false;
 
     // update board with the piece's new location
@@ -149,9 +150,9 @@ void Board::updateLocation(Coordinate square, Move movement) {
 }
 
 bool Board::isChecked(int pieceColor) {
-    for (int x = 0; x < 5; ++x) {
-        for (int y = 0; y < 5; ++y) {
-            for (int z = 0; z < 5; ++z) {
+    for (int x = 0; x < BOARD_SIZE; ++x) {
+        for (int y = 0; y < BOARD_SIZE; ++y) {
+            for (int z = 0; z < BOARD_SIZE; ++z) {
                 // if the current cell contains a piece, process its possible moves
                 // only process enemy pieces
                 if (board[x][y][z]->isAlive && board[x][y][z]->color != pieceColor) {
@@ -183,9 +184,9 @@ bool Board::isChecked(int pieceColor) {
 bool Board::isCheckmated(int pieceColor) {
     // Naive approach: try all possible moves, and if there exists at least 1 move that puts the king
     // out of check, return false
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            for (int k = 0; k < 5; ++k) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            for (int k = 0; k < BOARD_SIZE; ++k) {
                 if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
@@ -212,9 +213,9 @@ bool Board::isStalemated(int pieceColor) {
     // By definition of stalemate, the king should not be currently in check
     if (isChecked(pieceColor)) return false;
     // If we manage to find even one valid move for the current turn player, return false
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            for (int k = 0; k < 5; ++k) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            for (int k = 0; k < BOARD_SIZE; ++k) {
                 if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
                     if (board[i][j][k]->hasAnyMoves(*this, {i,j,k})) {
                         // Found a legal valid move

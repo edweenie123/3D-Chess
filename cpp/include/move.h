@@ -1,8 +1,7 @@
 #ifndef move_h
 #define move_h
 
-#include<string>
-using namespace std;
+#include "globals.h"
 
 class Move {
     private:

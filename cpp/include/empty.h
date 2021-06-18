@@ -1,5 +1,5 @@
-#ifndef unicorn_h
-#define unicorn_h
+#ifndef empty_h
+#define empty_h
 
 #include "globals.h"
 #include "piece.h"
@@ -7,11 +7,10 @@
 #include "move.h"
 #include "board.h"
 
-class Unicorn: public Piece {
+class Empty: public Piece {
     public:
         char getId(); 
         using Piece::Piece; // use constructor of parent class
-        static vector<Move> directions;
         vector<Move> getMoves(Board board, bool prune);
 };
 
