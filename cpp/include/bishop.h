@@ -1,3 +1,5 @@
+/* Bishop class, describing a bishop and its movements */
+
 #ifndef bishop_h
 #define bishop_h
 

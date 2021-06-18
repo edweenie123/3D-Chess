@@ -1,3 +1,5 @@
+/* Rook class, describing a rook and its movements */
+
 #ifndef rook_h
 #define rook_h
 

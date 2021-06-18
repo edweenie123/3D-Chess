@@ -1,3 +1,5 @@
+/* Knight class, describing a knight and its movements */
+
 #ifndef knight_h
 #define knight_h
 

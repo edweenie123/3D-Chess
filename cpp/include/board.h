@@ -1,3 +1,5 @@
+/* Board class. Initializes the 3D chessboard, along with methods to move pieces and detect game states */
+
 #ifndef board_h
 #define board_h
 
@@ -14,7 +16,7 @@ class Board {
 
         // I can't get embind to work with arrays, so gotta use yucky vector lol
         vector<vector<vector<Piece*>>> board =
-            vector<vector<vector<Piece*>>>(5, vector<vector<Piece*>>(5, vector<Piece*>(5, NULL)));
+            vector<vector<vector<Piece*>>>(BOARD_SIZE, vector<vector<Piece*>>(BOARD_SIZE, vector<Piece*>(BOARD_SIZE, NULL)));
 
         Board();
         Piece* getPieceAt(Coordinate square);

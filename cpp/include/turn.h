@@ -1,3 +1,5 @@
+/* Turn class, used by solver class to evaluate board positions */
+
 #ifndef turn_h
 #define turn_h
 

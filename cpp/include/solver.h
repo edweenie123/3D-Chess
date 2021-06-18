@@ -1,3 +1,5 @@
+/* Solver class, contains our CHESS AI featuring 3 levels of difficulty */
+
 #ifndef solver_h
 #define solver_h
 

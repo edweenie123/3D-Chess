@@ -1,3 +1,5 @@
+/* Coordinate class, describing a 3D chess coordinate, including handy methods for 3D coordinate arithmetic */
+
 #ifndef coordinate_h
 #define coordinate_h
 
@@ -15,7 +17,6 @@ class Coordinate {
         Coordinate operator+(const Move&);
         Coordinate& operator+=(const Move&);
         Coordinate& operator=(const Coordinate&);
-        // might add toChessNotation method
 };
 
 #endif

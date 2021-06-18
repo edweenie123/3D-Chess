@@ -1,3 +1,5 @@
+/* Move class, describing piece movement on 3D chess board, including operator overloads for piece movement arithmetic */
+
 #ifndef move_h
 #define move_h
 

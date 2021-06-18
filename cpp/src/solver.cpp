@@ -39,9 +39,9 @@ bool Solver::canPromote(Piece* piece){
 
 int Solver::evaluate(Board &board){
     int score = 0;
-    for(int row = 0; row < 5; ++row){
-        for(int col = 0; col < 5; ++col){
-            for(int lvl = 0; lvl < 5; ++lvl){
+    for(int row = 0; row < BOARD_SIZE; ++row){
+        for(int col = 0; col < BOARD_SIZE; ++col){
+            for(int lvl = 0; lvl < BOARD_SIZE; ++lvl){
                 score += pieceScore(board.getPieceAt(row, col, lvl));
             }
         }
@@ -51,9 +51,9 @@ int Solver::evaluate(Board &board){
 
 vector<Turn> Solver::genMoves(Board &board, int color){
     vector<Turn> moves;
-    for(int i = 0; i < 5; ++i) {
-        for(int j = 0; j < 5; ++j) {
-            for(int k = 0; k < 5; ++k) {
+    for(int i = 0; i < BOARD_SIZE; ++i) {
+        for(int j = 0; j < BOARD_SIZE; ++j) {
+            for(int k = 0; k < BOARD_SIZE; ++k) {
                 if(board.board[i][j][k]->color == color && board.board[i][j][k]->isAlive){
                     // Go through all the moves, make sure you don't leave your king checked
                     for (Move m : board.board[i][j][k]->getMoves(board, false)) {
@@ -84,9 +84,9 @@ vector<Turn> Solver::genMoves(Board &board, int color){
 Turn Solver::nextMove(Board &board, int colour){
     // Count the number of pieces left to determine the stage of the game (start, middle, end)
     int countPieces = 0;
-    for(int i = 0; i < 5; ++i)
-        for(int j = 0; j < 5; ++j)
-            for(int k = 0; k < 5; ++k)
+    for(int i = 0; i < BOARD_SIZE; ++i)
+        for(int j = 0; j < BOARD_SIZE; ++j)
+            for(int k = 0; k < BOARD_SIZE; ++k)
                 if(board.board[i][j][k]->color == -colour && board.board[i][j][k]->isAlive)
                     ++countPieces;
     if(difficulty == 0 && countPieces >= 10){

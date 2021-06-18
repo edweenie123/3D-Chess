@@ -1,3 +1,5 @@
+/* Unicorn class, describing a unicorn and its movements */
+
 #ifndef unicorn_h
 #define unicorn_h
 

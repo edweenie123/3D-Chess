@@ -1,3 +1,5 @@
+/* Queen class, describing a queen and its movements */
+
 #ifndef queen_h
 #define queen_h
 

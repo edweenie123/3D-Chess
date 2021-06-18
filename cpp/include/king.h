@@ -1,3 +1,5 @@
+/* King class, describing a king and its movements */
+
 #ifndef king_h
 #define king_h
 

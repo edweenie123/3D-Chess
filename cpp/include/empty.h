@@ -1,3 +1,5 @@
+/* Empty piece class, to denote an empty square */
+
 #ifndef empty_h
 #define empty_h
 

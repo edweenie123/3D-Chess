@@ -1,3 +1,5 @@
+/* Pawn class, describing a pawn and its movements, in addition to promotion */
+
 #ifndef pawn_h
 #define pawn_h
 
