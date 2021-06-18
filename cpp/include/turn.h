@@ -13,7 +13,11 @@ class Turn {
         int score;
         Coordinate currentLocation;
         Move change;
+        
+        // Constructor
         Turn(int, Coordinate, Move);
+
+        // Assignment operator overload
         Turn& operator= (const Turn&);
 };
 

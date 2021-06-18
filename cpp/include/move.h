@@ -8,10 +8,16 @@
 class Move {
     private:
     public:
+        // Bundles change in row, change in column, and change in lvl into one Move object
         int row, col, lvl;
+
+        // Constructors
         Move();
         Move(int row, int col, int lvl);
+
         string toString();
+
+        // Operator overloads for easy Move arithmetic
         Move operator+(const Move&);
         Move& operator+=(const Move&);
         Move& operator=(const Move&);
