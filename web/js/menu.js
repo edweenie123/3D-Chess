@@ -3,40 +3,27 @@ class Menu {
         this.panel = panel;
         this.board = board;
         this.gameMode;
-        this.menuDiv = document.getElementById("selec");
+        this.menuDiv = document.getElementById("menuPanel");
         document.getElementById("submitButton").onclick = () => {
             this.submit();
         };
         for (let id = 1; id <= 4; ++id) {
-            document
-                .getElementById(`sel${id}`)
-                .addEventListener("change", function () {
-                    if (this.value == -1) {
-                        document.getElementById("radWhite").style.cursor =
-                            "not-allowed";
-                        document.getElementById("radBlack").style.cursor =
-                            "not-allowed";
-                        document.getElementById("radRand").style.cursor =
-                            "not-allowed";
-                        document.getElementById("selectWarning").style.opacity =
-                            "1";
-                        document.getElementById(
-                            "selectWarning"
-                        ).style.visibility = "visible";
-                    } else {
-                        document.getElementById("radWhite").style.cursor =
-                            "pointer";
-                        document.getElementById("radBlack").style.cursor =
-                            "pointer";
-                        document.getElementById("radRand").style.cursor =
-                            "pointer";
-                        document.getElementById("selectWarning").style.opacity =
-                            "0";
-                        document.getElementById(
-                            "selectWarning"
-                        ).style.visibility = "hidden";
-                    }
-                });
+            document.getElementById(`sel${id}`)
+                    .addEventListener("change", function () {
+                        if (this.value == -1) {
+                            document.getElementById("radWhite").style.cursor = "not-allowed";
+                            document.getElementById("radBlack").style.cursor = "not-allowed";
+                            document.getElementById("radRand").style.cursor = "not-allowed";
+                            document.getElementById("selectWarning").style.opacity = "1";
+                            document.getElementById( "selectWarning").style.visibility = "visible";
+                        } else {
+                            document.getElementById("radWhite").style.cursor = "pointer";
+                            document.getElementById("radBlack").style.cursor = "pointer";
+                            document.getElementById("radRand").style.cursor = "pointer";
+                            document.getElementById("selectWarning").style.opacity = "0";
+                            document.getElementById("selectWarning").style.visibility = "hidden";
+                        }
+                    });
         }
     }
 

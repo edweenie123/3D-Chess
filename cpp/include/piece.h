@@ -11,25 +11,29 @@ class Board;
 
 class Piece {
     protected:
-        bool isAlive = true;
-        Coordinate location;
-        int color;
+        bool isAlive = true;    // is the piece alive / caputred?
+        Coordinate location;    // the 3D coordinate of the piece on board
+        int color;              // color of the piece (black or white)
     public:
+        // Constructors
         Piece();
         Piece(int row, int col, int lvl, int color);
         //virtual ~Piece() = 0;
 
-        int getColor();
-        void setColor(int color);
-        Coordinate getLocation();
-        void setLocation(int row, int col, int lvl);
+        // Getters
         bool getIsAlive();
+        Coordinate getLocation();
+        int getColor();
+        
+        // Setters
         void setIsAlive(bool alive);
+        void setLocation(int row, int col, int lvl);
+        void setColor(int color);
 
         string toString();
-        vector<Move> getAllMovesInLine(vector<Move>, Board, bool); // bool is to specify if we want to prune for checks
+        vector<Move> getAllMovesInLine(vector<Move>, Board, bool);  // bool is to specify if we want to prune for checks
         vector<Move> pruneMoves(vector<Move>, Board, Coordinate);
-        bool hasAnyMoves(Board, Coordinate); // Checks if a piece has any legal moves
+        bool hasAnyMoves(Board, Coordinate);    // Checks if a piece has any legal moves
 
         //virtual vector<Move> getMoves(Board, bool) = 0; // Pure virtual function. Each piece has unique set of moves
         //virtual char getId() = 0;

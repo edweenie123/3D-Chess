@@ -45,7 +45,7 @@ Board::Board() {
     }
 
     // set pieces for Level D
-    board[4][0][3] = new Bishop(4, 0, 3, BLACK); // colour -1 means black
+    board[4][0][3] = new Bishop(4, 0, 3, BLACK);
     board[4][3][3] = new Bishop(4, 3, 3, BLACK);
     board[4][1][3] = new Unicorn(4, 1, 3, BLACK);
     board[4][4][3] = new Unicorn(4, 4, 3, BLACK);
@@ -67,19 +67,6 @@ Board::Board() {
 
 vector<vector<vector<Piece*>>> Board::getBoard() {
     return board;
-}
-
-void Board::printBoard() {
-    for (int lvl = 0; lvl < BOARD_SIZE; ++lvl) {
-        for (int row = 0; row < BOARD_SIZE; ++row) {
-            for (int col = 0; col < BOARD_SIZE; ++col) {
-                if (board[row][col][lvl]->getId() == ' ') cout << '.' << ' ';
-                else cout << board[row][col][lvl]->getId() << ' ';
-            }
-            cout << '\n';
-        }
-        cout << '\n' << '\n';
-    }
 }
 
 Piece* Board::getPieceAt(Coordinate square) {
