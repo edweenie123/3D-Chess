@@ -1,14 +1,27 @@
-#selec {
-    width: 100%;
+
+
+/* Initialize all text with the custom font and color white */
+body {
+    font-family: 'Heebo', sans-serif;
+    color: white;
+    height: 100vh;
+    margin: 0 !important;
+}
+
+
+/* Menu panel CSS */
+#menuPanel {
+    /* Cover the entire screen */
+    width: 100vw;
     height: 100vh;
     position: absolute;
     z-index: 2;
     background-color: #303030;
     text-align: center;
     padding: 0;
-    opacity: 1;
 }
 
+/* Welcome menu content CSS */
 .splashContent {
     width: 20vw;
     height: 50vh;
@@ -18,6 +31,32 @@
     z-index: 2;
 }
 
+/* Welcome menu background CSS */
+.splashBackground {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    /* Background kind piece */
+    background: url("../img/kd.svg") no-repeat center;
+    background-size: auto 100%;
+    animation: spin 40s linear infinite;
+    z-index: -1;
+    filter: opacity(15%);
+}
+
+/* Spinning king animation */
+@keyframes spin {
+    0% { 
+        -webkit-transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
+        transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
+    }
+    100% { 
+        -webkit-transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
+        transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
+    }
+}
+
+/* Welcome menu shading */
 .splashBackground2 {
     height: 100vh;
     width: 100vw;
@@ -27,17 +66,7 @@
     overflow: hidden;
 }
 
-.splashBackground {
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
-    background: url("../img/kd.svg") no-repeat center;
-    background-size: auto 100%;
-    animation: spin 40s linear infinite;
-    z-index: -1;
-    filter: opacity(15%);
-}
-
+/* Welcome menu play/rule button CSS */
 .welcomeButton {
     margin: 0;
     padding: 0.6em 1.8vw;
@@ -56,21 +85,11 @@
     background-color: #E6E6E6;
 }
 
+/* Welcome menu text css */
 h4 {
     font-weight: 300;
     margin: 0;
     font-size: 0.8vw;
-}
-
-@keyframes spin {
-    0% { 
-        -webkit-transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
-        transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
-    }
-    100% { 
-        -webkit-transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
-        transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
-    }
 }
 
 .modeContainer {
@@ -81,6 +100,7 @@ td > p {
     margin: 0.1em;
 }
 
+/* Game's chess board CSS */
 #board {
     width: 100vw;
     height: 100vh;
@@ -89,28 +109,71 @@ td > p {
     position: fixed;
 }
 
+/* Individual chess boards */
 #panel {
     display: none;
     position: fixed;
-    /* margin: 25px; */
-    /* left: 200px; */
     bottom: 0;
     left: 0;
     z-index: 2;
     width: 40vmin;
     background-color:#363434c0;
-    /* top: 50%; */
-    /* transform: translateY(-50%); */
     border-radius: 0 1vmin 0 0;
     -webkit-box-shadow: 3px 5px 23px -6px #000000; 
     box-shadow: 3px 5px 23px -6px #000000;
 }
 
+/* Individual chess tiles */
+.square {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+    position: relative;
+    pointer-events: none;
+}
+
+/* Individual levels for each board (similar to panel class but the container is not transformed) */
+.boardLvl {
+    display: inherit; /* inherit for vertical stacking */
+    border: solid 10px #242424;
+    margin: 5px;
+    /* font-size: 0px is needed since inline-block of square creates space between divs */
+    font-size: 0px;
+    margin-left: 0%;
+    box-shadow: 5px 9px 8px -1px rgba(0,0,0,0.57);
+    transition: 0.2s;
+    animation: comein 20s;
+    opacity: 0;
+}
+
+/* Animations for transition between welcome screen and game board */
+@keyframes comeFromLeft {
+    0% {
+        margin-right: 1000px;
+        opacity: 0%;
+    }
+    100% {
+        margin-right: 0;
+        opacity: 100%;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+        width: 95%;
+        height: 95%;
+    }
+}
+
+/* Capture panel CSS */
 .captureBox {
-    /* position: absolute; */
     display: flex;
     margin-left: -0.3vw;
-    /* background-color: white; */
     height: 3.3vh;
     width: auto;
 }
@@ -125,13 +188,12 @@ td > p {
 }
 
 .capturedPiece {
-    /* margin: 0  5px 0 5px; */
     height: 100%;
     width: auto;
-    /* width: 7%; */
     height: auto;
 }
 
+/* Move history panel CSS */
 #movesPanel {
 	display: none;
 	height: 50vh;
@@ -147,6 +209,7 @@ td > p {
     box-shadow: 8px 5px 23px -1px #000000;
 }
 
+/* Move history table CSS */
 #movesBox {
 	position: relative;
 	width: 100%;
@@ -174,7 +237,7 @@ td > p {
     margin-left: 2em;
 }
 
-/* change scroll bar for history */
+/* Move history scroll bar */
 ::-webkit-scrollbar {
     width: 5px;
 }
@@ -187,77 +250,31 @@ td > p {
     background: rgba(255, 255, 255, 0.397);
 }
 
-.square {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    vertical-align: top;
-    position: relative;
-    /* width, height: 30px; */
-    pointer-events: none;
-}
-
-.boardLvl {
-    display: inherit; /* inherit for vertical display / stacking */
-    border: solid 10px #242424;
-    margin: 5px;
-    /* need this since inline-block of square creates space between divs */
-    font-size: 0px;
-    /* filter: drop-shadow(-2px 2px 2px rgba(34, 34, 34, 0.678)); */
-    /* animation: spinny 1s; */
-    margin-left: 0%;
-    box-shadow: 5px 9px 8px -1px rgba(0,0,0,0.57);
-    transition: 0.2s;
-    animation: comein 20s;
-    opacity: 0;
-}
-
-@keyframes comeFromLeft {
-    0% {
-        margin-right: 1000px;
-        opacity: 0%;
-    }
-    100% {
-        margin-right: 0;
-        opacity: 100%;
-    }
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0%;
-    }
-    100% {
-        opacity: 100%;
-        width: 95%;
-        height: 95%;
-    }
-}
-
+/* Chess images for the board */
 .chessImg {
-    /* center image horizontally and vertically */
+    /* Center image horizontally and vertically */
     position: absolute;
     left: 50%;
     top: 50%;
     width: 95%;
     height: 95%;
     z-index: 3;
-    /* disable highlight on image */
+    /* Disable highlight on image */
     -khtml-user-select: none;
     -o-user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    /* animation: fadeIn s  */
+    /* Apply visual effect filters (blur(0) is to sharpen the pictures) */
     filter: blur(0) drop-shadow(2px 2px 2px rgba(34, 34, 34, 0.527));
-    /* filter: drop-shadow(0px 0px 5px rgba(255, 238, 0, 0.527)); */
+    /* Apply transformations for 3D perspective */
     transform: translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0);
     -webkit-transform: translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0);
     opacity: 0;
-    /* transition: 1s; */
     
 }
 
+/* Flipped version of the chess images */
 .chessImgFlipped {
     transform: translate(-20%, -0%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0) rotateZ(180deg);
     -webkit-transform: translate(-20%, -0%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0) rotateZ(180deg);
@@ -271,20 +288,17 @@ td > p {
     z-index: 4;
 }
 
-/* red glow to show that the king is checked */
+/* Red glow to show that the king is checked */
 #checked {
     filter: drop-shadow(0px 0px 5px rgb(255, 0, 0)) drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.904)) drop-shadow(0px 0px 15px rgba(255, 0, 0, 0.87));
 }
 
+/* Visual colors for the move highlights and other chess tile colors */
 .darkCol {
-    /* animation: spinny 1s; */
-    /* background-color: rgb(162, 110, 91); */
     background-color: rgb(221, 169, 115);
 }
 
 .lightCol {
-    /* animation: spinny 1s; */
-    /* background-color: #ebd1b9; */
     background-color: rgb(250, 212, 164);
 }
 
@@ -309,7 +323,6 @@ td > p {
 }
 
 .lastMoveTint {
-    /* display: relative; */
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -318,7 +331,6 @@ td > p {
 }
 
 .pieceSelectTint {
-    /* display: relative; */
     width: 100%;
     pointer-events: auto;
     position: absolute;
@@ -329,6 +341,7 @@ td > p {
     background-color: rgba(0, 255, 64, 0.397);
 }
 
+/* Promotion panel CSS */
 #promotePanel {
     display: none;
     margin: 0;
@@ -353,19 +366,16 @@ td > p {
 }
 
 .promoteImg {
-    /* position: fixed; */
     width: 7em;
     margin: 1em;
-    /* height: 20%; */
     transition: 0.5s;
-    /* filter: drop-shadow(0px 0px 10px rgba(255, 251, 0, 0.527)); */
 }
 
 .promoteImg:hover {
-    /* width: 8em; */
     background-color: rgba(255, 255, 255, 0.349);
 }
 
+/* Play again button CSS */
 #playAgain {
 	position: fixed;
 	display: none;
@@ -389,6 +399,7 @@ td > p {
     background-color: #E6E6E6;
 }
 
+/* Game status container CSS */
 #statusContainer {
 	display: none;
 }
@@ -408,36 +419,22 @@ td > p {
     opacity: 0.5;
 }
 
-@keyframes spinny {
-    0% {
-        transform: rotateY(180deg)
-    }
-    100% {
-        transform: rotate(0deg)
-    }
-}
-
-
 /* Radio Buttons CSS */
-/* HIDE RADIO */
 [type=radio] { 
+    /* Hide the actual radio button, replaced with the pictures */
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-/* IMAGE STYLES */
+/* Set the cursor to point on the image */
 [type=radio] + img {
     cursor: pointer;
 }
 
-/* CHECKED STYLES */
-/* [type=radio]:checked + img {
-    outline: 2px solid #f00;
-} */
-
-/* Radio button hover */
+/* Radio button images and hover CSS */
+/* Player v player radio button */
 #rad1 {
     width: 2vw;
     height: 2vw;
@@ -455,6 +452,7 @@ td > p {
     background-size: 100%;
 }
 
+/* Easy cpu radio button */
 #rad2 {
     width: 2vw;
     height: 2vw;
@@ -472,6 +470,7 @@ td > p {
     background-size: 100%;
 }
 
+/* Normal cpu radio button */
 #rad3 {
     width: 2vw;
     height: 2vw;
@@ -489,6 +488,7 @@ td > p {
     background-size: 100%;
 }
 
+/* Hard cpu radio button */
 #rad4 {
     width: 2vw;
     height: 2vw;
@@ -506,21 +506,22 @@ td > p {
     background-size: 100%;
 }
 
-
-.colourSelect {
+/* Color selection CSS */
+.colorSelect {
     width: 18vw;
     margin: 0 1vw;
     border-collapse: collapse;
 }
 
-.colourSelect td {
+.colorSelect td {
     padding: 1vh 0 0 0;
 }
 
-.colourSelect div {
+.colorSelect div {
     margin: 0 0.5vw;
 }
 
+/* White radio color select CSS */
 #radWhite {
     position: relative;
     width: 5vw;
@@ -540,6 +541,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
+/* Random radio color select CSS */
 #radRand {
     position: relative;
     width: 5vw;
@@ -560,6 +562,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
+/* Black radio color select CSS */
 #radBlack {
     position: relative;
     width: 5vw;
@@ -579,6 +582,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
+/* Player v. player color select warning CSS */
 #selectWarning {
     position: fixed;
     transform: translateY(calc(-2.5vw - 0.8em));
@@ -598,6 +602,7 @@ td > p {
     margin: 0;
 }
 
+/* Current board evaluation bar CSS */
 #barBorder {
     position: fixed;
     height: 3vh;
@@ -616,6 +621,7 @@ td > p {
     transition: all 0.2s ease-out;
 }
 
+/* Evaluation bar text CSS */
 #scoreIndicator {
     color: #dbdbdb;
     mix-blend-mode: difference;
@@ -624,11 +630,4 @@ td > p {
     line-height: calc(3vh + 2px);
     font-weight: 300;
     position: fixed;
-}
-
-body {
-    font-family: 'Heebo', sans-serif;
-    color: white;
-    height: 100vh;
-    margin: 0 !important;
 }
