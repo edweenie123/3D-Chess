@@ -28,7 +28,7 @@ EMSCRIPTEN_BINDINGS() {
     class_<Piece>("Piece")
         .constructor<int, int, int, int>()
         .function("getMoves", &Piece::getMoves)
-        .property("isAlive", &Piece::isAlive)
+        .function("getIsAlive", &Piece::getIsAlive)
         .function("getId", &Piece::getId)
         .function("getColor", &Piece::getColor)
         ;

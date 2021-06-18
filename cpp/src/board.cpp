@@ -17,7 +17,7 @@ Board::Board() {
             for (int k = 0; k < BOARD_SIZE; ++k) {
                 /* To Denote an empty cell, we simply use a dead piece */
                 board[i][j][k] = new Empty();
-                board[i][j][k]->isAlive = false;
+                board[i][j][k]->setIsAlive(false);
             }
         }
     }
@@ -96,56 +96,56 @@ bool Board::isOnBoard(Coordinate c) {
 bool Board::isVacant(Coordinate c) {
     if (!isOnBoard(c)) return false;
     // this square is occupied
-    return !board[c.row][c.col][c.lvl]->isAlive;
+    return !board[c.row][c.col][c.lvl]->getIsAlive();
 }
 
 bool Board::isEnemySquare(Coordinate c, int pieceColor) {
     if (!isOnBoard(c) || isVacant(c)) return false;
     // return true if the piece at C is an enemy of pieceColor
-    return board[c.row][c.col][c.lvl]->color != pieceColor;
+    return board[c.row][c.col][c.lvl]->getColor() != pieceColor;
 }
 
 
 void Board::setPieceAt(Piece *piece) {
 
     // This method will only set a piece at an emtpy square
-    if(!isOnBoard(piece->location) || !isVacant(piece->location))
+    if(!isOnBoard(piece->getLocation()) || !isVacant(piece->getLocation()))
         return;
     // Don't re-add a dead piece
-    if(!piece->isAlive)
+    if(!piece->getIsAlive())
         return;
 
     // Add the pointer
-    board[piece->location.row][piece->location.col][piece->location.lvl] = piece;
+    board[piece->getLocation().row][piece->getLocation().col][piece->getLocation().lvl] = piece;
 }
 
 void Board::updateLocation(Coordinate square, Move movement) {
     Piece* curPiece = getPieceAt(square);
 
     // FIRST check if the move is legal
-    int newRow = curPiece->location.row + movement.row;
-    int newCol = curPiece->location.col + movement.col;
-    int newLvl = curPiece->location.lvl + movement.lvl;
+    int newRow = curPiece->getLocation().row + movement.row;
+    int newCol = curPiece->getLocation().col + movement.col;
+    int newLvl = curPiece->getLocation().lvl + movement.lvl;
     Coordinate newCord = {newRow, newCol, newLvl};
     if (!isOnBoard(newCord)) return;
     Piece* nextSquare = board[newRow][newCol][newLvl]; // the piece in the square the current piece is about to move to
 
-    if (!isVacant(newCord) && nextSquare->color == curPiece->color) return;
+    if (!isVacant(newCord) && nextSquare->getColor() == curPiece->getColor()) return;
 
     // The move should be legal, so we update it on the board,and for the piece
 
     // update the piece
-    curPiece->location = newCord;
+    curPiece->setLocation(newCord.row, newCord.col, newCord.lvl);
 
     // We need to update the board
     /* To Denote an empty cell, we simply use a dead piece */
     board[square.row][square.col][square.lvl] = new Empty();
-    board[square.row][square.col][square.lvl]->isAlive = false;
+    board[square.row][square.col][square.lvl]->setIsAlive(false);
 
     // update board with the piece's new location
 
     // if there is a piece of opposite colour currently occupying the new location, we destroy it
-    nextSquare->isAlive = false;
+    nextSquare->setIsAlive(false);
     board[newRow][newCol][newLvl] = curPiece;
 }
 
@@ -155,7 +155,7 @@ bool Board::isChecked(int pieceColor) {
             for (int z = 0; z < BOARD_SIZE; ++z) {
                 // if the current cell contains a piece, process its possible moves
                 // only process enemy pieces
-                if (board[x][y][z]->isAlive && board[x][y][z]->color != pieceColor) {
+                if (board[x][y][z]->getIsAlive() && board[x][y][z]->getColor() != pieceColor) {
                     vector<Move> possibleMoves = board[x][y][z]->getMoves(*this, false);
                     if (board[x][y][z]->getId() == 'p') {
                         // filter down the passive moves for the pawn
@@ -187,7 +187,7 @@ bool Board::isCheckmated(int pieceColor) {
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             for (int k = 0; k < BOARD_SIZE; ++k) {
-                if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
+                if (board[i][j][k]->getIsAlive() && board[i][j][k]->getColor() == pieceColor) {
                     // try out all possible moves of this piece, and check if the king is still checked
                     for (Move m : board[i][j][k]->getMoves(*this, false)) {
                         Coordinate newCoord = Coordinate(i, j, k) + m;
@@ -198,7 +198,7 @@ bool Board::isCheckmated(int pieceColor) {
                         updateLocation(newCoord, -m);
                         if(oldPiece->getId() != ' '){
                             board[newCoord.row][newCoord.col][newCoord.lvl] = oldPiece;
-                            oldPiece->isAlive = true;
+                            oldPiece->setIsAlive(true);
                         }
                         if(!checked) return false;
                     }
@@ -216,7 +216,7 @@ bool Board::isStalemated(int pieceColor) {
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             for (int k = 0; k < BOARD_SIZE; ++k) {
-                if (board[i][j][k]->isAlive && board[i][j][k]->color == pieceColor) {
+                if (board[i][j][k]->getIsAlive() && board[i][j][k]->getColor() == pieceColor) {
                     if (board[i][j][k]->hasAnyMoves(*this, {i,j,k})) {
                         // Found a legal valid move
                         return false;

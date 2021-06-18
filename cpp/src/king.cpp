@@ -22,7 +22,7 @@ vector<Move> King::getMoves(Board board, bool prune) {
                 Coordinate cur = Coordinate(location, posMove);
                 if (board.isVacant(cur))
                     moves.push_back(Move(a, b, c));
-                else if (board.isOnBoard(cur) && board.getPieceAt(cur)->color != color) {
+                else if (board.isOnBoard(cur) && board.getPieceAt(cur)->getColor() != color) {
                     moves.push_back(Move(a, b, c));
                 }
             }

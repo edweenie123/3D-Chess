@@ -10,22 +10,27 @@
 class Board;
 
 class Piece {
-    private:
-    public:
+    protected:
         bool isAlive = true;
         Coordinate location;
         int color;
+    public:
         Piece();
         Piece(int row, int col, int lvl, int color);
         //virtual ~Piece() = 0;
 
         int getColor();
+        void setColor(int color);
         Coordinate getLocation();
         void setLocation(int row, int col, int lvl);
+        bool getIsAlive();
+        void setIsAlive(bool alive);
+
         string toString();
         vector<Move> getAllMovesInLine(vector<Move>, Board, bool); // bool is to specify if we want to prune for checks
         vector<Move> pruneMoves(vector<Move>, Board, Coordinate);
         bool hasAnyMoves(Board, Coordinate); // Checks if a piece has any legal moves
+
         //virtual vector<Move> getMoves(Board, bool) = 0; // Pure virtual function. Each piece has unique set of moves
         //virtual char getId() = 0;
         virtual vector<Move> getMoves(Board, bool);

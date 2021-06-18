@@ -66,7 +66,7 @@ class Board {
       for (var row = 0; row < this.size; row++) {
         for (var col = 0; col < this.size; col++) {
           var piece = this.getPiece(row, col, lvl);
-          if (!piece.isAlive) continue;
+          if (!piece.getIsAlive()) continue;
 
           var pieceColor = piece.getColor();
           var hitbox = this.getHitbox(row, col, lvl);
@@ -249,7 +249,7 @@ class Board {
         for (var col = 0; col < this.size; col++) {
           // get the id of the piece located at this coordinate
           var cppPiece = this.getPiece(row, col, lvl);
-          if (!cppPiece.isAlive) continue;
+          if (!cppPiece.getIsAlive()) continue;
           var pieceId = String.fromCharCode(cppPiece.getId());
           var pieceColor = cppPiece.getColor() == 1 ? "l" : "d";
           // obtain the image name based off the piece id

@@ -23,18 +23,18 @@ int Solver::distance(Coordinate coord){
 
 int Solver::pieceScore(Piece *piece){
     // Hard difficulty: Sum of difference active piece scores, each multiplied by their relative position to the center (calculated using manhattan distance)
-    if(!piece->isAlive) return 0;
+    if(!piece->getIsAlive()) return 0;
     if(piece->getId() == 'k'){
         // The king should stay away from the center instead
-        return (pieceWeight[piece->getId()] - distance(piece->location)) * piece->color;
+        return (pieceWeight[piece->getId()] - distance(piece->getLocation())) * piece->getColor();
     }
-    return (pieceWeight[piece->getId()] + distance(piece->location)) * piece->color;
+    return (pieceWeight[piece->getId()] + distance(piece->getLocation())) * piece->getColor();
 }
 
 bool Solver::canPromote(Piece* piece){
     return piece->getId() == 'p' &&
-    ((piece->color == WHITE && piece->location.row + piece->location.lvl == 8) ||
-     (piece->color == BLACK && piece->location.row + piece->location.lvl == 0));
+    ((piece->getColor() == WHITE && piece->getLocation().row + piece->getLocation().lvl == 8) ||
+     (piece->getColor() == BLACK && piece->getLocation().row + piece->getLocation().lvl == 0));
 }
 
 int Solver::evaluate(Board &board){
@@ -54,7 +54,7 @@ vector<Turn> Solver::genMoves(Board &board, int color){
     for(int i = 0; i < BOARD_SIZE; ++i) {
         for(int j = 0; j < BOARD_SIZE; ++j) {
             for(int k = 0; k < BOARD_SIZE; ++k) {
-                if(board.board[i][j][k]->color == color && board.board[i][j][k]->isAlive){
+                if(board.board[i][j][k]->getColor() == color && board.board[i][j][k]->getIsAlive()){
                     // Go through all the moves, make sure you don't leave your king checked
                     for (Move m : board.board[i][j][k]->getMoves(board, false)) {
                         Piece* oldPiece = board.board[i + m.row][j + m.col][k + m.lvl];
@@ -68,7 +68,7 @@ vector<Turn> Solver::genMoves(Board &board, int color){
                         board.updateLocation({i + m.row, j + m.col, k + m.lvl}, -m);
                         if (oldPiece->getId() != ' ') {
                             board.board[i + m.row][j + m.col][k + m.lvl] = oldPiece;
-                            oldPiece->isAlive = true;
+                            oldPiece->setIsAlive(true);
                         }
                     }
                 }
@@ -87,7 +87,7 @@ Turn Solver::nextMove(Board &board, int colour){
     for(int i = 0; i < BOARD_SIZE; ++i)
         for(int j = 0; j < BOARD_SIZE; ++j)
             for(int k = 0; k < BOARD_SIZE; ++k)
-                if(board.board[i][j][k]->color == -colour && board.board[i][j][k]->isAlive)
+                if(board.board[i][j][k]->getColor() == -colour && board.board[i][j][k]->getIsAlive())
                     ++countPieces;
     if(difficulty == 0 && countPieces >= 10){
         // Easy mode -- randomly choose a move
@@ -157,7 +157,7 @@ Turn Solver::solve(Board &board, int depth, int ALPHA, int BETA, int color, int 
         board.updateLocation(newLoc, -curMove.change);
         if(oldPiece->getId() != ' '){
             board.board[newLoc.row][newLoc.col][newLoc.lvl] = oldPiece;
-            oldPiece->isAlive = true;
+            oldPiece->setIsAlive(true);
         }
         // White --> Maximizing
         // Black --> Minimizing

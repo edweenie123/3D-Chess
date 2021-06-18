@@ -16,6 +16,10 @@ int Piece::getColor() {
     return color;
 }
 
+void Piece::setColor(int color_) {
+    color = color_;
+}
+
 /* This would not be here if emscripten allowed us to use pure virtual functions / abstract base classes (see piece.h) */
 char Piece::getId() {
     return ' ';
@@ -27,6 +31,14 @@ Coordinate Piece::getLocation() {
 
 void Piece::setLocation(int row_, int col_, int lvl_) {
     location = Coordinate{row_, col_, lvl_};
+}
+
+bool Piece::getIsAlive() {
+    return isAlive;
+}
+
+void Piece::setIsAlive(bool alive_) {
+    isAlive = alive_;
 }
 
 vector<Move> Piece::pruneMoves(vector<Move> moves, Board board, Coordinate cord) {

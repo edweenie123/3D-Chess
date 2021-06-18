@@ -13,8 +13,7 @@ class Piece;
 class Board {
     private:
     public:
-
-        // I can't get embind to work with arrays, so gotta use yucky vector lol
+        // Vector is used to allow c++ code to be compiled into Webassembly to be run by Javascript
         vector<vector<vector<Piece*>>> board =
             vector<vector<vector<Piece*>>>(BOARD_SIZE, vector<vector<Piece*>>(BOARD_SIZE, vector<Piece*>(BOARD_SIZE, NULL)));
 
