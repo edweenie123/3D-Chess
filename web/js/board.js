@@ -9,16 +9,14 @@ class Board {
     this.gameOver = false;
     this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
     this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
-    // this.opponent = new Module.Solver(this.cpuDifficulty);
     this.panel = panel;
     this.flippedSide = 1; // 1 = flipped towards white, -1 flipped towards black
 
     this.boardLvlTransformWhite;
     this.boardLvlTransformBlack;
-    
+
     this.moves = moves;
     this.scoreBar = bar;
-    //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
   animateBoard() {
@@ -48,9 +46,9 @@ class Board {
       setTimeout(() => {
         elem.style.animation = "";
         elem.style.opacity = 1;
-      }, (boardTime + boardInterval*4 + pieceTime + pieceInterval * 39) * 1000);
+      }, (boardTime + boardInterval * 4 + pieceTime + pieceInterval * 39) * 1000);
     });
-    console.log(boardTime + boardInterval*4 + pieceTime + pieceInterval * 39)
+    console.log(boardTime + boardInterval * 4 + pieceTime + pieceInterval * 39);
   }
 
   changeClickability(clickWhite, clickBlack) {
@@ -109,13 +107,14 @@ class Board {
     return this.cppBoard.getBoard().get(row).get(col).get(lvl);
   }
 
-  // returns the div located at a specific coordiante
+  // returns the div located at a specific coordinate
   getSquareDiv(row, col, lvl) {
     return this.boardDiv.childNodes[this.size - 1 - lvl].childNodes[
       (this.size - 1 - row) * this.size + col
     ];
   }
 
+  // returns the chess image located at a specific coordinate
   getSquareImage(row, col, lvl) {
     var square = this.getSquareDiv(row, col, lvl);
     var image = Array.from(square.childNodes).find((elem) =>
@@ -129,6 +128,7 @@ class Board {
     return image;
   }
 
+  // returns the hitbox located at a specific coordinate
   getHitbox(row, col, lvl) {
     var square = this.getSquareDiv(row, col, lvl);
     var hitbox = Array.from(square.childNodes).find(
@@ -142,6 +142,7 @@ class Board {
     return hitbox;
   }
 
+  // get the image for the king of a certain color (used for the red shadow effect)
   getKingImg(color) {
     var desiredId = "k" + (color === 1 ? "l" : "d");
     for (var lvl = 0; lvl < this.size; lvl++) {
@@ -228,7 +229,8 @@ class Board {
       if (color == -1) lvl.style.transform += " rotateZ(180deg)";
 
       // change the offset of the drop shadow depending on whose side the board is facing
-      if (color == -1) lvl.style.boxShadow = "-5px -9px 8px -1px rgb(0 0 0 / 57%)";
+      if (color == -1)
+        lvl.style.boxShadow = "-5px -9px 8px -1px rgb(0 0 0 / 57%)";
       else lvl.style.boxShadow = "5px 9px 8px -1px rgb(0 0 0 / 57%)";
     });
 
@@ -265,10 +267,12 @@ class Board {
     }
   }
 
+  // creates a tint on a square of a specific type
   createTint(row, col, lvl, className) {
     var tint = document.createElement("DIV");
     tint.className = className;
 
+    // add event listeners to the tint depending on its class name
     if (className === "legalTint") {
       tint.addEventListener("click", (event) =>
         this.updatePiecePosition(event)
@@ -469,21 +473,31 @@ class Board {
 
     // move the piece to its new square
     this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
-    
+
     // record the move
-    this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
-    
+    this.moves.addMove(
+      pieceName,
+      moveInfo,
+      this.turn,
+      pRow,
+      pCol,
+      pLvl,
+      nRow,
+      nCol,
+      nLvl
+    );
+
     // update board's evaluation score
     this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
 
     if (moveInfo.isPromotion) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
     } else {
-	  if (moveInfo.enemyMated) {
-		this.moves.appendSpecial(true, false, false, this.turn, '');
-	  } else if (moveInfo.enemyChecked) {
-		this.moves.appendSpecial(false, true, false, this.turn, '');
-	  }
+      if (moveInfo.enemyMated) {
+        this.moves.appendSpecial(true, false, false, this.turn, "");
+      } else if (moveInfo.enemyChecked) {
+        this.moves.appendSpecial(false, true, false, this.turn, "");
+      }
       this.changeTurn();
     }
   }
@@ -500,10 +514,10 @@ class Board {
     const mRow = nxTurn.change.row;
     const mCol = nxTurn.change.col;
     const mLvl = nxTurn.change.lvl;
-    
+
     // Do not continue updating the board if the game has already ended
-    if(pRow < 0) {
-        return;
+    if (pRow < 0) {
+      return;
     }
 
     // update the cpp board to match the state of the GUI board
@@ -529,22 +543,32 @@ class Board {
     this.createTint(pRow, pCol, pLvl, "lastMoveTint");
 
     this.movePiece(pRow, pCol, pLvl, nRow, nCol, nLvl);
-    
+
     // record the move
-    this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
-    
+    this.moves.addMove(
+      pieceName,
+      moveInfo,
+      this.turn,
+      pRow,
+      pCol,
+      pLvl,
+      nRow,
+      nCol,
+      nLvl
+    );
+
     // update board's evaluation score
     this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
-    
+
     if (this.canPromote(nRow, nLvl, pieceName)) {
       // default to the best piece
       this.promote(nRow, nCol, nLvl, "q" + pieceName[1]);
     } else {
-		if (moveInfo.enemyMated) {
-		  this.moves.appendSpecial(true, false, false, this.turn, '');
-	    } else if (moveInfo.enemyChecked) {
-			this.moves.appendSpecial(false, true, false, this.turn, '');
-		}
+      if (moveInfo.enemyMated) {
+        this.moves.appendSpecial(true, false, false, this.turn, "");
+      } else if (moveInfo.enemyChecked) {
+        this.moves.appendSpecial(false, true, false, this.turn, "");
+      }
     }
     this.turn = this.turn === 1 ? -1 : 1;
     this.changeClickability(this.turn == 1, this.turn == -1);
@@ -595,8 +619,7 @@ class Board {
     promotedPiece.style.opacity = 1;
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
-    if (this.flippedSide==-1)
-      promotedPiece.classList.add("chessImgFlipped"); // make sure the promoted piece is not updown
+    if (this.flippedSide == -1) promotedPiece.classList.add("chessImgFlipped"); // make sure the promoted piece is not updown
 
     // get the cpp pawn and promote it
     var cppPawn = this.getPiece(row, col, lvl);
@@ -623,30 +646,29 @@ class Board {
       default:
         throw "ERROR: promoteId is invalid";
     }
-    
+
     cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
     var promote = new Audio("../sfx/promote.wav");
     promote.play();
-    
+
     var moveInfo = this.getMoveInfo(row, col, lvl, promoteId[0]);
     this.handleCheckShadow(moveInfo);
     this.handleSfx(moveInfo);
-    
+
     // update moves list
     if (moveInfo.enemyMated) {
-		this.moves.appendSpecial(true, false, true, this.turn, promoteId[0]);
-	} else if (moveInfo.enemyChecked) {
-		this.moves.appendSpecial(false, true, true, this.turn, promoteId[0]);
-	} else {
-		this.moves.appendSpecial(false, false, true, this.turn, promoteId[0]);
-	}
-    
+      this.moves.appendSpecial(true, false, true, this.turn, promoteId[0]);
+    } else if (moveInfo.enemyChecked) {
+      this.moves.appendSpecial(false, true, true, this.turn, promoteId[0]);
+    } else {
+      this.moves.appendSpecial(false, false, true, this.turn, promoteId[0]);
+    }
+
     // update board's evaluation score
     this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
-    
+
     if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
-		return;
-	} else
-		this.changeTurn();
+      return;
+    } else this.changeTurn();
   }
 }
