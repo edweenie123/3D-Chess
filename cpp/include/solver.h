@@ -12,11 +12,14 @@
 
 class Solver {
     private:
+        // Instance variables
         int difficulty;
+        // Instance methods
         Turn solve(Board &board, int depth, int ALPHA, int BETA, int color, int score);
         int distance(Coordinate coord);
         int pieceScore(Piece *piece);
         bool canPromote(Piece* piece);
+        // Static variables
         static unordered_map<char, int> pieceWeight;
         // Random number generator
         static random_device m_rd;
@@ -24,7 +27,9 @@ class Solver {
         static uniform_int_distribution<int> rng;
     public:
         static const int INF = 1e7;
+        // Constructor
         Solver(int);
+        // Useful utility methods
         int evaluate(Board &board);
         Turn nextMove(Board &board, int colour);
         vector<Turn> genMoves(Board &board, int color);

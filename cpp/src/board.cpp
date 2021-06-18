@@ -106,19 +106,6 @@ bool Board::isEnemySquare(Coordinate c, int pieceColor) {
 }
 
 
-void Board::setPieceAt(Piece *piece) {
-
-    // This method will only set a piece at an emtpy square
-    if(!isOnBoard(piece->getLocation()) || !isVacant(piece->getLocation()))
-        return;
-    // Don't re-add a dead piece
-    if(!piece->getIsAlive())
-        return;
-
-    // Add the pointer
-    board[piece->getLocation().row][piece->getLocation().col][piece->getLocation().lvl] = piece;
-}
-
 void Board::updateLocation(Coordinate square, Move movement) {
     Piece* curPiece = getPieceAt(square);
 

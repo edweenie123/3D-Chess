@@ -21,7 +21,6 @@ class Board {
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
         void updateLocation(Coordinate square, Move movement);
-        void setPieceAt(Piece *piece);
         void printBoard();
 
         bool isChecked(int pieceColor); // is king of color "pieceColor" checked?
