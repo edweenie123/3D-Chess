@@ -65,6 +65,10 @@ Board::Board() {
     }
 }
 
+vector<vector<vector<Piece*>>> Board::getBoard() {
+    return board;
+}
+
 void Board::printBoard() {
     for (int lvl = 0; lvl < BOARD_SIZE; ++lvl) {
         for (int row = 0; row < BOARD_SIZE; ++row) {

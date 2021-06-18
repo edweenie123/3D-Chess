@@ -106,7 +106,7 @@ class Board {
 
   // returns a the piece object located at a specific coordinate
   getPiece(row, col, lvl) {
-    return this.cppBoard.board.get(row).get(col).get(lvl);
+    return this.cppBoard.getBoard().get(row).get(col).get(lvl);
   }
 
   // returns the div located at a specific coordiante

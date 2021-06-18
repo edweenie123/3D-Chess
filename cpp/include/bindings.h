@@ -75,7 +75,7 @@ EMSCRIPTEN_BINDINGS() {
         ;
     class_<Board>("Board")
         .constructor()
-        .property("board", &Board::board)
+        .function("getBoard", &Board::getBoard)
         .function("updateLocation", &Board::updateLocation)
         .function("isChecked", &Board::isChecked)
         .function("isCheckmated", &Board::isCheckmated)

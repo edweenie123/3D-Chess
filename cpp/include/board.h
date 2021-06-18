@@ -12,17 +12,18 @@ class Piece;
 
 class Board {
     private:
-    public:
         // Vector is used to allow c++ code to be compiled into Webassembly to be run by Javascript
         vector<vector<vector<Piece*>>> board =
             vector<vector<vector<Piece*>>>(BOARD_SIZE, vector<vector<Piece*>>(BOARD_SIZE, vector<Piece*>(BOARD_SIZE, NULL)));
 
+    public:
         Board();
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
         void updateLocation(Coordinate square, Move movement);
         void printBoard();
 
+        vector<vector<vector<Piece*>>> getBoard();
         bool isChecked(int pieceColor); // is king of color "pieceColor" checked?
         bool isCheckmated(int pieceColor); // is king of color "pieceColor" checkmated? (only run this is isChecked() == true)
         bool isStalemated(int pieceColor); // is side of color "pieceColor" stalemated?
@@ -44,6 +45,7 @@ class Board {
 
         friend class Solver;
         friend class Piece;
+        friend class Pawn;
 };
 
 #endif
