@@ -40,13 +40,14 @@
 
 .welcomeButton {
     margin: 0;
-    padding: 0.6em 3vw;
+    padding: 0.6em 1.8vw;
     background-color: #292929;
     border: 0;
     color: #FFFFFF;
     border-radius: 5px;
     text-decoration: none;
     transition: all 0.15s ease-out;
+    font-size: 0.8vw;
 }
 
 .welcomeButton:hover{
@@ -58,11 +59,18 @@
 h4 {
     font-weight: 300;
     margin: 0;
+    font-size: 0.8vw;
 }
 
 @keyframes spin {
-    0% { transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);}
-    100% { transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);}
+    0% { 
+        -webkit-transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
+        transform: rotateY(-15deg) rotateX(50deg) rotateZ(31deg);
+    }
+    100% { 
+        -webkit-transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
+        transform: rotateY(345deg) rotateX(770deg) rotateZ(1111deg);
+    }
 }
 
 .modeContainer {
@@ -94,6 +102,8 @@ td > p {
     /* top: 50%; */
     /* transform: translateY(-50%); */
     border-radius: 0 1vmin 0 0;
+    -webkit-box-shadow: 3px 5px 23px -6px #000000; 
+    box-shadow: 3px 5px 23px -6px #000000;
 }
 
 .captureBox {
@@ -114,13 +124,6 @@ td > p {
     margin: 20px;
 }
 
-/* #whitePlayer img {
-    filter: drop-shadow(1px 1px 0px rgb(255, 255, 255)) 
-            drop-shadow(-1px -1px 0px rgb(255, 255, 255))
-            drop-shadow(1px -1px 0px rgb(255, 255, 255))
-            drop-shadow(-1px 1px 0px rgb(255, 255, 255));
-} */
-
 .capturedPiece {
     /* margin: 0  5px 0 5px; */
     height: 100%;
@@ -131,14 +134,18 @@ td > p {
 
 #movesPanel {
 	display: none;
-	height: 50%;
-	width: 30%;
-	top: 0px;
+	height: 50vh;
+	width: 20vw;
+	top: 2vh;
 	right: 0px;
+    z-index: 10;
 	position: fixed;
 	overflow-y: auto;
+    background-color: rgb(56, 56, 56, 0.5);
+    border-radius: 0.5em 0 0 0.5em;
+    -webkit-box-shadow: 8px 5px 23px -1px #000000; 
+    box-shadow: 8px 5px 23px -1px #000000;
 }
-
 
 #movesBox {
 	position: relative;
@@ -146,8 +153,25 @@ td > p {
 	border-collapse: collapse;
 }
 
-#movesBox:td, #movesBox:th {
+#movesBox th {
+	font-family: Heebo;
+	position: -webkit-sticky;
+	position: sticky;
+	text-align: center;
+	top: 0;
 	padding: 1px;
+    font-size: 1vw;
+    background-color: #0f0f0f;
+    color: rgb(221, 221, 221, 0.75);
+    z-index: 10;
+    padding: 0.3em 0;
+}
+
+#movesBox img {
+	padding: 1px;
+    transform: translateY(5px);
+    -webkit-transform: translateY(5px);
+    margin-left: 2em;
 }
 
 /* change scroll bar for history */
@@ -161,19 +185,6 @@ td > p {
 
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.397);
-}
-
-th {
-	font-family: Heebo;
-	font-size: 30px;
-	color: #ddd;
-	position: -webkit-sticky;
-	position: sticky;
-	text-align: center;
-	top: 0;
-	z-index: 10;
-	background: #333;
-	opacity: 0.75;
 }
 
 .square {
@@ -241,6 +252,7 @@ th {
     filter: blur(0) drop-shadow(2px 2px 2px rgba(34, 34, 34, 0.527));
     /* filter: drop-shadow(0px 0px 5px rgba(255, 238, 0, 0.527)); */
     transform: translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0);
+    -webkit-transform: translate(-75%, -90%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0);
     opacity: 0;
     /* transition: 1s; */
     
@@ -248,6 +260,7 @@ th {
 
 .chessImgFlipped {
     transform: translate(-20%, -0%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0) rotateZ(180deg);
+    -webkit-transform: translate(-20%, -0%) rotateX(52deg) rotateZ(5deg) skew(22deg) scale3d(1.0, 3.0, 1.0) rotateZ(180deg);
 }
 
 .pieceHitbox {
@@ -356,6 +369,24 @@ th {
 #playAgain {
 	position: fixed;
 	display: none;
+    top: 7vh;
+    left: 1vw;
+}
+
+.playAgainButton {
+    margin: 0;
+    padding: 0.5vh 2vw;
+    background-color: #292929;
+    color: #FFFFFF;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease-out;
+}
+
+.playAgainButton:hover{
+    cursor: pointer;
+    color: #292929;
+    background-color: #E6E6E6;
 }
 
 #statusContainer {
@@ -408,59 +439,71 @@ th {
 
 /* Radio button hover */
 #rad1 {
-    width: 42px;
-    height: 42px;
-    background: url("../img/kd.svg");
+    width: 2vw;
+    height: 2vw;
+    background: url("../img/kd.svg") no-repeat center;
+    background-size: 100%;
     transition: all 0.15s ease-out;
 }
 #rad1:hover {
-    background: url("../img/kl.svg");
+    background: url("../img/kl.svg") no-repeat center;
+    background-size: 100%;
     cursor: pointer;
 }
 [type=radio]:checked + #rad1 {
-    background: url("../img/kl.svg");
+    background: url("../img/kl.svg") no-repeat center;
+    background-size: 100%;
 }
 
 #rad2 {
-    width: 42px;
-    height: 42px;
-    background: url("../img/nd.svg");
+    width: 2vw;
+    height: 2vw;
+    background: url("../img/nd.svg") no-repeat center;
+    background-size: 100%;
     transition: all 0.15s ease-out;
 }
 #rad2:hover {
-    background: url("../img/nl.svg");
+    background: url("../img/nl.svg") no-repeat center;
+    background-size: 100%;
     cursor: pointer;
 }
 [type=radio]:checked + #rad2 {
-    background: url("../img/nl.svg");
+    background: url("../img/nl.svg") no-repeat center;
+    background-size: 100%;
 }
 
 #rad3 {
-    width: 42px;
-    height: 42px;
-    background: url("../img/rd.svg");
+    width: 2vw;
+    height: 2vw;
+    background: url("../img/rd.svg") no-repeat center;
+    background-size: 100%;
     transition: all 0.15s ease-out;
 }
 #rad3:hover {
-    background: url("../img/rl.svg");
+    background: url("../img/rl.svg") no-repeat center;
+    background-size: 100%;
     cursor: pointer;
 }
 [type=radio]:checked + #rad3 {
-    background: url("../img/rl.svg");
+    background: url("../img/rl.svg") no-repeat center;
+    background-size: 100%;
 }
 
 #rad4 {
-    width: 42px;
-    height: 42px;
-    background: url("../img/qd.svg");
+    width: 2vw;
+    height: 2vw;
+    background: url("../img/qd.svg") no-repeat center;
+    background-size: 100%;
     transition: all 0.15s ease-out;
 }
 #rad4:hover {
-    background: url("../img/ql.svg");
+    background: url("../img/ql.svg") no-repeat center;
+    background-size: 100%;
     cursor: pointer;
 }
 [type=radio]:checked + #rad4 {
-    background: url("../img/ql.svg");
+    background: url("../img/ql.svg") no-repeat center;
+    background-size: 100%;
 }
 
 
@@ -497,7 +540,6 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-
 #radRand {
     position: relative;
     width: 5vw;
@@ -518,7 +560,6 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-
 #radBlack {
     position: relative;
     width: 5vw;
@@ -538,6 +579,52 @@ th {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
+#selectWarning {
+    position: fixed;
+    transform: translateY(calc(-2.5vw - 0.8em));
+    -webkit-transform: translateY(calc(-2.5vw - 0.8em));
+    left: calc(50% - 5.75vw + 0.15em);
+    background: #0d0d0d;
+    padding: 0.5vw;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    opacity: 0;
+    border-radius: 0.3vw;
+    cursor: not-allowed;
+}
+
+#selectWarning p {
+    font-size: 0.5vw;
+    margin: 0;
+}
+
+#barBorder {
+    position: fixed;
+    height: 3vh;
+    width: 20vw;
+    top: 2vh;
+    left: 1vw;
+    border: 2px solid #dbdbdb;
+    background-color: #171717;
+    transition: all 0.2s ease-out;
+}
+
+#progressBar {
+    height: 3vh;
+    width: 50%;
+    background-color: #dbdbdb;
+    transition: all 0.2s ease-out;
+}
+
+#scoreIndicator {
+    color: #dbdbdb;
+    mix-blend-mode: difference;
+    margin: 0;
+    padding-left: 0.5em;
+    line-height: calc(3vh + 2px);
+    font-weight: 300;
+    position: fixed;
+}
 
 body {
     font-family: 'Heebo', sans-serif;

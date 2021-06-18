@@ -1,5 +1,5 @@
 class Board {
-  constructor(panel, moves) {
+  constructor(panel, moves, bar) {
     this.boardDiv = document.getElementById("board");
     this.size = 5;
     this.squareSize = 6; // size of each square on board in px
@@ -17,7 +17,7 @@ class Board {
     this.boardLvlTransformBlack;
     
     this.moves = moves;
-
+    this.scoreBar = bar;
     //document.getElementById("status").innerHTML = this.turn === 1 ? "White to move." : "Black to move.";
   }
 
@@ -472,6 +472,9 @@ class Board {
     
     // record the move
     this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
+    
+    // update board's evaluation score
+    this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
 
     if (moveInfo.isPromotion) {
       this.createPromotionPanel(nRow, nCol, nLvl, pieceName[1]);
@@ -529,7 +532,10 @@ class Board {
     
     // record the move
     this.moves.addMove(pieceName, moveInfo, this.turn, pRow, pCol, pLvl, nRow, nCol, nLvl);
-
+    
+    // update board's evaluation score
+    this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
+    
     if (this.canPromote(nRow, nLvl, pieceName)) {
       // default to the best piece
       this.promote(nRow, nCol, nLvl, "q" + pieceName[1]);
@@ -540,7 +546,6 @@ class Board {
 			this.moves.appendSpecial(false, true, false, this.turn, '');
 		}
     }
-
     this.turn = this.turn === 1 ? -1 : 1;
     this.changeClickability(this.turn == 1, this.turn == -1);
   }
@@ -590,6 +595,8 @@ class Board {
     promotedPiece.style.opacity = 1;
     this.getSquareDiv(row, col, lvl).appendChild(promotedPiece);
     this.getSquareDiv(row, col, lvl).appendChild(promotedPieceHitbox);
+    if (this.flippedSide==-1)
+      promotedPiece.classList.add("chessImgFlipped"); // make sure the promoted piece is not updown
 
     // get the cpp pawn and promote it
     var cppPawn = this.getPiece(row, col, lvl);
@@ -634,6 +641,12 @@ class Board {
 		this.moves.appendSpecial(false, false, true, this.turn, promoteId[0]);
 	}
     
-    this.changeTurn();
+    // update board's evaluation score
+    this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
+    
+    if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+		return;
+	} else
+		this.changeTurn();
   }
 }
