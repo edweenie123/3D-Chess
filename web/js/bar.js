@@ -13,7 +13,7 @@ class Bar {
   }
   
   normalize(score){
-    // return a decimal in the range [-50, 50]
-    return Math.cbrt(score) * 5;
+    // return a decimal in the range [0, 50]
+    return Math.min(50, Math.cbrt(score) * 5);
   }
 }

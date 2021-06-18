@@ -94,6 +94,8 @@ td > p {
     /* top: 50%; */
     /* transform: translateY(-50%); */
     border-radius: 0 1vmin 0 0;
+    -webkit-box-shadow: 3px 5px 23px -6px #000000; 
+    box-shadow: 3px 5px 23px -6px #000000;
 }
 
 .captureBox {
@@ -124,12 +126,17 @@ td > p {
 
 #movesPanel {
 	display: none;
-	height: 50%;
-	width: 30%;
-	top: 0px;
+	height: 50vh;
+	width: 20vw;
+	top: 2vh;
 	right: 0px;
+    z-index: 10;
 	position: fixed;
 	overflow-y: auto;
+    background-color: rgb(56, 56, 56, 0.5);
+    border-radius: 0.5em 0 0 0.5em;
+    -webkit-box-shadow: 8px 5px 23px -1px #000000; 
+    box-shadow: 8px 5px 23px -1px #000000;
 }
 
 #movesBox {
@@ -138,8 +145,24 @@ td > p {
 	border-collapse: collapse;
 }
 
-#movesBox:td, #movesBox:th {
+#movesBox th {
+	font-family: Heebo;
+	position: -webkit-sticky;
+	position: sticky;
+	text-align: center;
+	top: 0;
 	padding: 1px;
+    font-size: 1vw;
+    background-color: #0f0f0f;
+    color: rgb(221, 221, 221, 0.75);
+    z-index: 10;
+    padding: 0.3em 0;
+}
+
+#movesBox img {
+	padding: 1px;
+    transform: translateY(5px);
+    margin-left: 2em;
 }
 
 /* change scroll bar for history */
@@ -153,19 +176,6 @@ td > p {
 
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.397);
-}
-
-th {
-	font-family: Heebo;
-	font-size: 30px;
-	color: #ddd;
-	position: -webkit-sticky;
-	position: sticky;
-	text-align: center;
-	top: 0;
-	z-index: 10;
-	background: #333;
-	opacity: 0.75;
 }
 
 .square {
