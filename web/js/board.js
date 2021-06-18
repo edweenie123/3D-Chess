@@ -5,7 +5,7 @@ class Board {
         this.squareSize = 6; // size of each square on board in px
         this.cppBoard = new Module.Board();
         this.turn = 1; // 1 for white, -1 for black
-        this.aiColour = -1;
+        this.aiColor = -1;
         this.gameOver = false;
         this.cpuDifficulty = 2; // -1 for P vs P, [0-2] for CPU difficulty
         this.compDelay = 1000; // amount of milliseconds before genNextComputerMove() is called
@@ -50,13 +50,10 @@ class Board {
                 elem.style.opacity = 1;
             }, (boardTime + boardInterval * 4 + pieceTime + pieceInterval * 39) * 1000);
         });
-        console.log(
-            boardTime + boardInterval * 4 + pieceTime + pieceInterval * 39
-        );
     }
 
     changeClickability(clickWhite, clickBlack) {
-        if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+        if (this.cpuDifficulty != -1 && this.turn == this.aiColor) {
             if (!this.gameOver)
                 document.getElementById("status").innerHTML =
                     "Computer<br>is thinking";
@@ -395,7 +392,6 @@ class Board {
 
             // add the coordinate of the peace and the move delta to each legalTint div
             var legalTint = this.createTint(nRow, nCol, nLvl, "legalTint");
-            //   console.log("created at ", nRow, nCol, nLvl);
             legalTint.dataset["pieceLoc"] = [row, col, lvl];
             legalTint.dataset["move"] = [m.row, m.col, m.lvl];
             legalTint.dataset["pieceName"] = pieceName;
@@ -425,7 +421,6 @@ class Board {
             document.getElementById("status").innerHTML =
                 this.cppBoard.getGameState(oppColor);
             this.gameOver = true;
-            console.log(this.cppBoard.getGameState(oppColor));
         }
 
         return info;
@@ -597,8 +592,6 @@ class Board {
 
     // color = l -> white, color = d -> black
     createPromotionPanel(row, col, lvl, color) {
-        console.log("yes");
-
         var panel = document.getElementById("promotePanel");
         var pieceHolder = document.getElementById("pieceHolder");
         panel.style.display = "block";
@@ -629,7 +622,6 @@ class Board {
 
     // replaces a pawn with promoted piece
     promote(row, col, lvl, promoteId) {
-        console.log("promote", promoteId);
         var panel = document.getElementById("promotePanel");
         panel.style.display = "none";
 
@@ -669,7 +661,6 @@ class Board {
             default:
                 throw "ERROR: promoteId is invalid";
         }
-
         cppPawn.promote(this.cppBoard, cppPromotedPiece, true);
         var promote = new Audio("../sfx/promote.wav");
         promote.play();
@@ -708,7 +699,7 @@ class Board {
         // update board's evaluation score
         this.scoreBar.update(this.opponent.evaluate(this.cppBoard));
 
-        if (this.cpuDifficulty != -1 && this.turn == this.aiColour) {
+        if (this.cpuDifficulty != -1 && this.turn == this.aiColor) {
             return;
         } else this.changeTurn();
     }

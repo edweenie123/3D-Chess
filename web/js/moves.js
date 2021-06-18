@@ -4,17 +4,7 @@ class Moves {
         this.table = document.getElementById("movesBox");
     }
 
-    addMove(
-        pieceId,
-        info,
-        colour,
-        curRow,
-        curCol,
-        curLvl,
-        newRow,
-        newCol,
-        newLvl
-    ) {
+    addMove(pieceId, info, color, curRow, curCol, curLvl, newRow, newCol, newLvl) {
         var imgFileName = String(pieceId.toLowerCase()) + ".svg";
         var movement =
             '<img src="../img/' +
@@ -27,9 +17,8 @@ class Moves {
             String.fromCharCode("A".charCodeAt(0) + newLvl) +
             String.fromCharCode("a".charCodeAt(0) + newCol) +
             (1 + newRow);
-        console.log(imgFileName);
         // Add this move to the table
-        if (colour == 1) {
+        if (color == 1) {
             var row = this.table.insertRow();
             var cellLeft = row.insertCell();
             cellLeft.innerHTML = movement;
@@ -40,9 +29,9 @@ class Moves {
         }
     }
 
-    appendSpecial(checkmate, check, promote, colour, promoteId) {
+    appendSpecial(checkmate, check, promote, color, promoteId) {
         // Get the most recently filled out move
-        if (colour == 1) {
+        if (color == 1) {
             promoteId = promoteId.toUpperCase();
         } else {
             promoteId = promoteId.toLowerCase();

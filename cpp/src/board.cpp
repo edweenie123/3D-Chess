@@ -122,7 +122,7 @@ void Board::updateLocation(Coordinate square, Move movement) {
 
     // update board with the piece's new location
 
-    // if there is a piece of opposite colour currently occupying the new location, we destroy it
+    // if there is a piece of opposite color currently occupying the new location, we destroy it
     nextSquare->setIsAlive(false);
     board[newRow][newCol][newLvl] = curPiece;
 }
@@ -211,17 +211,17 @@ string Board::getGameState(int turnPlayer) {
     // Get your opponent's color
     int opponent = -turnPlayer;
 
-    string yourColour = (turnPlayer == WHITE ? "White" : "Black");
-    string oppColour = (turnPlayer == WHITE ? "Black" : "White");
+    string yourColor = (turnPlayer == WHITE ? "White" : "Black");
+    string oppColor = (turnPlayer == WHITE ? "Black" : "White");
 
     // Check for checkmate
     if (isChecked(turnPlayer) && isCheckmated(turnPlayer)) {
-        return "Checkmate! " + oppColour + " Wins.";
+        return "Checkmate! " + oppColor + " Wins.";
     }
 
     // Check for a check
     if (isChecked(turnPlayer)) {
-        return yourColour + " King is Checked!";
+        return yourColor + " King is Checked!";
     }
 
     // Check for stalemate

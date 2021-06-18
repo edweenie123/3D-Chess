@@ -97,19 +97,19 @@ vector<Turn> Solver::genMoves(Board &board, int color){
     return moves;
 }
 
-Turn Solver::nextMove(Board &board, int colour){
+Turn Solver::nextMove(Board &board, int color){
     // Count the number of pieces left to determine the stage of the game (start, middle, end)
     int countPieces = 0;
     for(int i = 0; i < BOARD_SIZE; ++i)
         for(int j = 0; j < BOARD_SIZE; ++j)
             for(int k = 0; k < BOARD_SIZE; ++k)
-                if(board.board[i][j][k]->getColor() == -colour && board.board[i][j][k]->getIsAlive())
+                if(board.board[i][j][k]->getColor() == -color && board.board[i][j][k]->getIsAlive())
                     ++countPieces;
     // For the easy difficulty we arbitrarily pick a piece (while there are many pieces left on the board)
     if(difficulty == 0 && countPieces >= 10){
         // Easy mode -- randomly choose a move
         vector<char> active;
-        vector<Turn> moves = genMoves(board, colour);
+        vector<Turn> moves = genMoves(board, color);
         // Shuffle to randomize the moves
         shuffle(moves.begin(), moves.end(), m_rng);
         // Just in case someone tried to get another move after a checkmate
@@ -135,7 +135,7 @@ Turn Solver::nextMove(Board &board, int colour){
         return Turn(0, Coordinate(-1, 0, 0), Move(0, 0, 0));
     }
     // Initialize the minimax
-    return solve(board, 3, -INF, INF, colour, evaluate(board));
+    return solve(board, 3, -INF, INF, color, evaluate(board));
 }
 
 Turn Solver::solve(Board &board, int depth, int ALPHA, int BETA, int color, int score){

@@ -31,7 +31,7 @@ class Solver {
         Solver(int);
         // Useful utility methods
         int evaluate(Board &board);
-        Turn nextMove(Board &board, int colour);
+        Turn nextMove(Board &board, int color);
         vector<Turn> genMoves(Board &board, int color);
         static int randRange(int low, int high);
 };

@@ -1,6 +1,6 @@
 
 
-/* Initialize all text with the custom font and colour white */
+/* Initialize all text with the custom font and color white */
 body {
     font-family: 'Heebo', sans-serif;
     color: white;
@@ -293,7 +293,7 @@ td > p {
     filter: drop-shadow(0px 0px 5px rgb(255, 0, 0)) drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.904)) drop-shadow(0px 0px 15px rgba(255, 0, 0, 0.87));
 }
 
-/* Visual colours for the move highlights and other chess tile colours */
+/* Visual colors for the move highlights and other chess tile colors */
 .darkCol {
     background-color: rgb(221, 169, 115);
 }
@@ -506,22 +506,22 @@ td > p {
     background-size: 100%;
 }
 
-/* Colour selection CSS */
-.colourSelect {
+/* Color selection CSS */
+.colorSelect {
     width: 18vw;
     margin: 0 1vw;
     border-collapse: collapse;
 }
 
-.colourSelect td {
+.colorSelect td {
     padding: 1vh 0 0 0;
 }
 
-.colourSelect div {
+.colorSelect div {
     margin: 0 0.5vw;
 }
 
-/* White radio colour select CSS */
+/* White radio color select CSS */
 #radWhite {
     position: relative;
     width: 5vw;
@@ -541,7 +541,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-/* Random radio colour select CSS */
+/* Random radio color select CSS */
 #radRand {
     position: relative;
     width: 5vw;
@@ -562,7 +562,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-/* Black radio colour select CSS */
+/* Black radio color select CSS */
 #radBlack {
     position: relative;
     width: 5vw;
@@ -582,7 +582,7 @@ td > p {
     box-shadow: 0 0 0 3px rgb(127, 166, 80);
 }
 
-/* Player v. player colour select warning CSS */
+/* Player v. player color select warning CSS */
 #selectWarning {
     position: fixed;
     transform: translateY(calc(-2.5vw - 0.8em));
