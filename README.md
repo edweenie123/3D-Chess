@@ -1,8 +1,10 @@
 # 3D-Chess
 
-This project is a complete interactive game of the Raumschach variant of 3D Chess and was made as our ICS4U summative. Users may choose to play against an AI with 3 different difficulty levels or with another player locally.  The rules of the game may be found [here](https://www.chessvariants.com/3d.dir/3d5.html).
+This project is a complete interactive game of the Raumschach variant of 3D Chess and was made as our ICS4U summative. Users may choose to play against an AI with 3  difficulty levels or with another player locally.  The rules of the game may be found [here](https://www.chessvariants.com/3d.dir/3d5.html).
 
 Play our game at: https://edweenie123.github.io/3D-Chess/
+
+![3D Chess Demo](gif/demo.gif)
 
 ## Features
 * 4 different game modes (PvP + 3 AI difficulties)
@@ -13,19 +15,19 @@ Play our game at: https://edweenie123.github.io/3D-Chess/
 * Game evaluation bar
 
 ## Built With
-The move logic, checkmate+stalemate detection and AI were all programmed in C++ and was compiled to [WebAssembly](https://webassembly.org/) using [Emscripten](https://emscripten.org/docs/introducing_emscripten/about_emscripten.html) so that it could be run on the browser. The visual interface of the game was made using vanilla JavaScript, HTML and CSS. 
+The move logic, checkmate+stalemate detection and AI were all programmed in C++ and were compiled to [WebAssembly](https://webassembly.org/) using [Emscripten](https://emscripten.org/docs/introducing_emscripten/about_emscripten.html) so that it could be run on the browser. The visual interface of the game was made using vanilla JavaScript, HTML and CSS. 
 
 ## Chess AI
-Our chess AI was made from scratch and consists of the minimax algorithm with alpha-beta pruning for optimization.
+Our chess AI was made from scratch and uses the minimax algorithm with alpha-beta pruning for optimization.
 
 ## Installation
-To run the game locally
+To install and run the game locally:
 
 1. Clone the repository 
 	``` sh
 	git clone https://github.com/edweenie123/3D-Chess.git
 	```
-2. Serve index.html on port 8080 by running the following command in the project root directory:
+2. Serve index.html on port 8080 by running the following command in the project root directory
 	``` sh
 	sh serve.sh
 	```
