@@ -42,6 +42,9 @@ class Board {
         bool isVacant(Coordinate cord); // returns true if cord is vacant
         bool isOnBoard(Coordinate cord); // return true if cord is on board
         bool isEnemySquare(Coordinate cord, int pieceColor); // returns true if cord contains an ememy piece
+
+        friend class Solver;
+        friend class Piece;
 };
 
 #endif
