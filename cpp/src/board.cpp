@@ -216,7 +216,7 @@ string Board::getGameState(int turnPlayer) {
 
     // Check for checkmate
     if (isChecked(turnPlayer) && isCheckmated(turnPlayer)) {
-        return "Checkmate! " + oppColor + " Wins.";
+        return "Checkmate! <br>" + oppColor + " Wins.";
     }
 
     // Check for a check
