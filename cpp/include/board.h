@@ -12,18 +12,20 @@ class Piece;
 
 class Board {
     private:
-        // Vector is used to allow c++ code to be compiled into Webassembly to be run by Javascript
+        // Vector is used to allow C++ code to be compiled into Webassembly to be run by Javascript
         vector<vector<vector<Piece*>>> board =
             vector<vector<vector<Piece*>>>(BOARD_SIZE, vector<vector<Piece*>>(BOARD_SIZE, vector<Piece*>(BOARD_SIZE, NULL)));
 
     public:
+        // Constructor
         Board();
+
+        // Getters
         Piece* getPieceAt(Coordinate square);
         Piece* getPieceAt(int row, int col, int lvl);
-        void updateLocation(Coordinate square, Move movement);
-        void printBoard();
-
         vector<vector<vector<Piece*>>> getBoard();
+
+        void updateLocation(Coordinate square, Move movement); // moves piece from coordinate square to new square on the board
         bool isChecked(int pieceColor); // is king of color "pieceColor" checked?
         bool isCheckmated(int pieceColor); // is king of color "pieceColor" checkmated? (only run this is isChecked() == true)
         bool isStalemated(int pieceColor); // is side of color "pieceColor" stalemated?
@@ -43,6 +45,7 @@ class Board {
         bool isOnBoard(Coordinate cord); // return true if cord is on board
         bool isEnemySquare(Coordinate cord, int pieceColor); // returns true if cord contains an ememy piece
 
+        // Friend classes; allow them to directly modify the private board
         friend class Solver;
         friend class Piece;
         friend class Pawn;
